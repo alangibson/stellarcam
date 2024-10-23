@@ -1,0 +1,19 @@
+{
+    // "compileOnSave": true,
+    "compilerOptions": {
+        // "strict": true,
+        // "noImplicitReturns": true,
+        "target": "ES6",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "outDir": "./dist/",
+        "lib": [
+            "es6",
+            "dom"
+        ]
+    },
+    "include": [
+        "*.ts",
+        "src/**/*.ts"
+    ]
+}
