@@ -8,7 +8,7 @@ function degToRad(degrees) {
     return degrees * (Math.PI / 180);
 }
 
-function boundingBoxForArc(cx, cy, radius, startAngle, endAngle) {
+function arcBoundingBox(cx, cy, radius, startAngle, endAngle) {
     // Convert start and end angles to radians
     let start = degToRad(startAngle);
     let end = degToRad(endAngle);
@@ -62,7 +62,7 @@ function boundingBoxForArc(cx, cy, radius, startAngle, endAngle) {
     };
 }
 
-function calculateArcPoints(center: Point, radius: number, startAngle, endAngle) {
+function arcPoints(center: Point, radius: number, startAngle, endAngle) {
     // Calculate start point
     const startX = center.x + radius * Math.cos(startAngle);
     const startY = center.y + radius * Math.sin(startAngle);
@@ -78,7 +78,7 @@ function calculateArcPoints(center: Point, radius: number, startAngle, endAngle)
     };
 }
 
-function convertArc(origin: OriginEnum, startAngle: number, endAngle: number, radius:number) {
+function projectArc(origin: OriginEnum, startAngle: number, endAngle: number, radius:number) {
     let newStartAngle, newEndAngle;
 
     // Convert angles based on the origin system
@@ -119,6 +119,32 @@ function normalizeAngle(angle) {
     return (angle % twoPi + twoPi) % twoPi;
 }
 
+// Calculate the clockwise or counterclockwise sweep of an arc between two angles,
+function arcSweep(start_angle_degrees, end_angle_degrees) {
+    // Normalize the angles to range [0, 360)
+    let normalizedStart = start_angle_degrees % 360;
+    let normalizedEnd = end_angle_degrees % 360;
+    
+    // If the angles are negative, bring them into positive range [0, 360)
+    if (normalizedStart < 0) normalizedStart += 360;
+    if (normalizedEnd < 0) normalizedEnd += 360;
+
+    // Calculate the difference between the start and end angles
+    let sweep = normalizedEnd - normalizedStart;
+
+    // If the sweep is negative, it means we crossed the 0-degree point (clockwise)
+    if (sweep < 0) {
+        sweep += 360;
+    }
+
+    // Determine the direction (clockwise or counterclockwise)
+    const isClockwise = sweep <= 180;
+
+    return {
+        sweep_angle: isClockwise ? sweep : 360 - sweep,
+        direction: isClockwise ? SweepDirectionEnum.CW : SweepDirectionEnum.CCW
+    };
+}
 
 /**
  * Converts a DXF LWPOLYLINE bulge to an arc (center, radius, start angle, end angle).
@@ -128,7 +154,7 @@ function normalizeAngle(angle) {
  * @param {number} bulge - The bulge value of the polyline segment.
  * @returns {object} Arc information with center, radius, start angle, end angle (in radians).
  */
-export function bulgeToArc(startPoint: Point, endPoint: Point, bulge: number): Arc {
+export function dxfBulgeToArc(startPoint: Point, endPoint: Point, bulge: number): Arc {
     const [x1, y1] = [startPoint.x, startPoint.y];
     const [x2, y2] = [endPoint.x, endPoint.y];
     
@@ -182,7 +208,7 @@ export function bulgeToArc(startPoint: Point, endPoint: Point, bulge: number): A
     });
 }
 
-export enum WindEnum {
+export enum SweepDirectionEnum {
     CW = 'cw',
     CCW = 'ccw'
 }
@@ -216,7 +242,7 @@ export class Arc extends Shape {
             maxY,
             width,
             height
-        } = boundingBoxForArc(center.x, center.y, radius, start_angle, end_angle);
+        } = arcBoundingBox(center.x, center.y, radius, start_angle, end_angle);
         this.bounding_box = new Boundary(new Point({x: minX, y: minY}), new Point({x: maxX, y: maxY}));
     }
     
@@ -224,11 +250,14 @@ export class Arc extends Shape {
         return this.bounding_box;
     }
 
-    get wind(): WindEnum {
-        if (this.end_angle > this.start_angle)
-            return WindEnum.CW;
-        else
-            return WindEnum.CCW;
+    get sweep_direction(): SweepDirectionEnum {
+        const { direction } = arcSweep(this.start_angle_degrees, this.end_angle_degrees);
+        return direction;
+    }
+
+    get sweep_degrees(): number {
+        const { sweep_angle } = arcSweep(this.start_angle_degrees, this.end_angle_degrees);
+        return sweep_angle;
     }
 
     get start_angle_degrees(): number {
@@ -240,18 +269,18 @@ export class Arc extends Shape {
     }
 
     get start_point(): Point {
-        const { start } = calculateArcPoints(this.center, this.radius, this.start_angle, this.end_angle);
+        const { start } = arcPoints(this.center, this.radius, this.start_angle, this.end_angle);
         return start;
     }
 
     get end_point(): Point {
-        const { end } = calculateArcPoints(this.center, this.radius, this.start_angle, this.end_angle);
+        const { end } = arcPoints(this.center, this.radius, this.start_angle, this.end_angle);
         return end;
     }
 
     get command(): string {
         let sweep_flag: number;
-        if (this.wind == WindEnum.CW)
+        if (this.sweep_direction == SweepDirectionEnum.CW)
             sweep_flag = 1;
         else
             sweep_flag = 0;
@@ -272,7 +301,7 @@ export class Arc extends Shape {
             minY,
             maxX,
             maxY,
-        } = boundingBoxForArc(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
+        } = arcBoundingBox(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
         this.bounding_box.start_point.x = minX;
         this.bounding_box.start_point.y = minY;
         this.bounding_box.end_point.x = maxX;
@@ -284,7 +313,7 @@ export class Arc extends Shape {
         // Convert center coordinates
         this.center.project(coord_origin, width, height);
         // and fix arc sweep
-        const {radius, startAngle, endAngle} = convertArc(coord_origin, this.start_angle, this.end_angle, this.radius);
+        const {radius, startAngle, endAngle} = projectArc(coord_origin, this.start_angle, this.end_angle, this.radius);
         this.radius = radius;
         this.start_angle = startAngle;
         this.end_angle = endAngle;
@@ -294,7 +323,7 @@ export class Arc extends Shape {
             minY,
             maxX,
             maxY
-        } = boundingBoxForArc(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
+        } = arcBoundingBox(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
         this.bounding_box.start_point.x = minX;
         this.bounding_box.start_point.y = minY;
         this.bounding_box.end_point.x = maxX;

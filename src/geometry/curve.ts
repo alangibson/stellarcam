@@ -89,18 +89,18 @@ export enum CurveTypeEnum {
     CUBIC = 'cubic'
 }
 
-export interface SplineProperties {
+export interface CurveProperties {
     control_points: Point[],
     knots: number[]
 }
 
-export class Spline extends Shape {
+export class Curve extends Shape {
 
-    type: GeometryTypeEnum = GeometryTypeEnum.SPLINE;
+    type: GeometryTypeEnum = GeometryTypeEnum.CURVE;
     control_points: Point[];
     knots: number[];
 
-    constructor({ control_points, knots }: SplineProperties) {
+    constructor({ control_points, knots }: CurveProperties) {
         super();
         
         this.control_points = control_points;

@@ -53,7 +53,7 @@ export class Point implements Geometry {
 
     distance(that: Point): number {
         const deltaX = that.x - this.x;
-        const deltaY = that.x - this.x;
+        const deltaY = that.y - this.y;
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 

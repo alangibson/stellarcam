@@ -5,18 +5,16 @@ import Konva from 'konva';
 import { parseString } from 'dxf';
 import { Segment } from './src/geometry/segment';
 import { Point } from './src/geometry/point';
-import { Arc, bulgeToArc } from './src/geometry/arc';
+import { Arc, dxfBulgeToArc } from './src/geometry/arc';
 import { Circle } from './src/geometry/circle';
 import { Shape } from './src/geometry/shape';
-import { Graphic } from './src/graphic/graphic';
 import { ShapeConfig } from 'konva/lib/Shape';
 import { GeometryTypeEnum } from './src/geometry/geometry.enum';
 import { Area } from './src/geometry/area';
 import { OriginEnum } from './src/geometry/origin.enum';
-import { SegmentGraphic } from './src/graphic/segment';
-import { ArcGraphic } from './src/graphic/arc';
-import { Spline } from './src/geometry/spline';
+import { Curve } from './src/geometry/curve';
 import { Multishape } from './src/geometry/multishape';
+import { Grapher } from './src/geometry/graph/grapher';
 
 //
 // Parse DXF file
@@ -25,6 +23,9 @@ import { Multishape } from './src/geometry/multishape';
 // Contains LINE: ./test/dxf/1.dxf
 // Contains LWPOLYLINE with bulge: './test/dxf/AFluegel Rippen b2 0201.dxf'
 // Contains SPLINE: './test/dxf/Tractor Light Mount - Left.dxf'
+// Contains INSERT: Bogen_Ellipsen_Polylinien_Block.dxf
+// Contains POLYLINE: SchlittenBack.dxf
+// Tractor Seat Mount - Left.dxf
 const parsed = parseString(fs.readFileSync('./test/dxf/Tractor Light Mount - Left.dxf', 'utf-8'));
 
 // console.log('Dump:');
@@ -53,19 +54,22 @@ for (let entity of parsed.entities) {
             break;
         }
         case 'ARC': {
-            let arc = new Arc({ 
-                center: new Point({ x: entity.x, y: entity.y }), 
-                radius: entity.r, 
-                start_angle: entity.startAngle, 
-                end_angle: entity.endAngle });
+            console.log(entity);
+            let arc = new Arc({
+                center: new Point({ x: entity.x, y: entity.y }),
+                radius: entity.r,
+                start_angle: entity.startAngle,
+                end_angle: entity.endAngle
+            });
             shapes.push(arc);
             area.add(arc);
             break;
         }
         case 'CIRCLE': {
-            let circle = new Circle({ 
-                center: new Point({ x: entity.x, y: entity.y }), 
-                radius: entity.r });
+            let circle = new Circle({
+                center: new Point({ x: entity.x, y: entity.y }),
+                radius: entity.r
+            });
             shapes.push(circle);
             area.add(circle);
             break;
@@ -77,8 +81,7 @@ for (let entity of parsed.entities) {
                 let this_point: Point = new Point({ x: vertex.x, y: vertex.y });
                 if (last_point) {
                     if ('bulge' in last_vertex) {
-                        let arc: Arc = bulgeToArc(last_point, this_point, last_vertex.bulge);
-                        // arc.type = 'bulge' as any;
+                        let arc: Arc = dxfBulgeToArc(last_point, this_point, last_vertex.bulge);
                         shapes.push(arc);
                         area.add(arc);
                     } else {
@@ -89,7 +92,6 @@ for (let entity of parsed.entities) {
                 }
                 last_point = this_point;
                 last_vertex = vertex;
-                // TODO are we missing the last segment?
             }
             break;
         }
@@ -113,7 +115,7 @@ for (let entity of parsed.entities) {
             for (let cp of entity.controlPoints) {
                 control_points.push(new Point(cp));
             }
-            let spline = new Spline({control_points, knots: entity.knots});
+            let spline = new Curve({ control_points, knots: entity.knots });
             shapes.push(spline);
             area.add(spline);
             break;
@@ -134,77 +136,19 @@ for (let entity of parsed.entities) {
 //
 
 // Connect all points within given tolerance
-//
-// Create matrix of distance between all start and end points
-// Geometry is identified by index in `shapes` array
-const links_matrix = [];
-const TOLERANCE = 0.1;
-for (let ir in shapes) {
-    links_matrix[ir] = [];
-    for (let ic in shapes) {
-        const distance = shapes[ir].end_point.distance(shapes[ic].start_point)
-        if (ir == ic) {
-            links_matrix[ir][ic] = null;
-        } else if (distance <= TOLERANCE) {
-            links_matrix[ir][ic] = true;
-        } else {
-            links_matrix[ir][ic] = false;
-        }
-    }
-}
+const grapher = new Grapher();
+const adjacency_list: number[][] = grapher.adjacency_list(shapes);
+const connections = grapher.connect(adjacency_list, shapes);
 
-// Seach backward to head of shape
-function search_reverse(col_i) {
-    let found = [];
-    for (let row_i in links_matrix) {
-        if (links_matrix[row_i][col_i] === true) {
-            // Avoid infinite loops
-            links_matrix[row_i][col_i] = null;
-            found.push([row_i, col_i]);
-            const r = search_reverse(row_i);
-            found.push(...r);
-            // FIXME dont return. we can miss true cells this way
-            // return found;
-        }
-    }   
-    // No true value in column if we got here
-    return found;
-}
-
-// Search forward to end of shape
-function search_forward(row_i) {
-    // Iterate through all column cells in row
-    let found = [];
-    for (let col_i in links_matrix[row_i]) {
-        if (links_matrix[row_i][col_i] === true) {
-            // Avoid infinite loops
-            links_matrix[row_i][col_i] = null;
-            // We found a match, record it and recurse
-            found.push([row_i, col_i]);
-            const r = search_forward(col_i);
-            found.push(...r);
-            // return found;
-        } // else just go on to next cell
-    }
-    return found;
-}
-const linkages = [];
-for (let shape_i in shapes) {
-    const reverse = search_reverse(shape_i).reverse();
-    const forward = search_forward(shape_i);
-    const complete = [...reverse, ...forward];
-    if (complete.length > 0)
-        linkages.push(complete);
-}
-console.log(links_matrix);
-
+// Create Multishapes from connected shapes
 const multishapes: Multishape[] = [];
-for (let linkage of linkages) {
-    const s: Shape[] = [];
-    for (let link of linkage) {
-        s.push(shapes[link[0]]);
+for (let visited_set of connections) {
+    const multishape = new Multishape();
+    for (let shape_i of visited_set.values()) {
+        const shape: Shape = shapes[shape_i];
+        multishape.shapes.push(shape);
     }
-    multishapes.push(new Multishape(s));
+    multishapes.push(multishape);
 }
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
@@ -240,51 +184,28 @@ const config: ShapeConfig = {
 };
 
 const svg_paths: string[] = [];
-const svg_geo_types: string[] = [];
 for (let multishape of multishapes) {
     let svg_path: string = "";
-    let geo_types: string = "";
-    // const graphics: Graphic[] = [];
     for (let shape of multishape.shapes) {
-        // let graphic: Graphic;
         switch (shape.type) {
             case GeometryTypeEnum.SEGMENT: {
                 // SVG path
                 svg_path += shape.command;
-                geo_types += `${shape.type},`;
-                // Konva graphic
-                // graphic = new SegmentGraphic(shape as Segment, config)
-                // graphics.push(graphic);
-                // let konvaShape = graphic.render(layer);
-                // layer.add(konvaShape);
                 break;
             }
             case GeometryTypeEnum.ARC: {
                 // SVG path
                 svg_path += shape.command;
-                geo_types += `${shape.type},`;
-                // Konva graphic
-                // graphic = new ArcGraphic(shape as Arc, config)
-                // graphics.push(graphic);
-                // let konvaShape = graphic.render(layer);
-                // layer.add(konvaShape);
                 break;
             }
             case GeometryTypeEnum.CIRCLE: {
                 // SVG path
                 svg_path += shape.command;
-                geo_types += `${shape.type},`;
-                // Konva graphic
-                // graphic = new ArcGraphic(shape as Arc, config)
-                // graphics.push(graphic);
-                // let konvaShape = graphic.render(layer);
-                // layer.add(konvaShape);
                 break;
             }
-            case GeometryTypeEnum.SPLINE: {
+            case GeometryTypeEnum.CURVE: {
                 // SVG path
                 svg_path += shape.command;
-                geo_types += `${shape.type},`;
                 break;
             }
             default: {
@@ -294,33 +215,31 @@ for (let multishape of multishapes) {
         }
     }
     svg_paths.push(svg_path);
-    svg_geo_types.push(geo_types);
 }
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+        color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
+}
 
 const dataURL = stage.toDataURL({ pixelRatio: 10 });
 let html = `
 <html>
 <body>
-<svg width="${area.width+100}" height="${area.height+100}">
+<svg width="${area.width}" height="${area.height}">
 `;
-for (let i in svg_paths) {
+for (let i = 0; i < svg_paths.length; i++) {
     const svg_path = svg_paths[i];
-    const geo_type = svg_geo_types[i];
     const stroke: string = getRandomColor();
-    html+= `<path fill="none" stroke="${stroke}" stroke-width="0.2" d-geo-types="${geo_type}" d="${svg_path}" />`;
+    html += `<path fill="none" stroke="${stroke}" stroke-width="0.4" d="${svg_path}" />`;
 }
 html += `</svg>
 <img width="${area.width}" height="${area.height}" src="${dataURL}"/>
 </body>
 </html>
 `
-fs.writeFile('test.html', html, (e)=>{});
+fs.writeFile('test.html', html, (e) => { });

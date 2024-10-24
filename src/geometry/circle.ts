@@ -1,4 +1,4 @@
-import { WindEnum } from "./arc";
+import { SweepDirectionEnum } from "./arc";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum } from "./geometry.enum";
 import { OriginEnum } from "./origin.enum";
@@ -49,9 +49,9 @@ export class Circle extends Shape {
         this.radius = radius;
     }
 
-    get wind(): WindEnum {
+    get wind(): SweepDirectionEnum {
         // TODO do we ever need a CCW circle?
-        return WindEnum.CW;
+        return SweepDirectionEnum.CW;
     }
 
     get boundary(): Boundary {
@@ -80,7 +80,7 @@ export class Circle extends Shape {
 
     get command(): string {
         let sweep_flag: number;
-        if (this.wind == WindEnum.CW)
+        if (this.wind == SweepDirectionEnum.CW)
             sweep_flag = 1;
         else
             sweep_flag = 0;

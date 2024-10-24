@@ -5,5 +5,5 @@ export enum GeometryTypeEnum {
     CIRCLE = 'circle',
     POINT = 'point',
     POLYSHAPE = 'polyshape',
-    SPLINE = 'spline'
+    CURVE = 'curve'
 }
