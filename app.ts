@@ -1,10 +1,10 @@
 import { Area } from './src/geometry/area';
-import { OriginEnum } from './src/geometry/origin.enum';
 import { Grapher } from './src/geometry/graph/grapher';
 import { DxfFile } from './src/file/dxf';
 import { Geometry } from './src/geometry/geometry';
 import { Multishape } from './src/entity/multishape';
 import { SvgFile } from './src/file/svg';
+import { OriginEnum } from './src/geometry/geometry.enum';
 
 //
 // Parse DXF file

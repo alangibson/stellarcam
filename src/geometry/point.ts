@@ -1,7 +1,7 @@
 import { Boundary } from "./boundary";
-import { Geometry, project } from "./geometry";
-import { GeometryTypeEnum } from "./geometry.enum";
-import { OriginEnum } from "./origin.enum";
+import { Geometry } from "./geometry";
+import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { project } from "./geometry.function";
 
 export interface PointProperties {
     x: number;
@@ -13,8 +13,6 @@ export class Point implements Geometry {
     type: GeometryTypeEnum = GeometryTypeEnum.POINT;
     x: number;
     y: number;
-
-    already_projected = false;
     
     constructor({ x, y }: PointProperties) {
         this.x = x;
@@ -49,18 +47,10 @@ export class Point implements Geometry {
     }
 
     project(coord_origin: OriginEnum, width: number, height: number) {
-        // FIXME HACK!
-        if (this.already_projected) {
-            // console.warn("HACK. Point already projected. Doing nothing.");
-            return;
-        }
-
         let {x, y} = project(this.x, this.y, coord_origin, width, height);
         this.x = x;
         this.y = y;
         // TODO notify subscribers of mutation
-
-        this.already_projected = true;
     }
 
     distance(that: Point): number {

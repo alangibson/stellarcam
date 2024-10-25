@@ -1,8 +1,7 @@
 import { ShapeConfig } from "konva/lib/Shape";
-import { Arc, SweepDirectionEnum } from "../geometry/arc";
+import { Arc } from "../geometry/arc";
 import { Graphic } from "./graphic";
 import Konva from "konva";
-import { OriginEnum } from "../geometry/origin.enum";
 
 export class ArcGraphic implements Graphic {
 

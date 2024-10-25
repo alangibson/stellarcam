@@ -1,6 +1,5 @@
 import { Boundary } from "./boundary";
-import { GeometryTypeEnum } from "./geometry.enum";
-import { OriginEnum } from "./origin.enum";
+import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { Shape } from "./shape";
 
@@ -99,10 +98,10 @@ export class Curve extends Shape {
     type: GeometryTypeEnum = GeometryTypeEnum.CURVE;
     control_points: Point[];
     knots: number[];
+    bounding_box: Boundary;
 
     constructor({ control_points, knots }: CurveProperties) {
         super();
-        
         this.control_points = control_points;
         this.knots = knots;
     }
@@ -116,11 +115,14 @@ export class Curve extends Shape {
     }
 
     get boundary(): Boundary {
-        const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
-            this.control_points[0], 
-            this.control_points[1], 
-            this.control_points[2]);
-        return new Boundary(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
+        if (! this.bounding_box) {
+            const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
+                this.control_points[0], 
+                this.control_points[1], 
+                this.control_points[2]);
+            this.bounding_box = new Boundary(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
+        }
+        return this.bounding_box;
     }
 
     get curve(): CurveTypeEnum {

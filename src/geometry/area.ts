@@ -1,6 +1,6 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
-import { OriginEnum } from "./origin.enum";
+import { OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
 /**

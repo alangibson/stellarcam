@@ -1,7 +1,6 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
-import { GeometryTypeEnum } from "./geometry.enum";
-import { OriginEnum } from "./origin.enum";
+import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
 export abstract class Shape implements Geometry {
