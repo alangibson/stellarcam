@@ -1,4 +1,4 @@
-import { SweepDirectionEnum } from "./arc.enum";
+import { DirectionEnum } from "./geometry.enum";
 import { arcBoundingBox, arcSweep, arcPoints, projectArc } from "./arc.function";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
@@ -15,10 +15,12 @@ export interface ArcProperties {
 export class Arc extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.ARC;
+
     center: Point;
     radius: number;
     start_angle: number; // in radians
     end_angle: number; // in radians
+
     bounding_box: Boundary;
 
     constructor({ center, radius, start_angle, end_angle }: ArcProperties) {
@@ -44,9 +46,19 @@ export class Arc extends Shape {
         return this.bounding_box;
     }
 
-    get sweep_direction(): SweepDirectionEnum {
+    get direction(): DirectionEnum {
         const { direction } = arcSweep(this.start_angle_degrees, this.end_angle_degrees);
         return direction;
+    }
+
+    set direction(direction: DirectionEnum) {
+        if (direction == this.direction)
+            return;
+        this.bust();
+        // Change direction
+        const start_angle = this.start_angle;
+        this.start_angle = this.end_angle;
+        this.end_angle = start_angle;
     }
 
     get sweep_degrees(): number {
@@ -74,7 +86,7 @@ export class Arc extends Shape {
 
     get command(): string {
         let sweep_flag: number;
-        if (this.sweep_direction == SweepDirectionEnum.CW)
+        if (this.direction == DirectionEnum.CW)
             sweep_flag = 1;
         else
             sweep_flag = 0;
@@ -85,6 +97,10 @@ export class Arc extends Shape {
     // Degrees between start angle and end angle
     get angle_degrees(): number {
         return this.end_angle_degrees - this.start_angle_degrees;
+    }
+
+    private bust() {
+        this.bounding_box = null;
     }
 
     translate(dx: number, dy: number) {

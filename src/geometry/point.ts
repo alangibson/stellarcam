@@ -14,8 +14,6 @@ export class Point implements Geometry {
     x: number;
     y: number;
 
-    already_projected = false;
-    
     constructor({ x, y }: PointProperties) {
         this.x = x;
         this.y = y;

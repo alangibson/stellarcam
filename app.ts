@@ -1,11 +1,10 @@
 import { Area } from './src/geometry/area';
 import { Grapher } from './src/geometry/graph/grapher';
 import { DxfFile } from './src/file/dxf';
-import { Geometry } from './src/geometry/geometry';
 import { Multishape } from './src/entity/multishape';
 import { SvgFile } from './src/file/svg';
-import { OriginEnum } from './src/geometry/geometry.enum';
 import { Point } from './src/geometry/point';
+import { Shape } from './src/geometry/shape';
 
 //
 // Parse DXF file
@@ -18,8 +17,8 @@ import { Point } from './src/geometry/point';
 // Contains POLYLINE: SchlittenBack.dxf
 // Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/1.dxf');
-const geometries: Geometry[] = area.geometries;
+const area: Area = dxf.load('./test/dxf/Tractor Light Mount - Left.dxf');
+const shapes: Shape[] = area.shapes;
 
 //
 // Derive and fix DXF data
@@ -27,18 +26,19 @@ const geometries: Geometry[] = area.geometries;
 
 // Connect all points within given tolerance
 const grapher = new Grapher();
-const contours: Array<Set<number>> = grapher.graph(geometries);
+const contours: Array<Set<number>> = grapher.graph(shapes);
 
 // Create Multishapes from connected shapes
 const multishapes: Multishape[] = [];
 for (let contour of contours) {
     const multishape = new Multishape();
     for (let shape_i of contour.values()) {
-        const shape: Geometry = geometries[shape_i];
-        multishape.shapes.push(shape);
+        const shape: Shape = shapes[shape_i];
+        multishape.append(shape);
     }
     multishapes.push(multishape);
 }
+// TODO fix direction of geometries so they all go in one direction
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
 const origin: Point = area.min;

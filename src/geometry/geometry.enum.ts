@@ -1,4 +1,9 @@
 
+export enum DirectionEnum {
+    CW = 'cw',
+    CCW = 'ccw'
+}
+
 export enum GeometryTypeEnum {
     SEGMENT = 'segment',
     ARC = 'arc',

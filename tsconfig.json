@@ -15,5 +15,10 @@
     "include": [
         "*.ts",
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts",
+        "node_modules"
     ]
 }

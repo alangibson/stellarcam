@@ -1,4 +1,4 @@
-import { SweepDirectionEnum } from "./arc.enum";
+import { DirectionEnum } from "./geometry.enum";
 import { Boundary } from "./boundary";
 import { circleBoundingBox, circlePath } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
@@ -24,9 +24,9 @@ export class Circle extends Shape {
         this.radius = radius;
     }
 
-    get wind(): SweepDirectionEnum {
+    get wind(): DirectionEnum {
         // TODO do we ever need a CCW circle?
-        return SweepDirectionEnum.CW;
+        return DirectionEnum.CW;
     }
 
     get boundary(): Boundary {
@@ -55,9 +55,18 @@ export class Circle extends Shape {
         return 360;
     }
 
+    get direction(): DirectionEnum {
+        // TODO is it OK to always be CW?
+        return DirectionEnum.CW;
+    }
+
+    set direction(direction: DirectionEnum) {
+        // noop
+    }
+
     get command(): string {
         let sweep_flag: number;
-        if (this.wind == SweepDirectionEnum.CW)
+        if (this.wind == DirectionEnum.CW)
             sweep_flag = 1;
         else
             sweep_flag = 0;

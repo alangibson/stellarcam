@@ -1,14 +1,12 @@
-import { Boundary } from "./boundary";
-import { Geometry } from "./geometry";
-import { OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
+import { Shape } from "./shape";
 
 /**
  * A bounded plane
  */
 export class Area {
 
-    geometries: Geometry[] = [];
+    shapes: Shape[] = [];
     origin: Point = new Point({x: 0, y: 0});
     
     get width(): number {
@@ -22,7 +20,7 @@ export class Area {
     get min(): Point {
         let min_x: number = Number.MAX_SAFE_INTEGER;
         let min_y: number = Number.MAX_SAFE_INTEGER;
-        for (let geo of this.geometries) {
+        for (let geo of this.shapes) {
             min_x = Math.min(min_x, geo.boundary.min.x);
             min_y = Math.min(min_y, geo.boundary.min.y);
         }
@@ -32,20 +30,20 @@ export class Area {
     get max(): Point {
         let max_x: number = 0;
         let max_y: number = 0;
-        for (let geo of this.geometries) {
+        for (let geo of this.shapes) {
             max_x = Math.max(max_x, geo.boundary.max.x);
             max_y = Math.max(max_y, geo.boundary.max.y);
         }
         return new Point({x: max_x, y: max_y});
     }
 
-    add(geometry: Geometry) {
-        this.geometries.push(geometry);
+    add(shape: Shape) {
+        this.shapes.push(shape);
     }
 
     translate(dx:number, dy:number) {
-        for (let geo of this.geometries) {
-            geo.translate(dx, dy);
+        for (let shape of this.shapes) {
+            shape.translate(dx, dy);
         }
     }
 

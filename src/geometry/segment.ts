@@ -1,6 +1,7 @@
 import { Boundary } from "./boundary";
-import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
+import { angleBetweenPoints } from "./point.function";
 import { Shape } from "./shape";
 
 /**
@@ -24,6 +25,28 @@ export class Segment extends Shape {
             this.bounding_box = new Boundary(this.start_point, this.end_point);
         }
         return this.bounding_box;
+    }
+
+    get direction(): DirectionEnum {
+        const angle: number = angleBetweenPoints(this.start_point.x, this.start_point.y, this.end_point.x, this.end_point.y);
+        if (0 < angle && angle <= 180)
+            return DirectionEnum.CW;
+        else
+            return DirectionEnum.CCW;
+    }
+
+    set direction(direction: DirectionEnum) {
+        if (direction == this.direction)
+            return;
+        this.bust();
+        // Change direction
+        const start_point = this.start_point;
+        this.start_point = this.end_point;
+        this.end_point = start_point;
+    }
+
+    private bust() {
+        this.bounding_box = null;
     }
 
     get command(): string {

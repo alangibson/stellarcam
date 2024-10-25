@@ -1,4 +1,4 @@
-import { SweepDirectionEnum } from "./arc.enum";
+import { DirectionEnum } from "./geometry.enum";
 import { OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
@@ -120,6 +120,10 @@ export function normalizeAngle(angle) {
     return (angle % twoPi + twoPi) % twoPi;
 }
 
+export function normalizeAngleDegrees(angleDegrees: number): number {
+    return (angleDegrees + 360) % 360
+}
+
 // Calculate the clockwise or counterclockwise sweep of an arc between two angles.
 export function arcSweep(start_angle_degrees, end_angle_degrees) {
     // Normalize the angles to range [0, 360)
@@ -143,6 +147,6 @@ export function arcSweep(start_angle_degrees, end_angle_degrees) {
 
     return {
         sweep_angle: isClockwise ? sweep : 360 - sweep,
-        direction: isClockwise ? SweepDirectionEnum.CW : SweepDirectionEnum.CCW
+        direction: isClockwise ? DirectionEnum.CW : DirectionEnum.CCW
     };
 }

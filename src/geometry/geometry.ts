@@ -1,5 +1,5 @@
 import { Boundary } from "./boundary";
-import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
 
