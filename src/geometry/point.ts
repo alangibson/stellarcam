@@ -30,6 +30,18 @@ export class Point implements Geometry {
         return `x:${this.x},y:${this.y}`;
     }
 
+    get start_point(): Point {
+        return this;
+    }
+
+    get end_point(): Point {
+        return this;
+    }
+
+    get command(): string {
+        return "";
+    }
+
     translate(dx: number, dy: number) {
         this.x += dx;
         this.y += dy;

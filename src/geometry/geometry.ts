@@ -1,6 +1,7 @@
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum } from "./geometry.enum";
 import { OriginEnum } from "./origin.enum";
+import { Point } from "./point";
 
 export function project(x, y, origin: OriginEnum, width, height) {
     let projectedX, projectedY;
@@ -41,6 +42,9 @@ export interface Geometry {
     type: GeometryTypeEnum;
     // Bounding box for this shape
     boundary: Boundary;
+    start_point: Point;
+    end_point: Point;
+    command: string;
     
     translate(dx:number, dy:number);
     
