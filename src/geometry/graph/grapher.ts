@@ -38,7 +38,9 @@ export class Grapher {
             for (let col_i = 0; col_i < geometries.length; col_i++) {
                 const distance1 = geometries[row_i].end_point.distance(geometries[col_i].start_point);
                 const distance2 = geometries[col_i].end_point.distance(geometries[row_i].start_point);
-                const distance = Math.min(distance1, distance2);
+                const distance3 = geometries[row_i].end_point.distance(geometries[col_i].end_point);
+                const distance4 = geometries[row_i].start_point.distance(geometries[col_i].start_point);
+                const distance = Math.min(distance1, distance2, distance3, distance4);
                 if (row_i == col_i) {
                     // do nothing
                 } else if (distance <= TOLERANCE) {

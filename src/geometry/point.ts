@@ -13,6 +13,8 @@ export class Point implements Geometry {
     type: GeometryTypeEnum = GeometryTypeEnum.POINT;
     x: number;
     y: number;
+
+    already_projected = false;
     
     constructor({ x, y }: PointProperties) {
         this.x = x;
@@ -43,14 +45,6 @@ export class Point implements Geometry {
     translate(dx: number, dy: number) {
         this.x += dx;
         this.y += dy;
-        // TODO notify subscribers of mutation
-    }
-
-    project(coord_origin: OriginEnum, width: number, height: number) {
-        let {x, y} = project(this.x, this.y, coord_origin, width, height);
-        this.x = x;
-        this.y = y;
-        // TODO notify subscribers of mutation
     }
 
     distance(that: Point): number {

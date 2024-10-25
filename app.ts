@@ -5,6 +5,7 @@ import { Geometry } from './src/geometry/geometry';
 import { Multishape } from './src/entity/multishape';
 import { SvgFile } from './src/file/svg';
 import { OriginEnum } from './src/geometry/geometry.enum';
+import { Point } from './src/geometry/point';
 
 //
 // Parse DXF file
@@ -17,7 +18,7 @@ import { OriginEnum } from './src/geometry/geometry.enum';
 // Contains POLYLINE: SchlittenBack.dxf
 // Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/Tractor Light Mount - Left.dxf');
+const area: Area = dxf.load('./test/dxf/1.dxf');
 const geometries: Geometry[] = area.geometries;
 
 //
@@ -40,13 +41,12 @@ for (let contour of contours) {
 }
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
-const origin = area.origin;
-const translateX = -origin.x;
-const translateY = -origin.y;
-area.translate(translateX, translateY);
+const origin: Point = area.min;
+// Add 5 to avoid cliping shapes on the edge of the boundary
+area.translate(-origin.x + 5, -origin.y + 5);
 
-// Project into Canvas coordinates (ie 0,0 at top-left)
-area.project(OriginEnum.TOP_LEFT);
+// TODO Flip coordinate origin from bottom-left to top-right
+// area.mirror(MirrorEnum.HORIZONTAL);
 
 //
 // Render DXF

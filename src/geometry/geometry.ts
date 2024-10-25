@@ -12,6 +12,5 @@ export interface Geometry {
     command: string;
     
     translate(dx:number, dy:number);
-    
-    project(coord_origin: OriginEnum, width: number, height: number);
+
 }

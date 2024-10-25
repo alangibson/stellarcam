@@ -5,19 +5,19 @@ import { Point } from "./point";
  */
 export class Boundary {
     // Bottom-left/min point
-    start_point: Point;
+    min: Point;
     // Top-right/max point
-    end_point: Point;
+    max: Point;
 
     constructor(start_point: Point, end_point: Point) {
-        this.start_point = start_point;
-        this.end_point = end_point;
+        this.min = start_point;
+        this.max = end_point;
     }
 
     join(boundary: Boundary) {
-        this.start_point.x = Math.min(this.start_point.x, this.end_point.x, boundary.start_point.x, boundary.end_point.x);
-        this.start_point.y = Math.min(this.start_point.y, this.end_point.y, boundary.start_point.y, boundary.end_point.y);
-        this.end_point.x = Math.min(this.start_point.x, this.end_point.x, boundary.start_point.x, boundary.end_point.x);
-        this.end_point.y = Math.min(this.start_point.y, this.end_point.y, boundary.start_point.y, boundary.end_point.y);
+        this.min.x = Math.min(this.min.x, this.max.x, boundary.min.x, boundary.max.x);
+        this.min.y = Math.min(this.min.y, this.max.y, boundary.min.y, boundary.max.y);
+        this.max.x = Math.min(this.min.x, this.max.x, boundary.min.x, boundary.max.x);
+        this.max.y = Math.min(this.min.y, this.max.y, boundary.min.y, boundary.max.y);
     }
 }

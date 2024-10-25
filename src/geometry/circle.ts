@@ -69,7 +69,4 @@ export class Circle extends Shape {
         this.center.translate(dx, dy);
     }
 
-    project(coord_origin: OriginEnum, width: number, height: number) {
-        this.center.project(coord_origin, width, height);
-    }
 }

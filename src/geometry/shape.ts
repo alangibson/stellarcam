@@ -8,7 +8,6 @@ export abstract class Shape implements Geometry {
     abstract type: GeometryTypeEnum;
     abstract boundary: Boundary;
     abstract translate(dx: number, dy: number);
-    abstract project(coord_origin: OriginEnum, width: number, height: number);
     abstract start_point: Point;
     abstract end_point: Point;
     // SVG path 'd' command

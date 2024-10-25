@@ -91,14 +91,8 @@ export class Arc extends Shape {
         this.center.translate(dx, dy);
     }
 
-    project(coord_origin: OriginEnum, width: number, height: number) {
-        // Convert center coordinates
-        this.center.project(coord_origin, width, height);
-        // and fix arc sweep
-        const {radius, startAngle, endAngle} = projectArc(coord_origin, this.start_angle, this.end_angle, this.radius);
-        this.radius = radius;
-        this.start_angle = startAngle;
-        this.end_angle = endAngle;
+    toJSON() {
+        return {...this, start_point: this.start_point, end_point: this.end_point};
     }
 
 }

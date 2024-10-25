@@ -35,9 +35,4 @@ export class Segment extends Shape {
         this.end_point.translate(dx, dy);
     }
 
-    project(coord_origin: OriginEnum, width: number, height: number) {
-        this.start_point.project(coord_origin, width, height);
-        this.end_point.project(coord_origin, width, height);
-    }
-
 }

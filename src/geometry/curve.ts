@@ -140,9 +140,4 @@ export class Curve extends Shape {
             p.translate(dx, dy);
     }
 
-    project(coord_origin: OriginEnum, width: number, height: number) {
-        for (let p of this.control_points)
-            p.project(coord_origin, width, height);
-    }
-
 }
