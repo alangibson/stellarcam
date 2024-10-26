@@ -30,9 +30,9 @@ export class Arc extends Shape {
         this.start_angle = start_angle;
         this.end_angle = end_angle;
     }
-    
+
     get boundary(): Boundary {
-        if (! this.bounding_box) {
+        if (!this.bounding_box) {
             const {
                 minX,
                 minY,
@@ -41,7 +41,7 @@ export class Arc extends Shape {
                 width,
                 height
             } = arcBoundingBox(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
-            this.bounding_box = new Boundary(new Point({x: minX, y: minY}), new Point({x: maxX, y: maxY}));
+            this.bounding_box = new Boundary(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
         }
         return this.bounding_box;
     }
@@ -67,11 +67,11 @@ export class Arc extends Shape {
     }
 
     get start_angle_degrees(): number {
-        return this.start_angle * (180/Math.PI);
+        return this.start_angle * (180 / Math.PI);
     }
 
     get end_angle_degrees(): number {
-        return this.end_angle * (180/Math.PI);
+        return this.end_angle * (180 / Math.PI);
     }
 
     get start_point(): Point {
@@ -80,7 +80,8 @@ export class Arc extends Shape {
     }
 
     get middle_point(): Point {
-        return arcMidpoint(this.center, this.radius, this.start_angle_degrees, this.end_angle_degrees);
+        const { x, y } = arcMidpoint(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
+        return new Point({ x, y });
     }
 
     get end_point(): Point {
@@ -112,7 +113,7 @@ export class Arc extends Shape {
     }
 
     toJSON() {
-        return {...this, start_point: this.start_point, end_point: this.end_point};
+        return { ...this, start_point: this.start_point, end_point: this.end_point };
     }
 
 }

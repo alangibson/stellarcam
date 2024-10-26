@@ -79,20 +79,41 @@ export function arcPoints(center: Point, radius: number, startAngle, endAngle) {
     };
 }
 
-/** Find the midpoint of an arc */
-export function arcMidpoint(center: Point, radius: number, startAngleDegrees: number, endAngleDegrees: number): Point {
-    // Convert angles from degrees to radians
-    const startRad = (Math.PI / 180) * startAngleDegrees;
-    const endRad = (Math.PI / 180) * endAngleDegrees;
+export function arcMidpoint(cx, cy, r, startAngle, endAngle, useLongArc = false) {
+    // Normalize the angles to be between 0 and 2*PI
+    startAngle = (startAngle + 2 * Math.PI) % (2 * Math.PI);
+    endAngle = (endAngle + 2 * Math.PI) % (2 * Math.PI);
 
-    // Calculate the midpoint angle (average of start and end angles)
-    const midAngle = (startRad + endRad) / 2;
+    // Calculate the angular difference
+    let deltaAngle = endAngle - startAngle;
+
+    // Adjust deltaAngle to be between -PI and PI
+    if (deltaAngle > Math.PI) {
+        deltaAngle -= 2 * Math.PI;
+    } else if (deltaAngle < -Math.PI) {
+        deltaAngle += 2 * Math.PI;
+    }
+
+    // If useLongArc is true, adjust deltaAngle to use the longer arc
+    if (useLongArc) {
+        if (deltaAngle > 0) {
+            deltaAngle -= 2 * Math.PI;
+        } else {
+            deltaAngle += 2 * Math.PI;
+        }
+    }
+
+    // Calculate the midpoint angle
+    let midAngle = startAngle + deltaAngle / 2;
+
+    // Ensure midAngle is between 0 and 2*PI
+    midAngle = (midAngle + 2 * Math.PI) % (2 * Math.PI);
 
     // Calculate the midpoint coordinates
-    const midX = center.x + radius * Math.cos(midAngle);
-    const midY = center.y + radius * Math.sin(midAngle);
+    let mx = cx + r * Math.cos(midAngle);
+    let my = cy + r * Math.sin(midAngle);
 
-    return new Point({ x: midX, y: midY });
+    return { x: mx, y: my };
 }
 
 // Convert angles based on the origin system

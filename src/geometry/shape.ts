@@ -14,4 +14,8 @@ export abstract class Shape implements Geometry {
     // SVG path 'd' command
     abstract command: string;
 
+    // TODO Used in debug visualization
+    // middle_point(): Point
+    // pointAlong(distance:number): Point;
+    
 }

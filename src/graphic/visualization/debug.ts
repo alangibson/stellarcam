@@ -1,16 +1,14 @@
-import { Multishape } from "../entity/multishape";
-import { Arc } from "../geometry/arc";
-import { pointAlongArc } from "../geometry/arc.function";
-import { Circle } from "../geometry/circle";
-import { pointAlongCircle } from "../geometry/circle.function";
-import { Curve } from "../geometry/curve";
-import { DirectionEnum, GeometryTypeEnum } from "../geometry/geometry.enum";
-import { Point } from "../geometry/point";
-import { Segment } from "../geometry/segment";
-
-export interface Visualization {
-
-}
+import { Multishape } from "../../entity/multishape";
+import { Arc } from "../../geometry/arc";
+import { pointAlongArc } from "../../geometry/arc.function";
+import { Circle } from "../../geometry/circle";
+import { pointAlongCircle } from "../../geometry/circle.function";
+import { Curve } from "../../geometry/curve";
+import { DirectionEnum, GeometryTypeEnum } from "../../geometry/geometry.enum";
+import { Point } from "../../geometry/point";
+import { Segment } from "../../geometry/segment";
+import { pointAlongSegment } from "../../geometry/segment.function";
+import { Visualization } from "./visualization";
 
 export class DebugVisualization implements Visualization {
 
@@ -34,7 +32,6 @@ export class DebugVisualization implements Visualization {
                         elements.push(`<line x1="${arc.center.x}" y1="${arc.center.y}" x2="${arc.middle_point.x}" y2="${arc.middle_point.y}" class="debug middle" />`);
                         // Add direction arrows
                         const length: number = 2;
-                        // TODO CW and CCW are flipped?
                         const direction: boolean = (arc.direction == DirectionEnum.CW);
                         const {x, y} = pointAlongArc(arc.center.x, arc.center.y, arc.radius, arc.start_angle, arc.end_angle, length, direction)
                         const end_point_on_arc: Point = new Point({x, y});
@@ -46,7 +43,6 @@ export class DebugVisualization implements Visualization {
                     case (GeometryTypeEnum.CIRCLE): {
                         const circle = shape as Circle;
                         const length: number = 2;
-                        // TODO CW and CCW are flipped?
                         const direction: boolean = (circle.direction == DirectionEnum.CW);
                         const {x, y} = pointAlongCircle(circle.center.x, circle.center.y, circle.radius, circle.start_point.x, circle.start_point.y, length, direction);
                         elements.push(`<circle r="0.4" cx="${circle.start_point.x}" cy="${circle.start_point.y}" class="debug start" />`)
@@ -69,10 +65,12 @@ export class DebugVisualization implements Visualization {
                     };
                     case (GeometryTypeEnum.SEGMENT): {
                         const segment = shape as Segment;
+                        const length: number = 2;
                         // Dot for each point
                         elements.push(`<circle r="0.4" cx="${segment.start_point.x}" cy="${segment.start_point.y}" class="debug start" />`)
-                        // TODO start and end line on segment
-                        // elements.push(`<line x1="${segment.start_point.x}" y1="${segment.start_point.y}" x2="${circle.start_point.x}" y2="${circle.start_point.y}" class="debug start" />`);
+                        // Start and end line on segment
+                        const {x, y} = pointAlongSegment(segment.start_point.x, segment.start_point.y, segment.end_point.x, segment.end_point.y, length);
+                        elements.push(`<line x1="${segment.start_point.x}" y1="${segment.start_point.y}" x2="${x}" y2="${y}" class="debug start" />`);
                         elements.push(`<circle r="0.4" cx="${segment.end_point.x}" cy="${segment.end_point.y}" class="debug end" />`)
                         break;
                     }
