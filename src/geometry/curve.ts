@@ -1,6 +1,6 @@
 import { Boundary } from "./boundary";
 import { CurveTypeEnum } from "./curve.enum";
-import { quadraticBezierBoundingBox, quadraticBezierOrientation } from "./curve.function";
+import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./curve.function";
 import { DirectionEnum, GeometryTypeEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { Shape } from "./shape";
@@ -27,6 +27,10 @@ export class Curve extends Shape {
 
     get start_point(): Point {
         return this.control_points[0];
+    }
+
+    get middle_point(): Point {
+        return quadraticBezierMidpoint(this.control_points[0], this.control_points[1], this.control_points[2]);
     }
 
     get end_point(): Point {

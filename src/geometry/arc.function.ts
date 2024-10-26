@@ -79,10 +79,26 @@ export function arcPoints(center: Point, radius: number, startAngle, endAngle) {
     };
 }
 
+/** Find the midpoint of an arc */
+export function arcMidpoint(center: Point, radius: number, startAngleDegrees: number, endAngleDegrees: number): Point {
+    // Convert angles from degrees to radians
+    const startRad = (Math.PI / 180) * startAngleDegrees;
+    const endRad = (Math.PI / 180) * endAngleDegrees;
+
+    // Calculate the midpoint angle (average of start and end angles)
+    const midAngle = (startRad + endRad) / 2;
+
+    // Calculate the midpoint coordinates
+    const midX = center.x + radius * Math.cos(midAngle);
+    const midY = center.y + radius * Math.sin(midAngle);
+
+    return new Point({ x: midX, y: midY });
+}
+
 // Convert angles based on the origin system
 export function projectArc(origin: OriginEnum, startAngle: number, endAngle: number, radius: number) {
     let newStartAngle, newEndAngle;
-   
+
     switch (origin) {
         case OriginEnum.TOP_LEFT: // same as bottom-right
         case OriginEnum.BOTTOM_RIGHT:
@@ -150,3 +166,43 @@ export function arcSweep(start_angle_degrees, end_angle_degrees) {
         direction: isClockwise ? DirectionEnum.CW : DirectionEnum.CCW
     };
 }
+
+/** Return a point at a distance along an arc */
+export function pointAlongArc(cx, cy, r, startAngle, endAngle, distance, clockwise) {
+
+    // Normalize the angle difference based on the direction
+    function angleDifference(angle1, angle2, clockwise) {
+      let diff = angle2 - angle1;
+      if (clockwise) {
+        if (diff > 0) {
+          diff -= 2 * Math.PI;
+        }
+      } else {
+        if (diff < 0) {
+          diff += 2 * Math.PI;
+        }
+      }
+      return diff;
+    }
+  
+    // Calculate the total angle difference and arc length
+    const deltaAngle = angleDifference(startAngle, endAngle, clockwise);
+    const arcLength = Math.abs(deltaAngle) * r;
+  
+    // Clamp the distance to the arc length
+    if (distance < 0 || distance > arcLength) {
+      distance = Math.max(0, Math.min(distance, arcLength));
+    }
+  
+    // Calculate the proportion of the arc traversed
+    const proportion = distance / arcLength;
+  
+    // Compute the angle at the given distance
+    const angleAtDistance = startAngle + proportion * deltaAngle;
+  
+    // Calculate the x and y coordinates
+    const x = cx + r * Math.cos(angleAtDistance);
+    const y = cy + r * Math.sin(angleAtDistance);
+  
+    return { x, y };
+  }

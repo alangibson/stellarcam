@@ -1,5 +1,5 @@
 import { DirectionEnum } from "./geometry.enum";
-import { arcBoundingBox, arcSweep, arcPoints, projectArc } from "./arc.function";
+import { arcBoundingBox, arcSweep, arcPoints, projectArc, arcMidpoint } from "./arc.function";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
@@ -77,6 +77,10 @@ export class Arc extends Shape {
     get start_point(): Point {
         const { start } = arcPoints(this.center, this.radius, this.start_angle, this.end_angle);
         return start;
+    }
+
+    get middle_point(): Point {
+        return arcMidpoint(this.center, this.radius, this.start_angle_degrees, this.end_angle_degrees);
     }
 
     get end_point(): Point {

@@ -27,3 +27,17 @@ export function circleBoundingBox(center: Point, radius: number) {
 export function circlePath(center: Point, radius: number) {
     return 'M ' + center.x + ' ' + center.y + ' m -' + radius + ', 0 a ' + radius + ',' + radius + ' 0 1,1 ' + (radius * 2) + ',0 a ' + radius + ',' + radius + ' 0 1,1 -' + (radius * 2) + ',0';
 }
+
+/** Return a point at a distance along a circle */
+export function pointAlongCircle(cx, cy, r, start_x, start_y, distance, clockwise: boolean = true) {
+    // Calculate the initial angle from the center to the starting point
+    var theta0 = Math.atan2(start_y - cy, start_x - cx);
+    // Calculate the change in angle corresponding to distance s
+    var deltaTheta = distance / r;
+    // Determine the new angle after moving distance s
+    var theta1 = theta0 + deltaTheta;
+    // Calculate the new point's coordinates
+    var x1 = cx + r * Math.cos(theta1);
+    var y1 = cy + r * Math.sin(theta1);
+    return { x: x1, y: y1 };
+}
