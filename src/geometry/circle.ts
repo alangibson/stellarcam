@@ -1,4 +1,4 @@
-import { DirectionEnum } from "./geometry.enum";
+import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { Boundary } from "./boundary";
 import { circleBoundingBox, circlePath } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
@@ -22,11 +22,6 @@ export class Circle extends Shape {
         
         this.center = center;
         this.radius = radius;
-    }
-
-    get wind(): DirectionEnum {
-        // TODO do we ever need a CCW circle?
-        return DirectionEnum.CW;
     }
 
     get boundary(): Boundary {
@@ -66,12 +61,17 @@ export class Circle extends Shape {
 
     get command(): string {
         let sweep_flag: number;
-        if (this.wind == DirectionEnum.CW)
+        if (this.direction == DirectionEnum.CW)
             sweep_flag = 1;
         else
             sweep_flag = 0;
         const large_arc_flag = 0; // large=1, small=0
         return circlePath(this.center, this.radius);
+    }
+
+    mirror(mirror: MirrorEnum, axisValue: number = 0) {
+        // TODO mirror center point
+        this.center.mirror(mirror, axisValue);
     }
 
     translate(dx: number, dy: number) {

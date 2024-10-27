@@ -1,5 +1,5 @@
-import { DirectionEnum } from "./geometry.enum";
-import { arcBoundingBox, arcSweep, arcPoints, projectArc, arcMidpoint } from "./arc.function";
+import { DirectionEnum, MirrorEnum } from "./geometry.enum";
+import { arcBoundingBox, arcSweep, arcPoints, projectArc, arcMidpoint, mirrorArc } from "./arc.function";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
@@ -54,8 +54,9 @@ export class Arc extends Shape {
     set direction(direction: DirectionEnum) {
         if (direction == this.direction)
             return;
-        this.bust();
+        // console.log(`Circle direction ${this.direction} -> ${direction}`);
         // Change direction
+        this.bust();
         const start_angle = this.start_angle;
         this.start_angle = this.end_angle;
         this.end_angle = start_angle;
@@ -106,6 +107,14 @@ export class Arc extends Shape {
 
     private bust() {
         this.bounding_box = null;
+    }
+    
+    mirror(mirror: MirrorEnum, axisValue: number = 0) {
+        const arc = mirrorArc(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle, this.direction, mirror, axisValue);
+        this.center = new Point({x: arc.x, y: arc.y});
+        this.radius = arc.radius;
+        this.start_angle = arc.startAngle;
+        this.end_angle = arc.endAngle;
     }
 
     translate(dx: number, dy: number) {

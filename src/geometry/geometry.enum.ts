@@ -4,6 +4,11 @@ export enum DirectionEnum {
     CCW = 'ccw'
 }
 
+export enum MirrorEnum {
+    HORIZONTAL = 'horizontal',
+    VERTICAL = 'vertical'
+}
+
 export enum GeometryTypeEnum {
     SEGMENT = 'segment',
     ARC = 'arc',

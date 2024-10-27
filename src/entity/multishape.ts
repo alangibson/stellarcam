@@ -12,7 +12,7 @@ export class Multishape {
 
     append(shape: Shape) {
         // If shape.direction != this.direction, then change direction of shape
-        shape.direction = this.direction;
+        // shape.direction = this.direction;
         this.shapes.push(shape);
     }
 }

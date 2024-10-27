@@ -1,7 +1,8 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
-import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
 import { project } from "./geometry.function";
+import { mirrorPoint } from "./point.function";
 
 export interface PointProperties {
     x: number;
@@ -38,6 +39,12 @@ export class Point implements Geometry {
 
     get command(): string {
         return "";
+    }
+
+    mirror(mirror: MirrorEnum, axisValue: number) {
+        const point: PointProperties = mirrorPoint(this, mirror, axisValue);
+        this.x = point.x;
+        this.y = point.y;
     }
 
     translate(dx: number, dy: number) {

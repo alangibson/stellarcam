@@ -1,4 +1,4 @@
-import { DirectionEnum } from "./geometry.enum";
+import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
@@ -193,37 +193,59 @@ export function pointAlongArc(cx, cy, r, startAngle, endAngle, distance, clockwi
 
     // Normalize the angle difference based on the direction
     function angleDifference(angle1, angle2, clockwise) {
-      let diff = angle2 - angle1;
-      if (clockwise) {
-        if (diff > 0) {
-          diff -= 2 * Math.PI;
+        let diff = angle2 - angle1;
+        if (clockwise) {
+            if (diff > 0) {
+                diff -= 2 * Math.PI;
+            }
+        } else {
+            if (diff < 0) {
+                diff += 2 * Math.PI;
+            }
         }
-      } else {
-        if (diff < 0) {
-          diff += 2 * Math.PI;
-        }
-      }
-      return diff;
+        return diff;
     }
-  
+
     // Calculate the total angle difference and arc length
     const deltaAngle = angleDifference(startAngle, endAngle, clockwise);
     const arcLength = Math.abs(deltaAngle) * r;
-  
+
     // Clamp the distance to the arc length
     if (distance < 0 || distance > arcLength) {
-      distance = Math.max(0, Math.min(distance, arcLength));
+        distance = Math.max(0, Math.min(distance, arcLength));
     }
-  
+
     // Calculate the proportion of the arc traversed
     const proportion = distance / arcLength;
-  
+
     // Compute the angle at the given distance
     const angleAtDistance = startAngle + proportion * deltaAngle;
-  
+
     // Calculate the x and y coordinates
     const x = cx + r * Math.cos(angleAtDistance);
     const y = cy + r * Math.sin(angleAtDistance);
-  
+
     return { x, y };
-  }
+}
+
+export function mirrorArc(x, y, radius, startAngle, endAngle, direction: DirectionEnum, mirror: MirrorEnum, axisValue: number) {
+    let clockwise: boolean = (direction == DirectionEnum.CW);
+
+    if (mirror === MirrorEnum.VERTICAL) {
+        // Mirror over vertical axis x = axisValue
+        x = 2 * axisValue - x;
+        startAngle = Math.PI - startAngle;
+        endAngle = Math.PI - endAngle;
+        clockwise = !clockwise;
+    } else if (mirror === MirrorEnum.HORIZONTAL) {
+        // Mirror over horizontal axis y = axisValue
+        y = 2 * axisValue - y;
+        startAngle = -startAngle;
+        endAngle = -endAngle;
+        clockwise = !clockwise;
+    }
+
+    const newDirection: DirectionEnum = clockwise ? DirectionEnum.CW : DirectionEnum.CCW;
+
+    return { x, y, radius, startAngle, endAngle, direction: newDirection };
+}

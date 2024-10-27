@@ -1,3 +1,4 @@
+import { MirrorEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { Shape } from "./shape";
 
@@ -39,6 +40,18 @@ export class Area {
 
     add(shape: Shape) {
         this.shapes.push(shape);
+    }
+
+    /** Flip horizontally or vertically along center of Area */
+    flip(mirror: MirrorEnum) {
+        let axisValue: number;
+        if (mirror == MirrorEnum.HORIZONTAL)
+            axisValue = this.height / 2;
+        else
+            axisValue = this.width / 2;
+        for (let shape of this.shapes) {
+            shape.mirror(mirror, axisValue);
+        }
     }
 
     translate(dx:number, dy:number) {

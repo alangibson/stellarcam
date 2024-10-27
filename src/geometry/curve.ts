@@ -1,7 +1,7 @@
 import { Boundary } from "./boundary";
 import { CurveTypeEnum } from "./curve.enum";
 import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./curve.function";
-import { DirectionEnum, GeometryTypeEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { Shape } from "./shape";
 
@@ -55,13 +55,13 @@ export class Curve extends Shape {
     set direction(direction: DirectionEnum) {
         if (direction == this.direction)
             return;
-        this.bust();
+        // console.log(`Curve direction ${this.direction} -> ${direction}`);
         // Change direction
+        this.bust();
         const end_point = this.control_points[2];
         this.control_points[2] = this.control_points[0];
         this.control_points[0] = end_point;
     }
-
 
     get curve(): CurveTypeEnum {
         if (this.control_points.length == 3) {
@@ -77,6 +77,12 @@ export class Curve extends Shape {
         this.bounding_box = null;
     }
 
+    mirror(mirror: MirrorEnum, axisValue: number = 0) {
+        this.control_points[0].mirror(mirror, axisValue);
+        this.control_points[1].mirror(mirror, axisValue);
+        this.control_points[2].mirror(mirror, axisValue);
+    }
+    
     translate(dx: number, dy: number) {
         for (let p of this.control_points)
             p.translate(dx, dy);

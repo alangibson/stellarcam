@@ -5,6 +5,7 @@ import { Multishape } from './src/entity/multishape';
 import { SvgFile } from './src/file/svg';
 import { Point } from './src/geometry/point';
 import { Shape } from './src/geometry/shape';
+import { MirrorEnum } from './src/geometry/geometry.enum';
 
 //
 // Parse DXF file
@@ -45,8 +46,8 @@ const origin: Point = area.min;
 // Add 5 to avoid cliping shapes on the edge of the boundary
 area.translate(-origin.x + 5, -origin.y + 5);
 
-// TODO Flip coordinate origin from bottom-left to top-right
-// area.mirror(MirrorEnum.HORIZONTAL);
+// Flip coordinate origin from bottom-left to top-right
+area.flip(MirrorEnum.HORIZONTAL);
 
 //
 // Render DXF

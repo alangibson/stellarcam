@@ -1,5 +1,5 @@
 import { Boundary } from "./boundary";
-import { DirectionEnum, GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 
 
@@ -11,6 +11,7 @@ export interface Geometry {
     end_point: Point;
     command: string;
     
+    mirror(mirror: MirrorEnum, axisValue: number);
     translate(dx:number, dy:number);
 
 }

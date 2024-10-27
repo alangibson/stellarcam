@@ -1,5 +1,5 @@
 import { Boundary } from "./boundary";
-import { DirectionEnum, GeometryTypeEnum, OriginEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { angleBetweenPoints } from "./point.function";
 import { Shape } from "./shape";
@@ -38,19 +38,27 @@ export class Segment extends Shape {
     set direction(direction: DirectionEnum) {
         if (direction == this.direction)
             return;
-        this.bust();
+        // console.log(`Segment direction ${this.direction} -> ${direction}`);
+        // console.log(`  before start_point: ${JSON.stringify(this.start_point)}, end_point: ${JSON.stringify(this.end_point)}`);
         // Change direction
+        this.bust();
         const start_point = this.start_point;
         this.start_point = this.end_point;
         this.end_point = start_point;
+        // console.log(`  after  start_point: ${JSON.stringify(this.start_point)}, end_point: ${JSON.stringify(this.end_point)}`);
+    }
+
+    get command(): string {
+        return `M ${this.start_point.x},${this.start_point.y} L ${this.end_point.x},${this.end_point.y}`;
     }
 
     private bust() {
         this.bounding_box = null;
     }
 
-    get command(): string {
-        return `M ${this.start_point.x},${this.start_point.y} L ${this.end_point.x},${this.end_point.y}`;
+    mirror(mirror: MirrorEnum, axisValue: number = 0) {
+        this.start_point.mirror(mirror, axisValue);
+        this.end_point.mirror(mirror, axisValue);
     }
 
     translate(dx: number, dy: number) {
