@@ -7,7 +7,7 @@ import { Shape } from "./shape";
 /**
  * A line anchored at two points
  */
-export class Segment extends Shape {
+export class Segment implements Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
     start_point: Point;
@@ -15,7 +15,6 @@ export class Segment extends Shape {
     bounding_box: Boundary;
 
     constructor(start_point: Point, end_point: Point) {
-        super();
         this.start_point = start_point;
         this.end_point = end_point;
     }

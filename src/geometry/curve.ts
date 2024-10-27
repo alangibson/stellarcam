@@ -10,7 +10,7 @@ export interface CurveProperties {
     knots: number[]
 }
 
-export class Curve extends Shape {
+export class Curve implements Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CURVE;
     
@@ -20,7 +20,6 @@ export class Curve extends Shape {
     bounding_box: Boundary;
 
     constructor({ control_points, knots }: CurveProperties) {
-        super();
         this.control_points = control_points;
         this.knots = knots;
     }

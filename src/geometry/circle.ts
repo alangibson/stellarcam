@@ -10,7 +10,7 @@ export interface CircleProperties {
     radius: number;
 }
 
-export class Circle extends Shape {
+export class Circle implements Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CIRCLE;
     center: Point;
@@ -18,8 +18,6 @@ export class Circle extends Shape {
     bounding_box: Boundary;
 
     constructor({ center, radius }: CircleProperties) {
-        super();
-        
         this.center = center;
         this.radius = radius;
     }

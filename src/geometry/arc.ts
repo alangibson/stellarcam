@@ -12,7 +12,7 @@ export interface ArcProperties {
     end_angle: number;
 }
 
-export class Arc extends Shape {
+export class Arc implements Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.ARC;
 
@@ -24,7 +24,6 @@ export class Arc extends Shape {
     bounding_box: Boundary;
 
     constructor({ center, radius, start_angle, end_angle }: ArcProperties) {
-        super();
         this.center = center;
         this.radius = radius;
         this.start_angle = start_angle;
