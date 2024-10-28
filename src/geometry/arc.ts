@@ -1,5 +1,5 @@
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { arcBoundingBox, arcSweep, arcPoints, projectArc, arcMidpoint, mirrorArc } from "./arc.function";
+import { arcBoundingBox, arcDirection, arcPoints, projectArc, arcMidpoint, mirrorArc, arcAngleAtPoint } from "./arc.function";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
@@ -12,7 +12,7 @@ export interface ArcProperties {
     end_angle: number;
 }
 
-export class Arc implements Shape {
+export class Arc extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.ARC;
 
@@ -24,6 +24,8 @@ export class Arc implements Shape {
     bounding_box: Boundary;
 
     constructor({ center, radius, start_angle, end_angle }: ArcProperties) {
+        super();
+
         this.center = center;
         this.radius = radius;
         this.start_angle = start_angle;
@@ -46,7 +48,7 @@ export class Arc implements Shape {
     }
 
     get direction(): DirectionEnum {
-        const { direction } = arcSweep(this.start_angle_degrees, this.end_angle_degrees);
+        const { direction } = arcDirection(this.start_angle_degrees, this.end_angle_degrees);
         return direction;
     }
 
@@ -62,7 +64,7 @@ export class Arc implements Shape {
     }
 
     get sweep_degrees(): number {
-        const { sweep_angle } = arcSweep(this.start_angle_degrees, this.end_angle_degrees);
+        const { sweep_angle } = arcDirection(this.start_angle_degrees, this.end_angle_degrees);
         return sweep_angle;
     }
 
@@ -79,6 +81,10 @@ export class Arc implements Shape {
         return start;
     }
 
+    set start_point(start_point: Point) {
+        this.start_angle = arcAngleAtPoint(this.center, start_point);
+    }
+
     get middle_point(): Point {
         const { x, y } = arcMidpoint(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle);
         return new Point({ x, y });
@@ -87,6 +93,10 @@ export class Arc implements Shape {
     get end_point(): Point {
         const { end } = arcPoints(this.center, this.radius, this.start_angle, this.end_angle);
         return end;
+    }
+
+    set end_point(end_point: Point) {
+        this.end_angle = arcAngleAtPoint(this.center, end_point);
     }
 
     get command(): string {
@@ -108,6 +118,12 @@ export class Arc implements Shape {
         this.bounding_box = null;
     }
     
+    reverse() {
+        const start_angle = this.start_angle;
+        this.start_angle = this.end_angle;
+        this.end_angle = start_angle;
+    }
+
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
         const arc = mirrorArc(this.center.x, this.center.y, this.radius, this.start_angle, this.end_angle, this.direction, mirror, axisValue);
         this.center = new Point({x: arc.x, y: arc.y});

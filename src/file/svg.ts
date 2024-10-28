@@ -29,9 +29,9 @@ export class SvgFile {
         <svg id="drawing" width="${area.width+2}" height="${area.height+2}">
         `;
         // Multishape visualization
-        for (let element of drawing_elements) {
-            html += element;
-        }
+        // for (let element of drawing_elements) {
+        //     html += element;
+        // }
         // Debug visualization
         for (let element of debug_elements) {
             html += element;

@@ -1,12 +1,12 @@
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { OriginEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { Point, PointProperties } from "./point";
 
 export function degToRad(degrees) {
     return degrees * (Math.PI / 180);
 }
 
-// Function to calculate the coordinates of a point on the arc at a specific angle
+// Calculate the coordinates of a point on the arc at a specific angle
 export function pointAtAngle(cx, cy, radius, angle) {
     return {
         x: cx + radius * Math.cos(angle),
@@ -14,6 +14,7 @@ export function pointAtAngle(cx, cy, radius, angle) {
     };
 }
 
+/** Calculate a bounding box for the arc */
 export function arcBoundingBox(cx, cy, radius, startAngle, endAngle) {
     // Convert start and end angles to radians
     let start = degToRad(startAngle);
@@ -60,9 +61,7 @@ export function arcBoundingBox(cx, cy, radius, startAngle, endAngle) {
     };
 }
 
-/**
- * Calculate start and end point of arc.
- */
+/** Calculate start and end point of arc. */
 export function arcPoints(center: Point, radius: number, startAngle, endAngle) {
     // Calculate start point
     const startX = center.x + radius * Math.cos(startAngle);
@@ -79,6 +78,7 @@ export function arcPoints(center: Point, radius: number, startAngle, endAngle) {
     };
 }
 
+/** Calculate midpoint of an arc */
 export function arcMidpoint(cx, cy, r, startAngle, endAngle, useLongArc = false) {
     // Normalize the angles to be between 0 and 2*PI
     startAngle = (startAngle + 2 * Math.PI) % (2 * Math.PI);
@@ -116,7 +116,23 @@ export function arcMidpoint(cx, cy, r, startAngle, endAngle, useLongArc = false)
     return { x: mx, y: my };
 }
 
-// Convert angles based on the origin system
+/** Calculate angle of a point from center of arc */
+export function arcAngleAtPoint(center: PointProperties, point: PointProperties) {
+    // Extract the x and y coordinates from the input
+    const { x: centerX, y: centerY } = center;
+    const { x: startX, y: startY } = point;
+
+    // Calculate the angle from the center to the start point using atan2
+    // Math.atan2 returns the angle in radians between -PI and PI
+    const startAngle = Math.atan2(startY - centerY, startX - centerX);
+
+    // Optionally, if you want to normalize the angle to be in the range [0, 2 * PI]
+    const normalizedAngle = (startAngle + 2 * Math.PI) % (2 * Math.PI);
+
+    return normalizedAngle;
+}
+
+/** Convert angles based on the origin system */
 export function projectArc(origin: OriginEnum, startAngle: number, endAngle: number, radius: number) {
     let newStartAngle, newEndAngle;
 
@@ -151,7 +167,7 @@ export function projectArc(origin: OriginEnum, startAngle: number, endAngle: num
     };
 }
 
-// Utility function to normalize angles to the range [0, 2*PI]
+/** Utility function to normalize angles to the range [0, 2*PI] */
 export function normalizeAngle(angle) {
     let twoPi = 2 * Math.PI;
     return (angle % twoPi + twoPi) % twoPi;
@@ -162,7 +178,7 @@ export function normalizeAngleDegrees(angleDegrees: number): number {
 }
 
 // Calculate the clockwise or counterclockwise sweep of an arc between two angles.
-export function arcSweep(start_angle_degrees, end_angle_degrees) {
+export function arcDirection(start_angle_degrees, end_angle_degrees) {
     // Normalize the angles to range [0, 360)
     let normalizedStart = start_angle_degrees % 360;
     let normalizedEnd = end_angle_degrees % 360;
@@ -228,6 +244,7 @@ export function pointAlongArc(cx, cy, r, startAngle, endAngle, distance, clockwi
     return { x, y };
 }
 
+/** Mirror arc across an axis */
 export function mirrorArc(x, y, radius, startAngle, endAngle, direction: DirectionEnum, mirror: MirrorEnum, axisValue: number) {
     let clockwise: boolean = (direction == DirectionEnum.CW);
 
@@ -249,3 +266,4 @@ export function mirrorArc(x, y, radius, startAngle, endAngle, direction: Directi
 
     return { x, y, radius, startAngle, endAngle, direction: newDirection };
 }
+

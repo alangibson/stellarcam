@@ -6,6 +6,7 @@ import { SvgFile } from './src/file/svg';
 import { Point } from './src/geometry/point';
 import { Shape } from './src/geometry/shape';
 import { MirrorEnum } from './src/geometry/geometry.enum';
+import { reorientShapes, sortShapes } from './src/geometry/graph/grapher.function';
 
 //
 // Parse DXF file
@@ -16,9 +17,10 @@ import { MirrorEnum } from './src/geometry/geometry.enum';
 // Contains SPLINE: './test/dxf/Tractor Light Mount - Left.dxf'
 // Contains INSERT: Bogen_Ellipsen_Polylinien_Block.dxf
 // Contains POLYLINE: SchlittenBack.dxf
-// Tractor Seat Mount - Left.dxf
+// Contains ELLIPS: ./test/dxf/test.dxf
+// Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/Tractor Light Mount - Left.dxf');
+const area: Area = dxf.load('./test/dxf/1.dxf');
 const shapes: Shape[] = area.shapes;
 
 //
@@ -26,20 +28,22 @@ const shapes: Shape[] = area.shapes;
 //
 
 // Connect all points within given tolerance
+const TOLERANCE = 0.5;
 const grapher = new Grapher();
-const contours: Array<Set<number>> = grapher.graph(shapes);
-
-// Create Multishapes from connected shapes
+const graphs: Shape[][] = grapher.graph(shapes, TOLERANCE);
 const multishapes: Multishape[] = [];
-for (let contour of contours) {
+for (let graph of graphs) {
     const multishape = new Multishape();
-    for (let shape_i of contour.values()) {
-        const shape: Shape = shapes[shape_i];
-        multishape.append(shape);
+    reorientShapes(graph, TOLERANCE);
+    // Sort shapes by end_point -> start_point
+    // graph = sortShapes(graph, TOLERANCE);
+    let lastShape: Shape;
+    for (let shape of graph) {
+        multishape.add(shape);
+        lastShape = shape;
     }
     multishapes.push(multishape);
 }
-// TODO fix direction of geometries so they all go in one direction
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
 const origin: Point = area.min;

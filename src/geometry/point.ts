@@ -2,7 +2,7 @@ import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
 import { GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
 import { project } from "./geometry.function";
-import { mirrorPoint } from "./point.function";
+import { distanceBetweenPoints, mirrorPoint } from "./point.function";
 
 export interface PointProperties {
     x: number;
@@ -53,9 +53,13 @@ export class Point implements Geometry {
     }
 
     distance(that: Point): number {
-        const deltaX = that.x - this.x;
-        const deltaY = that.y - this.y;
-        return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        return distanceBetweenPoints(this.x, this.y, that.x, that.y);
+    }
+
+    isEqual(that: Point, tolerance: number = 0): boolean {
+        if (! that)
+            return false;
+        return this.distance(that) <= tolerance;
     }
 
     // Vector operations
@@ -68,4 +72,9 @@ export class Point implements Geometry {
     subtract(that: Point): Point {
         return new Point({x: this.x - that.x, y: this.y - that.y});
     };
+
+    // Override toString for easy map key usage
+    toString() {
+        return `${this.x},${this.y}`;
+    }
 }

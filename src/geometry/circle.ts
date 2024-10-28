@@ -10,14 +10,18 @@ export interface CircleProperties {
     radius: number;
 }
 
-export class Circle implements Shape {
+export class Circle extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CIRCLE;
     center: Point;
     radius: number;
     bounding_box: Boundary;
 
+    private _direction: DirectionEnum = DirectionEnum.CW;
+
     constructor({ center, radius }: CircleProperties) {
+        super();
+        
         this.center = center;
         this.radius = radius;
     }
@@ -39,9 +43,19 @@ export class Circle implements Shape {
         });
     }
 
+    set start_point(end_point: Point)  {
+        // Noop because start point is always top center (ie 0 degrees).
+        // TODO implement this because we need it to set optimal start point
+    }
+
     // End point is always top center (ie 0 degrees).
     get end_point(): Point {
         return this.start_point;
+    }
+
+    set end_point(end_point: Point)  {
+        // Noop because end point is always top center (ie 0 degrees).
+        // TODO implement this because we need it to set optimal start point
     }
 
     get angle_degrees(): number {
@@ -49,12 +63,11 @@ export class Circle implements Shape {
     }
 
     get direction(): DirectionEnum {
-        // TODO is it OK to always be CW?
-        return DirectionEnum.CW;
+        return this._direction;
     }
 
     set direction(direction: DirectionEnum) {
-        // noop
+        this._direction = direction;
     }
 
     get command(): string {
@@ -65,6 +78,10 @@ export class Circle implements Shape {
             sweep_flag = 0;
         const large_arc_flag = 0; // large=1, small=0
         return circlePath(this.center, this.radius);
+    }
+
+    reverse() {
+        // Noop
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {

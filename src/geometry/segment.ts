@@ -2,49 +2,43 @@ import { Boundary } from "./boundary";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { angleBetweenPoints } from "./point.function";
+import { segmentDirection } from "./segment.function";
 import { Shape } from "./shape";
 
 /**
  * A line anchored at two points
  */
-export class Segment implements Shape {
+export class Segment extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
+    // Defines this geometry
     start_point: Point;
     end_point: Point;
+    // Cached
     bounding_box: Boundary;
 
     constructor(start_point: Point, end_point: Point) {
+        super();
         this.start_point = start_point;
         this.end_point = end_point;
     }
 
     get boundary(): Boundary {
-        if (! this.bounding_box) {
+        if (!this.bounding_box) {
             this.bounding_box = new Boundary(this.start_point, this.end_point);
         }
         return this.bounding_box;
     }
 
     get direction(): DirectionEnum {
-        const angle: number = angleBetweenPoints(this.start_point.x, this.start_point.y, this.end_point.x, this.end_point.y);
-        if (0 < angle && angle <= 180)
-            return DirectionEnum.CW;
-        else
-            return DirectionEnum.CCW;
+        return segmentDirection(this.start_point, this.end_point);
     }
 
     set direction(direction: DirectionEnum) {
         if (direction == this.direction)
             return;
-        // console.log(`Segment direction ${this.direction} -> ${direction}`);
-        // console.log(`  before start_point: ${JSON.stringify(this.start_point)}, end_point: ${JSON.stringify(this.end_point)}`);
         // Change direction
-        this.bust();
-        const start_point = this.start_point;
-        this.start_point = this.end_point;
-        this.end_point = start_point;
-        // console.log(`  after  start_point: ${JSON.stringify(this.start_point)}, end_point: ${JSON.stringify(this.end_point)}`);
+        this.reverse();
     }
 
     get command(): string {
@@ -53,6 +47,33 @@ export class Segment implements Shape {
 
     private bust() {
         this.bounding_box = null;
+    }
+
+    // Unique identifier for each segment (handles both directions)
+    toString() {
+        return `${this.start_point.toString()}-${this.end_point.toString()}`;
+    }
+
+    // Reverse identifier to handle bidirectional check
+    reverseToString() {
+        return `${this.end_point.toString()}-${this.start_point.toString()}`;
+    }
+
+    reversed: boolean = false;
+
+    reverse() {
+        if (this.reversed) {
+            console.log('already reversed');
+            // return;
+        }
+
+
+        this.bust();
+        const start_point = this.start_point;
+        this.start_point = this.end_point;
+        this.end_point = start_point;
+
+        this.reversed = true;
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {

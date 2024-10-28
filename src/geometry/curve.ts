@@ -10,7 +10,7 @@ export interface CurveProperties {
     knots: number[]
 }
 
-export class Curve implements Shape {
+export class Curve extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CURVE;
     
@@ -20,6 +20,8 @@ export class Curve implements Shape {
     bounding_box: Boundary;
 
     constructor({ control_points, knots }: CurveProperties) {
+        super();
+        
         this.control_points = control_points;
         this.knots = knots;
     }
@@ -28,12 +30,20 @@ export class Curve implements Shape {
         return this.control_points[0];
     }
 
+    set start_point(start_point: Point) {
+        this.control_points[0] = start_point;
+    }
+
     get middle_point(): Point {
         return quadraticBezierMidpoint(this.control_points[0], this.control_points[1], this.control_points[2]);
     }
 
     get end_point(): Point {
         return this.control_points[2];
+    }
+
+    set end_point(end_point: Point) {
+        this.control_points[2] = end_point;
     }
 
     get boundary(): Boundary {
@@ -57,9 +67,7 @@ export class Curve implements Shape {
         // console.log(`Curve direction ${this.direction} -> ${direction}`);
         // Change direction
         this.bust();
-        const end_point = this.control_points[2];
-        this.control_points[2] = this.control_points[0];
-        this.control_points[0] = end_point;
+        this.reverse();
     }
 
     get curve(): CurveTypeEnum {
@@ -76,6 +84,12 @@ export class Curve implements Shape {
         this.bounding_box = null;
     }
 
+    reverse() {
+        const end_point = this.control_points[2];
+        this.control_points[2] = this.control_points[0];
+        this.control_points[0] = end_point;
+    }
+    
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
         this.control_points[0].mirror(mirror, axisValue);
         this.control_points[1].mirror(mirror, axisValue);

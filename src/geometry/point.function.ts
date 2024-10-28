@@ -37,3 +37,10 @@ export function mirrorPoint(point: Point, mirror: MirrorEnum, axisValue = 0) {
         throw new Error('Invalid direction. Use "horizontal" or "vertical".');
     }
 }
+
+export function distanceBetweenPoints(x1, y1, x2, y2) {
+    const deltaX = x2 - x1;
+    const deltaY = y2 - y1;
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+}
