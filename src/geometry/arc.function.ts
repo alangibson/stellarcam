@@ -6,6 +6,19 @@ export function degToRad(degrees) {
     return degrees * (Math.PI / 180);
 }
 
+// Normalize the angles to the range -π to π
+const normalizeSignedAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+
+/** Utility function to normalize angles to the range [0, 2*PI] */
+export function normalizeAngle(angle) {
+    let twoPi = 2 * Math.PI;
+    return (angle % twoPi + twoPi) % twoPi;
+}
+
+export function normalizeAngleDegrees(angleDegrees: number): number {
+    return (angleDegrees + 360) % 360
+}
+
 // Calculate the coordinates of a point on the arc at a specific angle
 export function pointAtAngle(cx, cy, radius, angle) {
     return {
@@ -167,16 +180,6 @@ export function projectArc(origin: OriginEnum, startAngle: number, endAngle: num
     };
 }
 
-/** Utility function to normalize angles to the range [0, 2*PI] */
-export function normalizeAngle(angle) {
-    let twoPi = 2 * Math.PI;
-    return (angle % twoPi + twoPi) % twoPi;
-}
-
-export function normalizeAngleDegrees(angleDegrees: number): number {
-    return (angleDegrees + 360) % 360
-}
-
 // Calculate the clockwise or counterclockwise sweep of an arc between two angles.
 export function arcDirection(start_angle_degrees, end_angle_degrees) {
     // Normalize the angles to range [0, 360)
@@ -202,6 +205,94 @@ export function arcDirection(start_angle_degrees, end_angle_degrees) {
         sweep_angle: isClockwise ? sweep : 360 - sweep,
         direction: isClockwise ? DirectionEnum.CW : DirectionEnum.CCW
     };
+}
+
+/**
+export function arcOrientation(startAngle, endAngle) {
+    // Angles in a clockwise direction are negative.
+    // Angles in a counterclockwise direction are positive.
+
+    // Normalize angles to [0, 2 * PI) range
+    // const normalizedStart = startAngle % (2 * Math.PI);
+    // const normalizedEnd = endAngle % (2 * Math.PI);
+    // Normalize both angles to the range [0, 2 * PI)
+
+    const TWO_PI = 2 * Math.PI;
+
+    // Normalize both angles to the range [0, 2 * PI)
+    const normalizedStart = ((startAngle % TWO_PI) + TWO_PI) % TWO_PI;
+    const normalizedEnd = ((endAngle % TWO_PI) + TWO_PI) % TWO_PI;
+
+    // Calculate clockwise and counterclockwise sweeps
+    const clockwiseSweep = (normalizedEnd - normalizedStart + TWO_PI) % TWO_PI;
+    const counterclockwiseSweep = (normalizedStart - normalizedEnd + TWO_PI) % TWO_PI;
+
+    // Determine the correct direction and sweep
+    // let sweepAngle, direction;
+    // if (clockwiseSweep <= counterclockwiseSweep) {
+    //     sweepAngle = clockwiseSweep;
+    //     direction = DirectionEnum.CW;
+    // } else {
+    //     sweepAngle = counterclockwiseSweep;
+    //     direction = DirectionEnum.CCW;
+    // }
+
+    // Adjust sweep if it's negative (ensure positive sweep in [0, 2 * PI) range)
+    // let direction: DirectionEnum;
+    // if (sweep < 0) {
+    //     sweep += 2 * Math.PI;
+        // direction = DirectionEnum.CW;
+    // } else if (sweep > 0) {
+        // direction = DirectionEnum.CCW;
+    // } else {
+        // TODO is this a valid assumption?
+        // No change, so just assume CW
+        // direction = DirectionEnum.CW;
+    // }
+
+    // Special case: if the sweep is exactly PI, prefer the direction based on angle sign
+    // if (sweepAngle === Math.PI) {
+    //     // If end angle is negative relative to start, choose counterclockwise; otherwise, clockwise
+    //     direction = endAngle > startAngle ? DirectionEnum.CCW : DirectionEnum.CW;
+    // }
+
+    // TODO test case:
+    // const startAngle = Math.PI / 4;   // 45 degrees
+    // const endAngle = (3 * Math.PI) / 2; // 270 degrees
+    // console.log(calculateArcSweep(startAngle, endAngle)); // Expected output: 4.71238898038469 radians (or 270 degrees)
+
+    // Determine the direction based on the shortest path
+    if (clockwiseSweep <= counterclockwiseSweep) {
+        return DirectionEnum.CW;  // Clockwise
+    } else {
+        return DirectionEnum.CCW; // Counterclockwise
+    }
+
+    // return direction;
+}
+*/
+
+/** Calculate signed, non-normalized sweep of an arc. */
+export function arcSweep(startAngle: number, endAngle: number): number {
+    return endAngle - startAngle;
+}
+
+function round(num, places) {
+    return parseFloat(num.toFixed(places));
+}
+
+/**
+ * In DXF, and in math generally, sweep direction is CCW by default.
+ * If the start angle is less than the end angle, the arc will naturally move 
+ * counterclockwise from the start to the end. 
+ * If the start angle is greater than the end angle, the arc still moves 
+ * counterclockwise but passes through the 0-degree point.
+ */
+export function arcOrientation(startAngle: number, endAngle: number): DirectionEnum {
+    // Hard coded to CCW because it's always CCW in DXF
+    let direction: DirectionEnum = DirectionEnum.CCW;
+    // TODO when is it CW?
+    return direction;
 }
 
 /** Return a point at a distance along an arc */

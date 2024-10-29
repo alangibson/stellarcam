@@ -10,7 +10,8 @@
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc && node dist/app.js"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",

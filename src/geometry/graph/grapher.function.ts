@@ -1,6 +1,9 @@
 import { Shape } from "../shape";
 
 export function reorientShapes(shapes: Shape[], tolerance: number = 0.01) {
+
+  // FIXME this is causing some arcs to be rendered upside down
+
   for (let i = 1; i < shapes.length; i++) {
     const prevShape: Shape = shapes[i - 1];
     const currentShape: Shape = shapes[i];

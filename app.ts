@@ -16,12 +16,11 @@ import { reorientShapes, sortShapes } from './src/geometry/graph/grapher.functio
 // Contains LWPOLYLINE with bulge: './test/dxf/AFluegel Rippen b2 0201.dxf'
 // Contains SPLINE: './test/dxf/Tractor Light Mount - Left.dxf'
 // Contains INSERT: Bogen_Ellipsen_Polylinien_Block.dxf
-// Contains POLYLINE: SchlittenBack.dxf
+// Contains POLYLINE: SchlittenBack.dxf; ADLER.dxf
 // Contains ELLIPS: ./test/dxf/test.dxf
 // Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/1.dxf');
-const shapes: Shape[] = area.shapes;
+const area: Area = dxf.load('./test/dxf/ADLER.dxf');
 
 //
 // Derive and fix DXF data
@@ -30,7 +29,7 @@ const shapes: Shape[] = area.shapes;
 // Connect all points within given tolerance
 const TOLERANCE = 0.5;
 const grapher = new Grapher();
-const graphs: Shape[][] = grapher.graph(shapes, TOLERANCE);
+const graphs: Shape[][] = grapher.graph(area.shapes, TOLERANCE);
 const multishapes: Multishape[] = [];
 for (let graph of graphs) {
     const multishape = new Multishape();

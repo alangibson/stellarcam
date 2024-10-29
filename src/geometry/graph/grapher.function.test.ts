@@ -34,7 +34,6 @@ test('graphMultishapes', () => {
     // When
     const graph: Shape[][] = graphShapes(shapes);
     // Then
-    console.log(graph);
     expect(graph.length).toBe(6);
 
     expect(graph[0].length).toBe(3);

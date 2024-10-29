@@ -1,5 +1,5 @@
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { arcBoundingBox, arcDirection, arcPoints, projectArc, arcMidpoint, mirrorArc, arcAngleAtPoint } from "./arc.function";
+import { arcBoundingBox, arcDirection, arcPoints, projectArc, arcMidpoint, mirrorArc, arcAngleAtPoint, arcOrientation } from "./arc.function";
 import { Boundary } from "./boundary";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
 import { Point } from "./point";
@@ -22,6 +22,7 @@ export class Arc extends Shape {
     end_angle: number; // in radians
 
     bounding_box: Boundary;
+    private _direction: DirectionEnum;
 
     constructor({ center, radius, start_angle, end_angle }: ArcProperties) {
         super();
@@ -30,6 +31,11 @@ export class Arc extends Shape {
         this.radius = radius;
         this.start_angle = start_angle;
         this.end_angle = end_angle;
+
+        // Set at creation time because we will render arc backwards
+        // if we reverse() then try to determine direction afterward
+        // this._direction = arcOrientation(this.start_angle, this.end_angle);
+        this._direction = DirectionEnum.CCW;
     }
 
     get boundary(): Boundary {
@@ -48,20 +54,17 @@ export class Arc extends Shape {
     }
 
     get direction(): DirectionEnum {
-        const { direction } = arcDirection(this.start_angle_degrees, this.end_angle_degrees);
-        return direction;
+        return this._direction;
     }
 
-    set direction(direction: DirectionEnum) {
-        if (direction == this.direction)
-            return;
-        // console.log(`Circle direction ${this.direction} -> ${direction}`);
-        // Change direction
-        this.bust();
-        const start_angle = this.start_angle;
-        this.start_angle = this.end_angle;
-        this.end_angle = start_angle;
-    }
+    // set direction(direction: DirectionEnum) {
+    //     if (direction == this.direction)
+    //         return;
+    //     // Change direction
+    //     this.bust();
+    //     this.reverse();
+    //     // this._direction = this._direction == DirectionEnum.CW ? DirectionEnum.CCW : DirectionEnum.CW;
+    // }
 
     get sweep_degrees(): number {
         const { sweep_angle } = arcDirection(this.start_angle_degrees, this.end_angle_degrees);
@@ -118,10 +121,13 @@ export class Arc extends Shape {
         this.bounding_box = null;
     }
     
+    // Does not change internal direction to avoid rendering arc upside down
     reverse() {
         const start_angle = this.start_angle;
         this.start_angle = this.end_angle;
         this.end_angle = start_angle;
+        // TODO determine this with arcOrientation.
+        this._direction = this._direction == DirectionEnum.CW ? DirectionEnum.CCW : DirectionEnum.CW
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
@@ -137,7 +143,8 @@ export class Arc extends Shape {
     }
 
     toJSON() {
-        return { ...this, start_point: this.start_point, end_point: this.end_point };
+        return { ...this, start_point: this.start_point, end_point: this.end_point, 
+            direction: this.direction, sweep_degrees: this.sweep_degrees };
     }
 
 }
