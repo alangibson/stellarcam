@@ -15,7 +15,9 @@ export enum GeometryTypeEnum {
     CIRCLE = 'circle',
     POINT = 'point',
     POLYSHAPE = 'polyshape',
-    CURVE = 'curve'
+    QUADRATIC_CURVE = 'quadratic_curve',
+    CUBIC_CURVE = 'cubic_curve',
+    ELLIPSE = 'ellipse'
 }
 
 export enum OriginEnum {

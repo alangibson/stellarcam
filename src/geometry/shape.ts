@@ -28,8 +28,4 @@ export abstract class Shape implements Geometry {
         );
     }
 
-    // TODO Used in debug visualization
-    // middle_point(): Point
-    // pointAlong(distance:number): Point;
-    
 }

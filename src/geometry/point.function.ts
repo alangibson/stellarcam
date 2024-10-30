@@ -1,5 +1,12 @@
 import { MirrorEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { PointProperties } from "./point";
+
+export function translatePoint(x, y, dx, dy): PointProperties {
+    return {
+        x: x + dx,
+        y: y + dy,
+    };
+}
 
 export function angleBetweenPoints(start_x, start_y, end_x, end_y) {
     // Calculate the difference in x and y
@@ -26,7 +33,7 @@ export function angleBetweenPoints(start_x, start_y, end_x, end_y) {
  * @param axisValue either x or y value, depending on value of direction
  * @returns 
  */
-export function mirrorPoint(point: Point, mirror: MirrorEnum, axisValue = 0) {
+export function mirrorPoint(point: PointProperties, mirror: MirrorEnum, axisValue = 0) {
     if (mirror === MirrorEnum.VERTICAL) {
         // Mirror over the line x = axisValue
         return { x: 2 * axisValue - point.x, y: point.y };

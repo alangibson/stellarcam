@@ -1,25 +1,25 @@
 import { Boundary } from "./boundary";
 import { CurveTypeEnum } from "./curve.enum";
-import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./curve.function";
+import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./quadratic-curve.function";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
 import { Point } from "./point";
 import { Shape } from "./shape";
 
-export interface CurveProperties {
+export interface QuadraticCurveProperties {
     control_points: Point[],
     knots: number[]
 }
 
-export class Curve extends Shape {
+export class QuadraticCurve extends Shape {
 
-    type: GeometryTypeEnum = GeometryTypeEnum.CURVE;
+    type: GeometryTypeEnum = GeometryTypeEnum.QUADRATIC_CURVE;
     
     control_points: Point[];
     knots: number[];
 
     bounding_box: Boundary;
 
-    constructor({ control_points, knots }: CurveProperties) {
+    constructor({ control_points, knots }: QuadraticCurveProperties) {
         super();
         
         this.control_points = control_points;
@@ -64,7 +64,6 @@ export class Curve extends Shape {
     set direction(direction: DirectionEnum) {
         if (direction == this.direction)
             return;
-        // console.log(`Curve direction ${this.direction} -> ${direction}`);
         // Change direction
         this.bust();
         this.reverse();

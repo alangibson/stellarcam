@@ -20,7 +20,7 @@ import { reorientShapes, sortShapes } from './src/geometry/graph/grapher.functio
 // Contains ELLIPS: ./test/dxf/test.dxf
 // Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/ADLER.dxf');
+const area: Area = dxf.load('./test/dxf/Bogen_Ellipsen_Polylinien_Block.dxf');
 
 //
 // Derive and fix DXF data

@@ -3,12 +3,13 @@ import { Arc } from "../../geometry/arc";
 import { pointAlongArc } from "../../geometry/arc.function";
 import { Circle } from "../../geometry/circle";
 import { pointAlongCircle } from "../../geometry/circle.function";
-import { Curve } from "../../geometry/curve";
+import { QuadraticCurve } from "../../geometry/quadratic-curve";
 import { DirectionEnum, GeometryTypeEnum } from "../../geometry/geometry.enum";
 import { Point } from "../../geometry/point";
 import { Segment } from "../../geometry/segment";
 import { pointAlongSegment } from "../../geometry/segment.function";
 import { Visualization } from "./visualization";
+import { CubicCurve } from "../../geometry/cubic-curve";
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -78,14 +79,25 @@ export class DebugVisualization implements Visualization {
                         multishape_elements.push(`<line x1="${circle.center.x}" y1="${circle.center.y}" x2="${circle.start_point.x}" y2="${circle.start_point.y}" class="debug middle" />`);
                         break;
                     }
-                    case (GeometryTypeEnum.CURVE): {
-                        const curve = shape as Curve;
+                    case (GeometryTypeEnum.QUADRATIC_CURVE): {
+                        const curve = shape as QuadraticCurve;
                         // Dot or each point
                         multishape_elements.push(`<circle r="0.4" cx="${curve.start_point.x}" cy="${curve.start_point.y}" class="debug start" />`)
                         multishape_elements.push(`<line x1="${curve.start_point.x}" y1="${curve.start_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug start" />`);
                         multishape_elements.push(`<circle r="0.4" cx="${curve.control_points[1].x}" cy="${curve.control_points[1].y}" class="debug" />`)
                         multishape_elements.push(`<circle r="0.4" cx="${curve.end_point.x}" cy="${curve.end_point.y}" class="debug end" />`)
                         multishape_elements.push(`<line x1="${curve.end_point.x}" y1="${curve.end_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug end" />`);
+                        break;
+                    };
+                    case (GeometryTypeEnum.CUBIC_CURVE): {
+                        const curve = shape as CubicCurve;
+                        // Dot or each point
+                        multishape_elements.push(`<circle r="0.4" cx="${curve.start_point.x}" cy="${curve.start_point.y}" class="debug start" />`)
+                        multishape_elements.push(`<circle r="0.4" cx="${curve.end_point.x}" cy="${curve.end_point.y}" class="debug end" />`)
+                        // TODO bring back
+                        // multishape_elements.push(`<line x1="${curve.start_point.x}" y1="${curve.start_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug start" />`);
+                        // multishape_elements.push(`<circle r="0.4" cx="${curve.control_points[1].x}" cy="${curve.control_points[1].y}" class="debug" />`)
+                        // multishape_elements.push(`<line x1="${curve.end_point.x}" y1="${curve.end_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug end" />`);
                         break;
                     };
                     case (GeometryTypeEnum.SEGMENT): {

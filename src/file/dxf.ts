@@ -3,15 +3,25 @@ import { parseString } from 'dxf';
 import { Arc } from "../geometry/arc";
 import { Area } from "../geometry/area";
 import { Circle } from "../geometry/circle";
-import { Curve } from "../geometry/curve";
-import { Point } from "../geometry/point";
+import { QuadraticCurve } from "../geometry/quadratic-curve";
+import { Point, PointProperties } from "../geometry/point";
 import { Segment } from "../geometry/segment";
 import { dxfBulgeToArc } from './dxf.function';
-import { PointProperties } from 'svg-path-commander';
+import { Ellipse } from './dxf/ellipse';
+import { CubicCurve } from '../geometry/cubic-curve';
 
 function dxfToArea(parsed): Area {
+
+    // Make map of blocks to use with insert elements later
+    const blocks: {} = {};
+    for (let block of parsed.blocks) {
+        blocks[block.name] = block;
+    }
+
     const area: Area = new Area();
-    for (let entity of parsed.entities) {
+    const entities = [...parsed.entities];
+    while (entities.length > 0) {
+        let entity = entities.shift();
         switch (entity.type) {
             case 'LINE': {
                 let segment = new Segment(
@@ -36,6 +46,11 @@ function dxfToArea(parsed): Area {
                     radius: entity.r
                 });
                 area.add(circle);
+                break;
+            }
+            case 'ELLIPSE': {
+                const ellipse = new Ellipse(entity);
+                ellipse.toCurves().forEach((curve: CubicCurve) => area.add(curve));
                 break;
             }
             case 'LWPOLYLINE': {
@@ -73,7 +88,33 @@ function dxfToArea(parsed): Area {
                 for (let cp of entity.controlPoints) {
                     control_points.push(new Point(cp));
                 }
-                area.add(new Curve({ control_points, knots: entity.knots }));
+                area.add(new QuadraticCurve({ control_points, knots: entity.knots }));
+                break;
+            }
+            case 'INSERT': {
+                // const block = blocks[entity.block];
+                // for (let block_entity of block.entities) {
+
+                //     // console.log(`INSERT x=${entity.x},y=${entity.y}`);
+                //     // console.log(`  BLOCK x=${block_entity.x},y=${block_entity.y}`);
+                //     // console.log(block_entity);
+
+                //     // TODO modify blocks?
+                //     //
+                //     // if ('vertices' in block_entity) {
+                //     //     // TODO if block_entity.vertices, then offset each point?
+                //     //     for (let vertex of block_entity.vertices) {
+                //     //         vertex.x += entity.x;
+                //     //         vertex.y += entity.y;
+                //     //     }
+                //     // } else {
+                //     //     block_entity.x += entity.x;
+                //     //     block_entity.y += entity.y;
+                //     // }
+
+                //     entities.push(block_entity);
+                // }
+                console.log('INSERT not supported');
                 break;
             }
             case 'VIEWPORT': {
@@ -95,20 +136,5 @@ export class DxfFile {
         const parsed = parseString(fs.readFileSync(path, 'utf-8'));
         return dxfToArea(parsed);
     }
-
-    // console.log('Dump:');
-    // console.log(parsed);
-
-    // console.log("Header:");
-    // console.log(parsed.header);
-
-    // console.log('Layers:');
-    // console.log(parsed.tables.layers);
-
-    // console.log('Viewports:');
-    // console.log(parsed.tables.vports)
-
-    // console.log('Entities:');
-
 
 }

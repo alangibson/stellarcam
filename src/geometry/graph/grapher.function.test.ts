@@ -2,7 +2,7 @@ import { Segment } from '../segment';
 import { Point } from '../point';
 import { Shape } from '../shape';
 import { graphShapes } from './grapher.function';
-import { Curve } from '../curve';
+import { QuadraticCurve } from '../quadratic-curve';
 
 test('graphMultishapes', () => {
     // Given
@@ -25,7 +25,7 @@ test('graphMultishapes', () => {
         new Segment(new Point({x: 8, y: 8}), new Point({x: 10, y: 10})),
         // polycurve. open. 
         new Segment(new Point({x: 30, y: 30}), new Point({x: 31, y: 31})),
-        new Curve({control_points:[
+        new QuadraticCurve({control_points:[
             new Point({x: 33, y: 33}),
             new Point({x: 32, y: 32}),
             new Point({x: 31, y: 31})

@@ -1,7 +1,6 @@
 import { Boundary } from "./boundary";
-import { DirectionEnum, GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
 import { Point } from "./point";
-import { angleBetweenPoints } from "./point.function";
 import { segmentDirection } from "./segment.function";
 import { Shape } from "./shape";
 
@@ -11,10 +10,10 @@ import { Shape } from "./shape";
 export class Segment extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
-    // Defines this geometry
+    
     start_point: Point;
     end_point: Point;
-    // Cached
+
     bounding_box: Boundary;
 
     constructor(start_point: Point, end_point: Point) {

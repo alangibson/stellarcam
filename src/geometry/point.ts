@@ -1,7 +1,6 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
 import { GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
-import { project } from "./geometry.function";
 import { distanceBetweenPoints, mirrorPoint } from "./point.function";
 
 export interface PointProperties {
