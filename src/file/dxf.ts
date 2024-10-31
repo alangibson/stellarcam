@@ -92,29 +92,29 @@ function dxfToArea(parsed): Area {
                 break;
             }
             case 'INSERT': {
-                // const block = blocks[entity.block];
-                // for (let block_entity of block.entities) {
+                const block = blocks[entity.block];
+                for (let block_entity of block.entities) {
 
-                //     // console.log(`INSERT x=${entity.x},y=${entity.y}`);
-                //     // console.log(`  BLOCK x=${block_entity.x},y=${block_entity.y}`);
-                //     // console.log(block_entity);
+                    // console.log(`INSERT x=${entity.x},y=${entity.y}`);
+                    // console.log(`  BLOCK x=${block_entity.x},y=${block_entity.y}`);
+                    // console.log(block_entity);
 
-                //     // TODO modify blocks?
-                //     //
-                //     // if ('vertices' in block_entity) {
-                //     //     // TODO if block_entity.vertices, then offset each point?
-                //     //     for (let vertex of block_entity.vertices) {
-                //     //         vertex.x += entity.x;
-                //     //         vertex.y += entity.y;
-                //     //     }
-                //     // } else {
-                //     //     block_entity.x += entity.x;
-                //     //     block_entity.y += entity.y;
-                //     // }
+                    // TODO modify blocks?
+                    //
+                    // if ('vertices' in block_entity) {
+                    //     // TODO if block_entity.vertices, then offset each point?
+                    //     for (let vertex of block_entity.vertices) {
+                    //         vertex.x += entity.x;
+                    //         vertex.y += entity.y;
+                    //     }
+                    // } else {
+                    //     block_entity.x += entity.x;
+                    //     block_entity.y += entity.y;
+                    // }
 
-                //     entities.push(block_entity);
-                // }
-                console.log('INSERT not supported');
+                    entities.push(block_entity);
+                }
+
                 break;
             }
             case 'VIEWPORT': {

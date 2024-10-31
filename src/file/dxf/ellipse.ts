@@ -2,8 +2,10 @@ import { CubicCurve, CubicCurveProperties } from "../../geometry/cubic-curve";
 import { ellipseToCubicCurves } from "./ellipse.function";
 
 export interface EllipseProperties {
+    // Center
     x: number,
     y: number,
+    // Focus
     majorX: number,
     majorY: number,
     axisRatio: number,
@@ -20,6 +22,7 @@ export class Ellipse implements EllipseProperties {
     axisRatio: number;
     startAngle: number;
     endAngle: number;
+    
     rotationAngle: number;
 
     constructor(props: EllipseProperties) {
