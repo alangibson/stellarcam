@@ -1,16 +1,16 @@
 import * as fs from 'fs';
 import { parseString } from 'dxf';
-import { Arc } from "../geometry/arc";
-import { Area } from "../geometry/area";
-import { Circle } from "../geometry/circle";
-import { QuadraticCurve } from "../geometry/quadratic-curve";
-import { Point, PointProperties } from "../geometry/point";
-import { Segment } from "../geometry/segment";
+import { Arc } from "../../geometry/arc";
+import { Circle } from "../../geometry/circle";
+import { QuadraticCurve } from "../../geometry/quadratic-curve";
+import { Point, PointProperties } from "../../geometry/point";
+import { Segment } from "../../geometry/segment";
 import { dxfBulgeToArc } from './dxf.function';
-import { Ellipse } from './dxf/ellipse';
-import { CubicCurve } from '../geometry/cubic-curve';
-import { Shape } from '../geometry/shape';
-import { degreesToRadians, radiansToDegrees } from '../geometry/arc.function';
+import { Ellipse } from '../../geometry/ellipse';
+import { Shape } from '../../geometry/shape';
+import { degreesToRadians } from '../../geometry/arc.function';
+import { DXFDrawing } from './dxf-drawing';
+import { DXFLayer } from './dxf-layer';
 
 function dxfEntityToShapes(entity, blocks): Shape[] {
     switch (entity.type) {
@@ -119,28 +119,33 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
     }
 }
 
-function dxfToArea(parsed): Area {
+/** Convert DXF file contents into a Drawing */
+function dxfToDrawing(dxfEntities: {}[], dxfBlocks: {}[], dxfLayers: {[key: string]: {}[]}): DXFDrawing {
+    
     // Make map of blocks to use with insert elements later
-    const blocks: {} = {};
-    for (let block of parsed.blocks) {
-        blocks[block.name] = block;
+    const dxfBlocksLookup: {} = {};
+    for (let block of dxfBlocks) {
+        dxfBlocksLookup[block['name']] = block;
     }
 
-    const area: Area = new Area();
-    const entities = [...parsed.entities];
-    while (entities.length > 0) {
-        let entity = entities.shift();
-        const shapes: Shape[] = dxfEntityToShapes(entity, blocks);
-        shapes.forEach((shape: Shape) => area.add(shape));
+    // Build up list of Shape by layer name
+    const layerNameToDxfLayerMap: {[key:string]: DXFLayer} = {};
+    for (const dxfEntity of dxfEntities) {
+        const layerName: string = dxfEntity['layer'];
+        if (! layerNameToDxfLayerMap.hasOwnProperty(layerName))
+            layerNameToDxfLayerMap[layerName] = new DXFLayer(layerName);
+        const shapes: Shape[] = dxfEntityToShapes(dxfEntity, dxfBlocksLookup);
+        layerNameToDxfLayerMap[layerName].shapes.push(...shapes);
     }
-    return area;
+
+    return new DXFDrawing(layerNameToDxfLayerMap);
 }
 
 export class DxfFile {
 
-    load(path: string): Area {
+    load(path: string): DXFDrawing {
         const parsed = parseString(fs.readFileSync(path, 'utf-8'));
-        return dxfToArea(parsed);
+        return dxfToDrawing(parsed.entities, parsed.blocks, parsed.tables.layers);;
     }
 
 }

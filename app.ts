@@ -1,12 +1,14 @@
 import { Area } from './src/geometry/area';
 import { Grapher } from './src/geometry/graph/grapher';
-import { DxfFile } from './src/file/dxf';
+import { DxfFile } from './src/file/dxf/dxf';
 import { Multishape } from './src/entity/multishape';
-import { SvgFile } from './src/file/svg';
-import { Point } from './src/geometry/point';
+import { SvgFile } from './src/output/svg/svg';
 import { Shape } from './src/geometry/shape';
 import { MirrorEnum } from './src/geometry/geometry.enum';
-import { reorientShapes, sortShapes } from './src/geometry/graph/grapher.function';
+import { reorientShapes } from './src/geometry/graph/grapher.function';
+import { Cut, Drawing, Layer } from './src/entity/drawing';
+import { DXFDrawing } from './src/file/dxf/dxf-drawing';
+import { HtmlFile } from './src/output/html/html';
 
 //
 // Parse DXF file
@@ -20,42 +22,59 @@ import { reorientShapes, sortShapes } from './src/geometry/graph/grapher.functio
 // Contains ELLIPS: ./test/dxf/test.dxf
 // Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
-const area: Area = dxf.load('./test/dxf/Bogen_Ellipsen_Polylinien_Block.dxf');
+const dxfDrawing: DXFDrawing = dxf.load('./test/dxf/Tractor Seat Mount - Left.dxf');
 
 //
 // Derive and fix DXF data
 //
 
-// Connect all points within given tolerance
+// Loop over DXF layers. One graph per layer
 const TOLERANCE = 0.5;
-const grapher = new Grapher();
-const graphs: Shape[][] = grapher.graph(area.shapes, TOLERANCE);
-const multishapes: Multishape[] = [];
-for (let graph of graphs) {
-    const multishape = new Multishape();
-    reorientShapes(graph, TOLERANCE);
-    // Sort shapes by end_point -> start_point
-    // graph = sortShapes(graph, TOLERANCE);
-    let lastShape: Shape;
-    for (let shape of graph) {
-        multishape.add(shape);
-        lastShape = shape;
+const layers: Layer[] = [];
+const area = new Area();
+for (const layerName in dxfDrawing.layers) {
+
+    const shapes: Shape[] = dxfDrawing.layers[layerName].shapes;
+
+    // Each Multishape is a Cut
+    const cuts: Cut[] = [];
+
+    // Generate Multishapes
+    // Connect all points within given tolerance
+    const grapher = new Grapher();
+    const graphs: Shape[][] = grapher.graph(shapes, TOLERANCE);
+    for (let graph of graphs) {
+        const multishape = new Multishape();
+        reorientShapes(graph, TOLERANCE);
+        // Sort shapes by end_point -> start_point
+        // graph = sortShapes(graph, TOLERANCE);
+        let lastShape: Shape;
+        for (let shape of graph) {
+            multishape.add(shape);
+            area.add(shape);
+            lastShape = shape;
+        }
+        cuts.push(new Cut(multishape));
     }
-    multishapes.push(multishape);
+
+    // TODO reorganize cuts into parts
+    // const parts: Part[] = new Parter().part(cuts);
+
+    layers.push(new Layer(layerName, cuts));
 }
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
-const origin: Point = area.min;
 // Add 5 to avoid cliping shapes on the edge of the boundary
-area.translate(-origin.x + 5, -origin.y + 5);
+area.translate(-area.min.x + 5, -area.min.y + 5);
 
 // Flip coordinate origin from bottom-left to top-right
 area.flip(MirrorEnum.HORIZONTAL);
+
+const drawing: Drawing = new Drawing(layers, area);
 
 //
 // Render DXF
 //
 
-const svg_file = new SvgFile();
-svg_file.save(area, multishapes, 'test.html');
-
+// new SvgFile().save(drawing, 'test.html');
+new HtmlFile().save(drawing, 'test.html');

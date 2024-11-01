@@ -1,5 +1,6 @@
+import { Layer } from "../../entity/drawing";
 import { Multishape } from "../../entity/multishape";
 
 export interface Visualization {
-    to_svg(multishapes: Multishape[]): string[];
+    toSVG(layer: Layer): string[];
 }

@@ -1,5 +1,5 @@
-import { Arc } from "../geometry/arc";
-import { Point } from "../geometry/point";
+import { Arc } from "../../geometry/arc";
+import { Point } from "../../geometry/point";
 
 /**
  * Converts a DXF LWPOLYLINE bulge to an arc (center, radius, start angle, end angle).
