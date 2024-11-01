@@ -1,4 +1,4 @@
-import { Drawing } from "../../entity/drawing";
+import { Drawing } from "../../domain/drawing";
 import { GeometryTypeEnum } from "../../geometry/geometry.enum";
 
 export class Gcode {

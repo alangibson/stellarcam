@@ -1,5 +1,5 @@
-import { Layer } from "../../entity/layer";
-import { Multishape } from "../../entity/multishape";
+import { Layer } from "../../../domain/layer";
+import { Multishape } from "../../../domain/multishape";
 import { Visualization } from "./visualization";
 
 export class DrawingVisualization implements Visualization {

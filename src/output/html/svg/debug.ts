@@ -1,16 +1,16 @@
-import { Multishape } from "../../entity/multishape";
-import { Arc } from "../../geometry/arc/arc";
-import { pointAlongArc } from "../../geometry/arc/arc.function";
-import { Circle } from "../../geometry/circle/circle";
-import { pointAlongCircle } from "../../geometry/circle/circle.function";
-import { QuadraticCurve } from "../../geometry/quadratic-curve/quadratic-curve";
-import { DirectionEnum, GeometryTypeEnum } from "../../geometry/geometry.enum";
-import { Point } from "../../geometry/point/point";
-import { Segment } from "../../geometry/segment/segment";
-import { pointOnSegment } from "../../geometry/segment/segment.function";
+import { Multishape } from "../../../domain/multishape";
+import { Arc } from "../../../geometry/arc/arc";
+import { pointAlongArc } from "../../../geometry/arc/arc.function";
+import { Circle } from "../../../geometry/circle/circle";
+import { pointAlongCircle } from "../../../geometry/circle/circle.function";
+import { QuadraticCurve } from "../../../geometry/quadratic-curve/quadratic-curve";
+import { DirectionEnum, GeometryTypeEnum } from "../../../geometry/geometry.enum";
+import { Point } from "../../../geometry/point/point";
+import { Segment } from "../../../geometry/segment/segment";
+import { pointOnSegment } from "../../../geometry/segment/segment.function";
 import { Visualization } from "./visualization";
-import { CubicCurve } from "../../geometry/cubic-curve/cubic-curve";
-import { Layer } from "../../entity/layer";
+import { CubicCurve } from "../../../geometry/cubic-curve/cubic-curve";
+import { Layer } from "../../../domain/layer";
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';

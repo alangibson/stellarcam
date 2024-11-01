@@ -5,12 +5,12 @@ import { Circle } from "../../geometry/circle/circle";
 import { QuadraticCurve } from "../../geometry/quadratic-curve/quadratic-curve";
 import { Point, PointProperties } from "../../geometry/point/point";
 import { Segment } from "../../geometry/segment/segment";
-import { dxfBulgeToArc } from './dxf.function';
 import { Ellipse } from '../../geometry/ellipse/ellipse';
 import { Shape } from '../../geometry/shape';
+import { dxfBulgeToArc } from '../../input/dxf/dxf.function';
 import { degreesToRadians } from '../../geometry/arc/arc.function';
-import { DXFDrawing } from './dxf-drawing';
-import { DXFLayer } from './dxf-layer';
+import { DXFDrawing } from '../../input/dxf/dxf-drawing';
+import { DXFLayer } from '../../input/dxf/dxf-layer';
 
 function dxfEntityToShapes(entity, blocks): Shape[] {
     switch (entity.type) {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as Mustache from 'mustache';
-import { Drawing } from "../../entity/drawing";
-import { SvgFile } from '../svg/svg';
+import { Drawing } from "../../domain/drawing";
+import { SvgFile } from './svg/svg';
 
 export class HtmlFile {
 

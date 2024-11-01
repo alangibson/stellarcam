@@ -1,9 +1,6 @@
 import * as fs from 'fs';
-import { Multishape } from "../../entity/multishape";
-import { Area } from "../../geometry/area";
-import { DrawingVisualization } from '../../graphic/visualization/drawing';
-import { DebugVisualization } from '../../graphic/visualization/debug';
-import { Drawing } from '../../entity/drawing';
+import { DebugVisualization } from './debug';
+import { Drawing } from '../../../domain/drawing';
 
 export class SvgFile {
 
