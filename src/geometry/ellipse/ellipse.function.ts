@@ -1,6 +1,6 @@
-import { QuadraticCurveProperties } from "../geometry/quadratic-curve";
-import { Point } from "../geometry/point";
-import { CubicCurveProperties } from "../geometry/cubic-curve";
+import { QuadraticCurveProperties } from "../quadratic-curve/quadratic-curve";
+import { Point } from "../point/point";
+import { CubicCurveProperties } from "../cubic-curve/cubic-curve";
 
 export function ellipseAngleRange(startAngle, endAngle) {
     return Math.abs(endAngle - startAngle);

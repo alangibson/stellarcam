@@ -1,6 +1,6 @@
 import { CircleProperties } from "./circle";
-import { Point, PointProperties } from "./point";
-import { rotatePoint } from "./point.function";
+import { Point, PointProperties } from "../point/point";
+import { rotatePoint } from "../point/point.function";
 
 /**
  * Calculate bounding box for a circle.

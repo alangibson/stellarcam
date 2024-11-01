@@ -1,4 +1,4 @@
-import { rectangleCentroid } from './boundary.function';
+import { rectangleCentroid } from './rectangle.function';
 
 test('rectangleCentroid', () => {
     // Given

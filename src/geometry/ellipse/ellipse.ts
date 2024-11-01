@@ -1,4 +1,4 @@
-import { CubicCurve, CubicCurveProperties } from "../geometry/cubic-curve";
+import { CubicCurve, CubicCurveProperties } from "../cubic-curve/cubic-curve";
 import { ellipseToCubicCurves } from "./ellipse.function";
 
 export interface EllipseProperties {

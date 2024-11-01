@@ -1,4 +1,4 @@
-import { PointProperties } from "./point";
+import { PointProperties } from "../point/point";
 
 export function rectangleCentroid(x1, y1, x2, y2): PointProperties {
     const xCentroid = (x1 + x2) / 2;

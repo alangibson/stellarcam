@@ -1,9 +1,9 @@
-import { Boundary } from "./boundary";
-import { CurveTypeEnum } from "./curve.enum";
+import { Rectangle } from "../rectangle/rectangle";
+import { CurveTypeEnum } from "../curve.enum";
 import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./quadratic-curve.function";
-import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { Shape } from "./shape";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { Shape } from "../shape";
 
 export interface QuadraticCurveProperties {
     control_points: Point[],
@@ -17,7 +17,7 @@ export class QuadraticCurve extends Shape {
     control_points: Point[];
     knots: number[];
 
-    bounding_box: Boundary;
+    bounding_box: Rectangle;
 
     constructor({ control_points, knots }: QuadraticCurveProperties) {
         super();
@@ -46,13 +46,13 @@ export class QuadraticCurve extends Shape {
         this.control_points[2] = end_point;
     }
 
-    get boundary(): Boundary {
+    get boundary(): Rectangle {
         if (! this.bounding_box) {
             const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
                 this.control_points[0], 
                 this.control_points[1], 
                 this.control_points[2]);
-            this.bounding_box = new Boundary(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
+            this.bounding_box = new Rectangle(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
         }
         return this.bounding_box;
     }

@@ -1,8 +1,8 @@
-import { Boundary } from "./boundary";
-import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
+import { Rectangle } from "../rectangle/rectangle";
+import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
 import { rotateSegment, segmentDirection } from "./segment.function";
-import { Shape } from "./shape";
+import { Shape } from "../shape";
 
 export interface SegmentProperties {
     start_point: PointProperties;
@@ -19,7 +19,7 @@ export class Segment extends Shape {
     start_point: Point;
     end_point: Point;
 
-    bounding_box: Boundary;
+    bounding_box: Rectangle;
 
     constructor(start_point: Point, end_point: Point) {
         super();
@@ -27,9 +27,9 @@ export class Segment extends Shape {
         this.end_point = end_point;
     }
 
-    get boundary(): Boundary {
+    get boundary(): Rectangle {
         if (!this.bounding_box) {
-            this.bounding_box = new Boundary(this.start_point, this.end_point);
+            this.bounding_box = new Rectangle(this.start_point, this.end_point);
         }
         return this.bounding_box;
     }

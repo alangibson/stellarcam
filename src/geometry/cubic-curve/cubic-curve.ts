@@ -1,8 +1,8 @@
-import { Boundary } from "./boundary";
+import { Rectangle } from "../rectangle/rectangle";
 import { cubicCurveBoundingBox, cubicCurveDirection, mirrorCubicCurve, reverseCubicCurve, rotateCubicCurve, translateCubicCurve } from "./cubic-curve.function";
-import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { Shape } from "./shape";
+import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { Shape } from "../shape";
 
 export interface CubicCurveProperties {
     start_point: PointProperties;
@@ -28,9 +28,9 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
         this.end_point = new Point(props.end_point);
     }
 
-    get boundary(): Boundary {
+    get boundary(): Rectangle {
         const cbbb = cubicCurveBoundingBox(this.start_point, this.control1, this.control2, this.end_point);
-        const boundary = new Boundary(new Point({x:cbbb.minX, y:cbbb.minY}), new Point({x:cbbb.maxX, y:cbbb.maxY}));
+        const boundary = new Rectangle(new Point({x:cbbb.minX, y:cbbb.minY}), new Point({x:cbbb.maxX, y:cbbb.maxY}));
         return boundary;
     }
 

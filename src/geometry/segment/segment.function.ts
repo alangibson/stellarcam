@@ -1,6 +1,6 @@
-import { DirectionEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { rotatePoint } from "./point.function";
+import { DirectionEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { rotatePoint } from "../point/point.function";
 import { SegmentProperties } from "./segment";
 
 /**

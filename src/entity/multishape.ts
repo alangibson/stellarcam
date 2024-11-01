@@ -1,5 +1,5 @@
 import { DirectionEnum } from "../geometry/geometry.enum";
-import { Point } from "../geometry/point";
+import { Point } from "../geometry/point/point";
 import { Shape } from "../geometry/shape";
 import { sortShapesInDirection } from "./multishape.function";
 

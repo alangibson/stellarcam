@@ -1,5 +1,5 @@
-import { DirectionEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { DirectionEnum } from "../geometry.enum";
+import { Point } from "../point/point";
 
 export function quadraticBezierBoundingBox(p0: Point, p1: Point, p2: Point) {
     // Function to evaluate the quadratic Bezier curve at a given t

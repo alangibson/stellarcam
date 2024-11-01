@@ -1,9 +1,9 @@
-import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { arcBoundingBox, arcDirection, arcPoints, projectArc, arcMidpoint, mirrorArc, arcAngleAtPoint, arcOrientation, rotateArc } from "./arc.function";
-import { Boundary } from "./boundary";
-import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { Shape } from "./shape";
+import { DirectionEnum, MirrorEnum } from "../geometry.enum";
+import { arcBoundingBox, arcDirection, arcPoints, arcMidpoint, mirrorArc, arcAngleAtPoint, rotateArc } from "./arc.function";
+import { Rectangle } from "../rectangle/rectangle";
+import { GeometryTypeEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { Shape } from "../shape";
 
 export interface ArcProperties {
     center: PointProperties;
@@ -21,7 +21,7 @@ export class Arc extends Shape {
     startAngle: number; // in radians
     endAngle: number; // in radians
 
-    bounding_box: Boundary;
+    bounding_box: Rectangle;
     private _direction: DirectionEnum;
 
     constructor({ center, radius, startAngle: start_angle, endAngle: end_angle }: ArcProperties) {
@@ -37,7 +37,7 @@ export class Arc extends Shape {
         this._direction = DirectionEnum.CCW;
     }
 
-    get boundary(): Boundary {
+    get boundary(): Rectangle {
         if (!this.bounding_box) {
             const {
                 minX,
@@ -47,7 +47,7 @@ export class Arc extends Shape {
                 width,
                 height
             } = arcBoundingBox(this.center.x, this.center.y, this.radius, this.startAngle, this.endAngle);
-            this.bounding_box = new Boundary(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
+            this.bounding_box = new Rectangle(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
         }
         return this.bounding_box;
     }

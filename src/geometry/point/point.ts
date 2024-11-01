@@ -1,6 +1,6 @@
-import { Boundary } from "./boundary";
-import { Geometry } from "./geometry";
-import { GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
+import { Rectangle } from "../rectangle/rectangle";
+import { Geometry } from "../geometry";
+import { GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
 import { distanceBetweenPoints, mirrorPoint, rotatePoint } from "./point.function";
 
 export interface PointProperties {
@@ -19,8 +19,8 @@ export class Point implements Geometry {
         this.y = y;
     }
 
-    get boundary(): Boundary {
-        return new Boundary(this, this);
+    get boundary(): Rectangle {
+        return new Rectangle(this, this);
     }
 
     // Generate a content-based hash

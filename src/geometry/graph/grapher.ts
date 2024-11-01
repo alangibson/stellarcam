@@ -1,5 +1,5 @@
 import { Geometry } from "../geometry";
-import { Point } from "../point";
+import { Point } from "../point/point";
 import { Shape } from "../shape";
 import { graphShapes } from "./grapher.function";
 

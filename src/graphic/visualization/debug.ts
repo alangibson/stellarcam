@@ -1,15 +1,15 @@
 import { Multishape } from "../../entity/multishape";
-import { Arc } from "../../geometry/arc";
-import { pointAlongArc } from "../../geometry/arc.function";
-import { Circle } from "../../geometry/circle";
-import { pointAlongCircle } from "../../geometry/circle.function";
-import { QuadraticCurve } from "../../geometry/quadratic-curve";
+import { Arc } from "../../geometry/arc/arc";
+import { pointAlongArc } from "../../geometry/arc/arc.function";
+import { Circle } from "../../geometry/circle/circle";
+import { pointAlongCircle } from "../../geometry/circle/circle.function";
+import { QuadraticCurve } from "../../geometry/quadratic-curve/quadratic-curve";
 import { DirectionEnum, GeometryTypeEnum } from "../../geometry/geometry.enum";
-import { Point } from "../../geometry/point";
-import { Segment } from "../../geometry/segment";
-import { pointOnSegment } from "../../geometry/segment.function";
+import { Point } from "../../geometry/point/point";
+import { Segment } from "../../geometry/segment/segment";
+import { pointOnSegment } from "../../geometry/segment/segment.function";
 import { Visualization } from "./visualization";
-import { CubicCurve } from "../../geometry/cubic-curve";
+import { CubicCurve } from "../../geometry/cubic-curve/cubic-curve";
 import { Layer } from "../../entity/layer";
 
 function getRandomColor() {

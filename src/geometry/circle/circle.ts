@@ -1,9 +1,9 @@
-import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { Boundary } from "./boundary";
+import { DirectionEnum, MirrorEnum } from "../geometry.enum";
+import { Rectangle } from "../rectangle/rectangle";
 import { circleBoundingBox, circlePath, rotateCircle } from "./circle.function";
-import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { Shape } from "./shape";
+import { GeometryTypeEnum, OriginEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { Shape } from "../shape";
 
 export interface CircleProperties {
     center: PointProperties;
@@ -17,7 +17,7 @@ export class Circle extends Shape {
     center: Point;
     radius: number;
 
-    bounding_box: Boundary;
+    bounding_box: Rectangle;
     private _direction: DirectionEnum = DirectionEnum.CW;
 
     constructor({ center, radius }: CircleProperties) {
@@ -26,10 +26,10 @@ export class Circle extends Shape {
         this.radius = radius;
     }
 
-    get boundary(): Boundary {
+    get boundary(): Rectangle {
         if (! this.bounding_box) {
             const { bottomLeft, topRight } = circleBoundingBox(this.center, this.radius);
-            const boundary = new Boundary(bottomLeft, topRight);
+            const boundary = new Rectangle(bottomLeft, topRight);
             this.bounding_box = boundary;
         }
         return this.bounding_box;

@@ -1,7 +1,7 @@
 import { CubicCurveProperties } from "./cubic-curve";
-import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { PointProperties } from "./point";
-import { mirrorPoint, rotatePoint, translatePoint } from "./point.function";
+import { DirectionEnum, MirrorEnum } from "../geometry.enum";
+import { PointProperties } from "../point/point";
+import { mirrorPoint, rotatePoint, translatePoint } from "../point/point.function";
 
 export function cubicCurveBoundingBox(p0: PointProperties, p1: PointProperties, p2: PointProperties, p3: PointProperties) {
     // The bezier(t) function computes the point on the 

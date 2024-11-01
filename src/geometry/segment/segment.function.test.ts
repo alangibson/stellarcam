@@ -1,4 +1,4 @@
-import { DirectionEnum } from "./geometry.enum";
+import { DirectionEnum } from "../geometry.enum";
 import { segmentDirection } from "./segment.function";
 
 test('segmentDirection vertical upwards', () => {

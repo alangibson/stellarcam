@@ -1,10 +1,7 @@
-import { rectangleCentroid } from "./boundary.function";
-import { Point, PointProperties } from "./point";
+import { rectangleCentroid } from "./rectangle.function";
+import { Point, PointProperties } from "../point/point";
 
-/**
- * A bounding box
- */
-export class Boundary {
+export class Rectangle {
     // Bottom-left/min point
     min: Point;
     // Top-right/max point
@@ -20,7 +17,7 @@ export class Boundary {
         return new Point(pointdef);
     }
 
-    join(boundary: Boundary) {
+    join(boundary: Rectangle) {
         this.min.x = Math.min(this.min.x, this.max.x, boundary.min.x, boundary.max.x);
         this.min.y = Math.min(this.min.y, this.max.y, boundary.min.y, boundary.max.y);
         this.max.x = Math.min(this.min.x, this.max.x, boundary.min.x, boundary.max.x);

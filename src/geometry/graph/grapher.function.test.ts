@@ -1,8 +1,8 @@
-import { Segment } from '../segment';
-import { Point } from '../point';
+import { Segment } from '../segment/segment';
+import { Point } from '../point/point';
 import { Shape } from '../shape';
 import { graphShapes } from './grapher.function';
-import { QuadraticCurve } from '../quadratic-curve';
+import { QuadraticCurve } from '../quadratic-curve/quadratic-curve';
 
 test('graphMultishapes', () => {
     // Given

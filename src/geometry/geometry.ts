@@ -1,12 +1,12 @@
-import { Boundary } from "./boundary";
+import { Rectangle } from "./rectangle/rectangle";
 import { GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
+import { Point, PointProperties } from "./point/point";
 
 
 export interface Geometry {
     type: GeometryTypeEnum;
     // Bounding box for this shape
-    boundary: Boundary;
+    boundary: Rectangle;
     start_point: Point;
     end_point: Point;
     command: string;

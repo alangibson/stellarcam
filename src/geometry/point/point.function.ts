@@ -1,4 +1,4 @@
-import { MirrorEnum } from "./geometry.enum";
+import { MirrorEnum } from "../geometry.enum";
 import { PointProperties } from "./point";
 
 export function translatePoint(x, y, dx, dy): PointProperties {

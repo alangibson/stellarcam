@@ -1,5 +1,5 @@
 import { MirrorEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { Point } from "./point/point";
 import { Shape } from "./shape";
 
 /**

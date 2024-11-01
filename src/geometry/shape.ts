@@ -1,13 +1,13 @@
-import { Boundary } from "./boundary";
+import { Rectangle } from "./rectangle/rectangle";
 import { Geometry } from "./geometry";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
+import { Point, PointProperties } from "./point/point";
 
 export abstract class Shape implements Geometry {
 
     // From geometry
     abstract type: GeometryTypeEnum;
-    abstract boundary: Boundary;
+    abstract boundary: Rectangle;
     abstract start_point: Point;
     abstract end_point: Point;
     abstract command: string;

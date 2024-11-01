@@ -1,8 +1,7 @@
+import { DirectionEnum, MirrorEnum, OriginEnum } from "../geometry.enum";
+import { Point, PointProperties } from "../point/point";
+import { rotatePoint } from "../point/point.function";
 import { ArcProperties } from "./arc";
-import { DirectionEnum, MirrorEnum } from "./geometry.enum";
-import { OriginEnum } from "./geometry.enum";
-import { Point, PointProperties } from "./point";
-import { rotatePoint } from "./point.function";
 
 /** Convert degrees to radians */
 export function degreesToRadians(degrees: number): number {

@@ -1,6 +1,6 @@
 import { cubicCurveDirection } from './cubic-curve.function';
-import { DirectionEnum } from './geometry.enum';
-import { PointProperties } from './point';
+import { DirectionEnum } from '../geometry.enum';
+import { PointProperties } from '../point/point';
 
 test('cubicCurveDirection CW', () => {
     // Given

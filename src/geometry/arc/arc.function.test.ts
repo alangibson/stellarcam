@@ -1,6 +1,6 @@
 import { ArcProperties } from './arc';
-import {arcOrientation, arcSweep, rotateArc} from './arc.function';
-import { DirectionEnum } from './geometry.enum';
+import {arcOrientation, arcSweep, rotateArc} from '../arc/arc.function';
+import { DirectionEnum } from '../geometry.enum';
 
 const PI = Math.PI;
 const HALFPI = PI/2;
