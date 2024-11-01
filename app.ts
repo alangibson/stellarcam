@@ -1,13 +1,15 @@
 import { Area } from './src/geometry/area';
 import { Grapher } from './src/geometry/graph/grapher';
-import { DxfFile } from './src/file/dxf/dxf';
+import { DxfFile } from './src/input/dxf/dxf';
 import { Multishape } from './src/entity/multishape';
 import { SvgFile } from './src/output/svg/svg';
 import { Shape } from './src/geometry/shape';
 import { MirrorEnum } from './src/geometry/geometry.enum';
 import { reorientShapes } from './src/geometry/graph/grapher.function';
-import { Cut, Drawing, Layer } from './src/entity/drawing';
-import { DXFDrawing } from './src/file/dxf/dxf-drawing';
+import { Drawing } from './src/entity/drawing';
+import { Cut } from "./src/entity/cut";
+import { Layer } from "./src/entity/layer";
+import { DXFDrawing } from './src/input/dxf/dxf-drawing';
 import { HtmlFile } from './src/output/html/html';
 
 //

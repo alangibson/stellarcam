@@ -10,7 +10,7 @@ import { Segment } from "../../geometry/segment";
 import { pointOnSegment } from "../../geometry/segment.function";
 import { Visualization } from "./visualization";
 import { CubicCurve } from "../../geometry/cubic-curve";
-import { Layer } from "../../entity/drawing";
+import { Layer } from "../../entity/layer";
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
