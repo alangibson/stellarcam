@@ -1,7 +1,7 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
-import { GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
-import { distanceBetweenPoints, mirrorPoint } from "./point.function";
+import { GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
+import { distanceBetweenPoints, mirrorPoint, rotatePoint } from "./point.function";
 
 export interface PointProperties {
     x: number;
@@ -49,6 +49,12 @@ export class Point implements Geometry {
     translate(dx: number, dy: number) {
         this.x += dx;
         this.y += dy;
+    }
+
+    rotate(center: PointProperties, angle: number) {
+        const pointdef: PointProperties = rotatePoint(this.x, this.y, center.x, center.y, angle);
+        this.x = pointdef.x;
+        this.y = pointdef.y;
     }
 
     distance(that: Point): number {

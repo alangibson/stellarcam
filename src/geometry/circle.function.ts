@@ -1,4 +1,6 @@
-import { Point } from "./point";
+import { CircleProperties } from "./circle";
+import { Point, PointProperties } from "./point";
+import { rotatePoint } from "./point.function";
 
 /**
  * Calculate bounding box for a circle.
@@ -40,4 +42,19 @@ export function pointAlongCircle(cx, cy, r, start_x, start_y, distance, clockwis
     var x1 = cx + r * Math.cos(theta1);
     var y1 = cy + r * Math.sin(theta1);
     return { x: x1, y: y1 };
+}
+
+/**
+ * Rotates a circle around a center by a given angle.
+ * @param {number} x - X-coordinate of the circle center.
+ * @param {number} y - Y-coordinate of the circle center.
+ * @param {number} radius - Radius of the circle.
+ * @param {number} centerX - X-coordinate of the rotation center.
+ * @param {number} centerY - Y-coordinate of the rotation center.
+ * @param {number} angle - Rotation angle in radians.
+ * @returns {Object} - Rotated circle parameters.
+ */
+export function rotateCircle(x, y, radius, centerX, centerY, angle): CircleProperties {
+    const center: PointProperties = rotatePoint(x, y, centerX, centerY, angle);
+    return { center, radius: radius };
 }

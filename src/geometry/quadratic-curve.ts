@@ -2,7 +2,7 @@ import { Boundary } from "./boundary";
 import { CurveTypeEnum } from "./curve.enum";
 import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./quadratic-curve.function";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { Point, PointProperties } from "./point";
 import { Shape } from "./shape";
 
 export interface QuadraticCurveProperties {
@@ -100,4 +100,7 @@ export class QuadraticCurve extends Shape {
             p.translate(dx, dy);
     }
 
+    rotate(center: PointProperties, angle: number) {
+        throw new Error("Method not implemented.");
+    }
 }

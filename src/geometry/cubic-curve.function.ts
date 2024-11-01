@@ -1,7 +1,7 @@
 import { CubicCurveProperties } from "./cubic-curve";
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { PointProperties } from "./point";
-import { mirrorPoint, translatePoint } from "./point.function";
+import { mirrorPoint, rotatePoint, translatePoint } from "./point.function";
 
 export function cubicCurveBoundingBox(p0: PointProperties, p1: PointProperties, p2: PointProperties, p3: PointProperties) {
     // The bezier(t) function computes the point on the 
@@ -76,7 +76,8 @@ export function pointOnCubicCurve(P0, P1, P2, P3, t) {
  * @param {Object} P3 - End point of the curve {x, y}
  * @param {number} samples - Number of samples to take along the curve
  * @returns {DirectionEnum} - Either 'CW' or 'CCW' based on the curve direction
- */export function cubicCurveDirection(P0, P1, P2, P3, samples = 100): DirectionEnum {
+ */
+export function cubicCurveDirection(P0, P1, P2, P3, samples = 100): DirectionEnum {
     let crossProductSum = 0;
 
     // Sample points along the curve and calculate cross products
@@ -149,5 +150,34 @@ export function translateCubicCurve(cubicCurve: CubicCurveProperties, dx: number
         control1: translatePoint(cubicCurve.control1.x, cubicCurve.control1.y, dx, dy), 
         control2: translatePoint(cubicCurve.control2.x, cubicCurve.control2.y, dx, dy),
         end_point: translatePoint(cubicCurve.end_point.x, cubicCurve.end_point.y, dx, dy)
+    };
+}
+
+/**
+ * Rotates a cubic curve around a center by a given angle.
+ * 
+ * @param {number} startX - X-coordinate of the starting point.
+ * @param {number} startY - Y-coordinate of the starting point.
+ * @param {number} cp1x - X-coordinate of the first control point.
+ * @param {number} cp1y - Y-coordinate of the first control point.
+ * @param {number} cp2x - X-coordinate of the second control point.
+ * @param {number} cp2y - Y-coordinate of the second control point.
+ * @param {number} endX - X-coordinate of the ending point.
+ * @param {number} endY - Y-coordinate of the ending point.
+ * @param {number} centerX - X-coordinate of the rotation center.
+ * @param {number} centerY - Y-coordinate of the rotation center.
+ * @param {number} angle - Rotation angle in radians.
+ * @returns {Object} - Rotated cubic curve parameters.
+ */
+export function rotateCubicCurve(startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY, centerX, centerY, angle): CubicCurveProperties {
+    const p0: PointProperties = rotatePoint(startX, startY, centerX, centerY, angle);
+    const cp1: PointProperties = rotatePoint(cp1x, cp1y, centerX, centerY, angle);
+    const cp2: PointProperties = rotatePoint(cp2x, cp2y, centerX, centerY, angle);
+    const p1: PointProperties = rotatePoint(endX, endY, centerX, centerY, angle);
+    return {
+        start_point: p0,
+        control1: cp1,
+        control2: cp2,
+        end_point: p1
     };
 }

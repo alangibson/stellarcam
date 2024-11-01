@@ -1,5 +1,5 @@
 import { Boundary } from "./boundary";
-import { cubicCurveBoundingBox, cubicCurveDirection, mirrorCubicCurve, reverseCubicCurve, translateCubicCurve } from "./cubic-curve.function";
+import { cubicCurveBoundingBox, cubicCurveDirection, mirrorCubicCurve, reverseCubicCurve, rotateCubicCurve, translateCubicCurve } from "./cubic-curve.function";
 import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "./geometry.enum";
 import { Point, PointProperties } from "./point";
 import { Shape } from "./shape";
@@ -64,6 +64,21 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
         this.control1 = new Point(reversed.control1);
         this.control2 = new Point(reversed.control2);
         this.end_point = new Point(reversed.end_point);
+    }
+
+    rotate(center: PointProperties, angle: number) {
+        const cubicCurveDef: CubicCurveProperties = rotateCubicCurve(
+            this.start_point.x, this.start_point.y, 
+            this.control1.x, this.control1.y, 
+            this.control2.x, this.control2.y, 
+            this.end_point.x, this.end_point.y,
+            center.x, center.y,
+            angle
+        );
+        this.start_point = new Point(cubicCurveDef.start_point);
+        this.control1 = new Point(cubicCurveDef.control1);
+        this.control2  = new Point(cubicCurveDef.control2);
+        this.end_point = new Point(cubicCurveDef.end_point);
     }
 
 }

@@ -1,28 +1,28 @@
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { Boundary } from "./boundary";
-import { circleBoundingBox, circlePath } from "./circle.function";
+import { circleBoundingBox, circlePath, rotateCircle } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { Point, PointProperties } from "./point";
 import { Shape } from "./shape";
 
 export interface CircleProperties {
-    center: Point;
+    center: PointProperties;
     radius: number;
 }
 
 export class Circle extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CIRCLE;
+
     center: Point;
     radius: number;
-    bounding_box: Boundary;
 
+    bounding_box: Boundary;
     private _direction: DirectionEnum = DirectionEnum.CW;
 
     constructor({ center, radius }: CircleProperties) {
         super();
-        
-        this.center = center;
+        this.center = new Point(center);
         this.radius = radius;
     }
 
@@ -82,6 +82,11 @@ export class Circle extends Shape {
 
     reverse() {
         // Noop
+    }
+
+    rotate(center: PointProperties, angle: number) {
+        const circledef: CircleProperties = rotateCircle(this.center.x, this.center.y, this.radius, center.x, center.y, angle);
+        this.center = new Point(circledef.center);
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {

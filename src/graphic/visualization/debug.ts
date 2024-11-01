@@ -7,7 +7,7 @@ import { QuadraticCurve } from "../../geometry/quadratic-curve";
 import { DirectionEnum, GeometryTypeEnum } from "../../geometry/geometry.enum";
 import { Point } from "../../geometry/point";
 import { Segment } from "../../geometry/segment";
-import { pointAlongSegment } from "../../geometry/segment.function";
+import { pointOnSegment } from "../../geometry/segment.function";
 import { Visualization } from "./visualization";
 import { CubicCurve } from "../../geometry/cubic-curve";
 
@@ -59,7 +59,7 @@ export class DebugVisualization implements Visualization {
                         const length: number = 2;
                         // FIXME why does direction need to be negated to be correct?
                         const direction: boolean = !(arc.direction == DirectionEnum.CW);
-                        const {x, y} = pointAlongArc(arc.center.x, arc.center.y, arc.radius, arc.start_angle, arc.end_angle, length, direction)
+                        const {x, y} = pointAlongArc(arc.center.x, arc.center.y, arc.radius, arc.startAngle, arc.endAngle, length, direction)
                         const end_point_on_arc: Point = new Point({x, y});
                         multishape_elements.push(`<line x1="${arc.start_point.x}" y1="${arc.start_point.y}" x2="${end_point_on_arc.x}" y2="${end_point_on_arc.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.start_point)})'/>`);
                         multishape_elements.push(`<circle r="0.4" cx="${arc.start_point.x}" cy="${arc.start_point.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.start_point)})'/>`)
@@ -104,7 +104,7 @@ export class DebugVisualization implements Visualization {
                         const segment = shape as Segment;
                         const length: number = 2;
                         // Start and end line on segment
-                        const {x, y} = pointAlongSegment(segment.start_point.x, segment.start_point.y, segment.end_point.x, segment.end_point.y, length);
+                        const {x, y} = pointOnSegment(segment.start_point.x, segment.start_point.y, segment.end_point.x, segment.end_point.y, length);
                         multishape_elements.push(`<line x1="${segment.start_point.x}" y1="${segment.start_point.y}" x2="${x}" y2="${y}" class="debug start" onClick='console.log(${JSON.stringify(segment.start_point)})'/>`);
                         // Dot for each point
                         multishape_elements.push(`<circle r="0.4" cx="${segment.start_point.x}" cy="${segment.start_point.y}" class="debug start" onClick='console.log(${JSON.stringify(segment.start_point)})' />`)

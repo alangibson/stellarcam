@@ -1,4 +1,5 @@
-import { Point } from "./point";
+import { rectangleCentroid } from "./boundary.function";
+import { Point, PointProperties } from "./point";
 
 /**
  * A bounding box
@@ -12,6 +13,11 @@ export class Boundary {
     constructor(start_point: Point, end_point: Point) {
         this.min = start_point;
         this.max = end_point;
+    }
+
+    get centroid(): Point {
+        const pointdef: PointProperties = rectangleCentroid(this.min.x, this.min.y, this.max.x, this.max.y);
+        return new Point(pointdef);
     }
 
     join(boundary: Boundary) {

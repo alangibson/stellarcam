@@ -1,9 +1,17 @@
+import { ArcProperties } from "./arc";
 import { DirectionEnum, MirrorEnum } from "./geometry.enum";
 import { OriginEnum } from "./geometry.enum";
 import { Point, PointProperties } from "./point";
+import { rotatePoint } from "./point.function";
 
-export function degToRad(degrees) {
+/** Convert degrees to radians */
+export function degreesToRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
+}
+
+/** Convert radians to degrees */
+export function radiansToDegrees(radians: number): number {
+    return radians * (180 / Math.PI);;
 }
 
 // Normalize the angles to the range -π to π
@@ -30,8 +38,8 @@ export function pointAtAngle(cx, cy, radius, angle) {
 /** Calculate a bounding box for the arc */
 export function arcBoundingBox(cx, cy, radius, startAngle, endAngle) {
     // Convert start and end angles to radians
-    let start = degToRad(startAngle);
-    let end = degToRad(endAngle);
+    let start = degreesToRadians(startAngle);
+    let end = degreesToRadians(endAngle);
 
     // Normalize angles so that start is always less than or equal to end
     if (end < start) {
@@ -358,3 +366,26 @@ export function mirrorArc(x, y, radius, startAngle, endAngle, direction: Directi
     return { x, y, radius, startAngle, endAngle, direction: newDirection };
 }
 
+/**
+ * Rotates an arc around a center by a given angle.
+ * @param {number} x - X-coordinate of the arc center.
+ * @param {number} y - Y-coordinate of the arc center.
+ * @param {number} radius - Radius of the arc.
+ * @param {number} startAngle - Starting angle of the arc (in radians).
+ * @param {number} endAngle - Ending angle of the arc (in radians).
+ * @param {number} centerX - X-coordinate of the rotation center.
+ * @param {number} centerY - Y-coordinate of the rotation center.
+ * @param {number} angle - Rotation angle in radians.
+ * @returns {Object} - Rotated arc parameters.
+ */
+export function rotateArc(x, y, radius, startAngle, endAngle, centerX, centerY, angle): ArcProperties {
+    const center = rotatePoint(x, y, centerX, centerY, angle);
+    const newStartAngle = startAngle + angle;
+    const newEndAngle = endAngle + angle;
+    return {
+        center,
+        radius,
+        startAngle: newStartAngle,
+        endAngle: newEndAngle
+    };
+}

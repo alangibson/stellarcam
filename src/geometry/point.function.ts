@@ -51,3 +51,23 @@ export function distanceBetweenPoints(x1, y1, x2, y2) {
     return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
 }
+
+/**
+ * Rotates a point around a center by a given angle.
+ * 
+ * @param {number} x - X-coordinate of the point.
+ * @param {number} y - Y-coordinate of the point.
+ * @param {number} centerX - X-coordinate of the rotation center.
+ * @param {number} centerY - Y-coordinate of the rotation center.
+ * @param {number} angle - Rotation angle in radians.
+ * @returns {PointProperties} - Rotated point coordinates.
+ */
+export function rotatePoint(x, y, centerX, centerY, angle): PointProperties {
+    const dx = x - centerX;
+    const dy = y - centerY;
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const xRotated = dx * cos - dy * sin + centerX;
+    const yRotated = dx * sin + dy * cos + centerY;
+    return { x: xRotated, y: yRotated };
+}

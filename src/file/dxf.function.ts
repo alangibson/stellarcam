@@ -50,7 +50,7 @@ export function dxfBulgeToArc(startPoint: Point, endPoint: Point, bulge: number)
     return new Arc({
         center: new Point({ x: centerX, y: centerY }),
         radius: radius,
-        start_angle: startAngle,
-        end_angle: endAngle
+        startAngle: startAngle,
+        endAngle: endAngle
     });
 }

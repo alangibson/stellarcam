@@ -1,6 +1,6 @@
 import { Boundary } from "./boundary";
-import { DirectionEnum, GeometryTypeEnum, MirrorEnum, OriginEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
+import { Point, PointProperties } from "./point";
 
 
 export interface Geometry {
@@ -13,5 +13,6 @@ export interface Geometry {
     
     mirror(mirror: MirrorEnum, axisValue: number);
     translate(dx:number, dy:number);
+    rotate(center: PointProperties, angle: number);
 
 }

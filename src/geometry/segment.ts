@@ -1,8 +1,13 @@
 import { Boundary } from "./boundary";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point } from "./point";
-import { segmentDirection } from "./segment.function";
+import { Point, PointProperties } from "./point";
+import { rotateSegment, segmentDirection } from "./segment.function";
 import { Shape } from "./shape";
+
+export interface SegmentProperties {
+    start_point: PointProperties;
+    end_point: PointProperties;
+}
 
 /**
  * A line anchored at two points
@@ -48,31 +53,11 @@ export class Segment extends Shape {
         this.bounding_box = null;
     }
 
-    // Unique identifier for each segment (handles both directions)
-    toString() {
-        return `${this.start_point.toString()}-${this.end_point.toString()}`;
-    }
-
-    // Reverse identifier to handle bidirectional check
-    reverseToString() {
-        return `${this.end_point.toString()}-${this.start_point.toString()}`;
-    }
-
-    reversed: boolean = false;
-
     reverse() {
-        if (this.reversed) {
-            console.log('already reversed');
-            // return;
-        }
-
-
         this.bust();
         const start_point = this.start_point;
         this.start_point = this.end_point;
         this.end_point = start_point;
-
-        this.reversed = true;
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
@@ -83,6 +68,22 @@ export class Segment extends Shape {
     translate(dx: number, dy: number) {
         this.start_point.translate(dx, dy);
         this.end_point.translate(dx, dy);
+    }
+
+    rotate(center: PointProperties, angle: number) {
+        const segmentDef: SegmentProperties = rotateSegment(this.start_point.x, this.start_point.y, this.end_point.x, this.end_point.y, center.x, center.y, angle);
+        this.start_point = new Point(segmentDef.start_point);
+        this.end_point = new Point(segmentDef.end_point);
+    }
+
+    // Unique identifier for each segment (handles both directions)
+    toString() {
+        return `${this.start_point.toString()}-${this.end_point.toString()}`;
+    }
+
+    // Reverse identifier to handle bidirectional check
+    reverseToString() {
+        return `${this.end_point.toString()}-${this.start_point.toString()}`;
     }
 
 }

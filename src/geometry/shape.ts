@@ -1,9 +1,10 @@
 import { Boundary } from "./boundary";
 import { Geometry } from "./geometry";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "./geometry.enum";
-import { Point } from "./point";
+import { Point, PointProperties } from "./point";
 
 export abstract class Shape implements Geometry {
+
     // From geometry
     abstract type: GeometryTypeEnum;
     abstract boundary: Boundary;
@@ -12,6 +13,7 @@ export abstract class Shape implements Geometry {
     abstract command: string;
     abstract mirror(mirror: MirrorEnum, axisValue: number);
     abstract translate(dx: number, dy: number);
+    abstract rotate(center: PointProperties, angle: number);
     // Defined on Shape
     abstract direction: DirectionEnum;
 
