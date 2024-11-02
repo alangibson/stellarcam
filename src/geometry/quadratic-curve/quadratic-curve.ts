@@ -1,5 +1,4 @@
 import { Rectangle } from "../rectangle/rectangle";
-import { CurveTypeEnum } from "../curve.enum";
 import { quadraticBezierBoundingBox, quadraticBezierMidpoint, quadraticBezierOrientation } from "./quadratic-curve.function";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
@@ -65,12 +64,6 @@ export class QuadraticCurve extends Shape {
         // Change direction
         this.bust();
         this.reverse();
-    }
-
-    get curve(): CurveTypeEnum {
-        if (this.control_points.length == 3) {
-            return CurveTypeEnum.QUADRATIC;
-        } // TODO others?
     }
 
     get command(): string {
