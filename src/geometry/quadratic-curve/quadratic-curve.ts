@@ -6,7 +6,7 @@ import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 
 export interface QuadraticCurveProperties {
-    control_points: Point[],
+    control_points: PointProperties[],
     knots: number[]
 }
 
@@ -15,15 +15,13 @@ export class QuadraticCurve extends Shape {
     type: GeometryTypeEnum = GeometryTypeEnum.QUADRATIC_CURVE;
     
     control_points: Point[];
-    knots: number[];
 
     bounding_box: Rectangle;
 
-    constructor({ control_points, knots }: QuadraticCurveProperties) {
+    constructor({ control_points }: QuadraticCurveProperties) {
         super();
         
-        this.control_points = control_points;
-        this.knots = knots;
+        this.control_points = control_points.map((pointDef) => new Point(pointDef));
     }
 
     get start_point(): Point {

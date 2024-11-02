@@ -25,17 +25,17 @@ export class Ellipse implements EllipseProperties {
     
     rotationAngle: number;
 
-    constructor(props: EllipseProperties) {
-        this.x = props.x;
-        this.y = props.y;
-        this.majorX = props.majorX;
-        this.majorY = props.majorY;
-        this.axisRatio = props.axisRatio;
-        this.startAngle = props.startAngle;
-        this.endAngle = props.endAngle;
+    constructor({x, y, majorX, majorY, axisRatio, startAngle, endAngle}: EllipseProperties) {
+        this.x = x;
+        this.y = y;
+        this.majorX = majorX;
+        this.majorY = majorY;
+        this.axisRatio = axisRatio;
+        this.startAngle = startAngle;
+        this.endAngle = endAngle;
         // Calculate rotationAngle
         // see: https://github.com/skymakerolof/dxf/blob/e4dbde6bcb0c3f0ce8423622cd53f3d03171281b/src/toSVG.js#L74
-        this.rotationAngle = -Math.atan2(-props.majorY, props.majorX);
+        this.rotationAngle = -Math.atan2(-majorY, majorX);
     }
 
     toCurves(): CubicCurve[] {

@@ -12,7 +12,7 @@ export interface SegmentProperties {
 /**
  * A line anchored at two points
  */
-export class Segment extends Shape {
+export class Segment extends Shape implements SegmentProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
     
@@ -21,10 +21,10 @@ export class Segment extends Shape {
 
     bounding_box: Rectangle;
 
-    constructor(start_point: Point, end_point: Point) {
+    constructor({start_point, end_point}: SegmentProperties) {
         super();
-        this.start_point = start_point;
-        this.end_point = end_point;
+        this.start_point = new Point(start_point);
+        this.end_point = new Point(end_point);
     }
 
     get boundary(): Rectangle {

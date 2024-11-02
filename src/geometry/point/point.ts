@@ -8,9 +8,10 @@ export interface PointProperties {
     y: number;
 }
 
-export class Point implements Geometry {
+export class Point implements Geometry, PointProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.POINT;
+    
     x: number;
     y: number;
 

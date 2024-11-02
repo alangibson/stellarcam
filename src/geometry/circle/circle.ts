@@ -10,7 +10,7 @@ export interface CircleProperties {
     radius: number;
 }
 
-export class Circle extends Shape {
+export class Circle extends Shape implements CircleProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CIRCLE;
 

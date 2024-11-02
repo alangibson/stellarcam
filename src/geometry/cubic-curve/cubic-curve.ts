@@ -20,12 +20,12 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
     control2: Point;
     end_point: Point;
 
-    constructor(props: CubicCurveProperties) {
+    constructor({start_point, control1, control2, end_point}: CubicCurveProperties) {
         super();
-        this.start_point = new Point(props.start_point);
-        this.control1 = new Point(props.control1);
-        this.control2 = new Point(props.control2);
-        this.end_point = new Point(props.end_point);
+        this.start_point = new Point(start_point);
+        this.control1 = new Point(control1);
+        this.control2 = new Point(control2);
+        this.end_point = new Point(end_point);
     }
 
     get boundary(): Rectangle {

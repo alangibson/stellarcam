@@ -15,14 +15,15 @@ import { DXFLayer } from '../../input/dxf/dxf-layer';
 function dxfEntityToShapes(entity, blocks): Shape[] {
     switch (entity.type) {
         case 'LINE': {
-            let segment = new Segment(
-                new Point({ x: entity.start.x, y: entity.start.y }),
-                new Point({ x: entity.end.x, y: entity.end.y }));
+            let segment = new Segment({
+                start_point: { x: entity.start.x, y: entity.start.y },
+                end_point: { x: entity.end.x, y: entity.end.y }
+            });
             return [segment];
         }
         case 'ARC': {
             let arc = new Arc({
-                center: new Point({ x: entity.x, y: entity.y }),
+                center: { x: entity.x, y: entity.y },
                 radius: entity.r,
                 startAngle: entity.startAngle,
                 endAngle: entity.endAngle
@@ -51,7 +52,7 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
                         const arc = dxfBulgeToArc(last_point, this_point, last_vertex.bulge);
                         out.push(arc);
                     } else {
-                        const segment = new Segment(last_point, this_point);
+                        const segment = new Segment({start_point: last_point, end_point: this_point});
                         out.push(segment);
                     }
                 }
@@ -67,7 +68,7 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
             for (let vertex of entity.vertices) {
                 let this_point: Point = new Point(vertex);
                 if (last_point) {
-                    const segment = new Segment(last_point, this_point);
+                    const segment = new Segment({start_point: last_point, end_point: this_point});
                     // area.add();
                     out.push(segment);
                 }

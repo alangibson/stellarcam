@@ -2,9 +2,7 @@ import { MirrorEnum } from "./geometry.enum";
 import { Point } from "./point/point";
 import { Shape } from "./shape";
 
-/**
- * A bounded plane
- */
+/** A bounded plane */
 export class Area {
 
     shapes: Shape[] = [];

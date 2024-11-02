@@ -12,7 +12,7 @@ export interface ArcProperties {
     endAngle: number;
 }
 
-export class Arc extends Shape {
+export class Arc extends Shape implements ArcProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.ARC;
 
