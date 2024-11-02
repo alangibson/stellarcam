@@ -7,9 +7,9 @@ export class Rectangle {
     // Top-right/max point
     max: Point;
 
-    constructor(start_point: Point, end_point: Point) {
-        this.min = start_point;
-        this.max = end_point;
+    constructor(startPoint: Point, endPoint: Point) {
+        this.min = startPoint;
+        this.max = endPoint;
     }
 
     get centroid(): Point {

@@ -75,10 +75,10 @@ export function arcToCubicCurve(cx, cy, rx, ry, startAngle, endAngle, rotationAn
     };
 
     return {
-        start_point: start,
+        startPoint: start,
         control1,
         control2,
-        end_point: end
+        endPoint: end
     };
 }
 

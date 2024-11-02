@@ -7,16 +7,16 @@ export function reorientShapes(shapes: Shape[], tolerance: number = 0.01) {
   for (let i = 1; i < shapes.length; i++) {
     const prevShape: Shape = shapes[i - 1];
     const currentShape: Shape = shapes[i];
-    if (prevShape.end_point.isEqual(currentShape.start_point, tolerance)) {
+    if (prevShape.endPoint.isEqual(currentShape.startPoint, tolerance)) {
       // Already correctly oriented
       continue;
-    } else if (prevShape.end_point.isEqual(currentShape.end_point, tolerance)) {
+    } else if (prevShape.endPoint.isEqual(currentShape.endPoint, tolerance)) {
       // Reverse the current segment to match the end to start
       currentShape.reverse();
-    } else if (prevShape.start_point.isEqual(currentShape.start_point, tolerance)) {
+    } else if (prevShape.startPoint.isEqual(currentShape.startPoint, tolerance)) {
       // Reverse the previous segment to match the start to end
       prevShape.reverse();
-    } else if (prevShape.start_point.isEqual(currentShape.end_point, tolerance)) {
+    } else if (prevShape.startPoint.isEqual(currentShape.endPoint, tolerance)) {
       currentShape.reverse();
       prevShape.reverse();
     }
@@ -35,7 +35,7 @@ export function sortShapes(shapes: Shape[], tolerance: number = 0.01): Shape[] {
       const remainingShape: Shape = remainingShapes[i];
       const lastResult: Shape = result[result.length - 1];
 
-      if (remainingShape.start_point.isEqual(lastResult.end_point, tolerance)) {
+      if (remainingShape.startPoint.isEqual(lastResult.endPoint, tolerance)) {
         result.push(remainingShape);
         remainingShapes.splice(i, 1); // Remove the matched shape from remaining shapes
         shapeFound = true;

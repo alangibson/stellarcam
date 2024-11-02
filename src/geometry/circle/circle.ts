@@ -36,24 +36,24 @@ export class Circle extends Shape implements CircleProperties {
     }
 
     // Start point is always top center (ie 0 degrees).
-    get start_point(): Point {
+    get startPoint(): Point {
         return new Point({
             x: this.center.x,
             y: this.center.y + this.radius
         });
     }
 
-    set start_point(end_point: Point)  {
+    set startPoint(endPoint: Point)  {
         // Noop because start point is always top center (ie 0 degrees).
         // TODO implement this because we need it to set optimal start point
     }
 
     // End point is always top center (ie 0 degrees).
-    get end_point(): Point {
-        return this.start_point;
+    get endPoint(): Point {
+        return this.startPoint;
     }
 
-    set end_point(end_point: Point)  {
+    set endPoint(endPoint: Point)  {
         // Noop because end point is always top center (ie 0 degrees).
         // TODO implement this because we need it to set optimal start point
     }

@@ -5,80 +5,80 @@ import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 
 export interface CubicCurveProperties {
-    start_point: PointProperties;
+    startPoint: PointProperties;
     control1: PointProperties
     control2: PointProperties;
-    end_point: PointProperties;
+    endPoint: PointProperties;
 }
 
 export class CubicCurve extends Shape implements CubicCurveProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.CUBIC_CURVE;
 
-    start_point: Point;
+    startPoint: Point;
     control1: Point;
     control2: Point;
-    end_point: Point;
+    endPoint: Point;
 
-    constructor({start_point, control1, control2, end_point}: CubicCurveProperties) {
+    constructor({startPoint, control1, control2, endPoint}: CubicCurveProperties) {
         super();
-        this.start_point = new Point(start_point);
+        this.startPoint = new Point(startPoint);
         this.control1 = new Point(control1);
         this.control2 = new Point(control2);
-        this.end_point = new Point(end_point);
+        this.endPoint = new Point(endPoint);
     }
 
     get boundary(): Rectangle {
-        const cbbb = cubicCurveBoundingBox(this.start_point, this.control1, this.control2, this.end_point);
+        const cbbb = cubicCurveBoundingBox(this.startPoint, this.control1, this.control2, this.endPoint);
         const boundary = new Rectangle(new Point({x:cbbb.minX, y:cbbb.minY}), new Point({x:cbbb.maxX, y:cbbb.maxY}));
         return boundary;
     }
 
     get direction(): DirectionEnum {
-        return cubicCurveDirection(this.start_point, this.control1, this.control2, this.end_point);
+        return cubicCurveDirection(this.startPoint, this.control1, this.control2, this.endPoint);
     }
 
     get command(): string {
-        return `M ${this.start_point.x},${this.start_point.y} C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.end_point.x} ${this.end_point.y}`;
+        return `M ${this.startPoint.x},${this.startPoint.y} C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.endPoint.x} ${this.endPoint.y}`;
     }
 
     mirror(mirror: MirrorEnum, axisValue: number) {
         const mirrored: CubicCurveProperties = mirrorCubicCurve(this, mirror, axisValue);
-        this.start_point = new Point(mirrored.start_point);
+        this.startPoint = new Point(mirrored.startPoint);
         this.control1 = new Point(mirrored.control1);
         this.control2 = new Point(mirrored.control2);
-        this.end_point = new Point(mirrored.end_point);
+        this.endPoint = new Point(mirrored.endPoint);
     }
 
     translate(dx: number, dy: number) {
         const translated: CubicCurveProperties = translateCubicCurve(this, dx, dy);
-        this.start_point = new Point(translated.start_point);
+        this.startPoint = new Point(translated.startPoint);
         this.control1 = new Point(translated.control1);
         this.control2 = new Point(translated.control2);
-        this.end_point = new Point(translated.end_point);
+        this.endPoint = new Point(translated.endPoint);
     }
 
     reverse() {
         const reversed: CubicCurveProperties = reverseCubicCurve(this);
-        this.start_point = new Point(reversed.start_point);
+        this.startPoint = new Point(reversed.startPoint);
         this.control1 = new Point(reversed.control1);
         this.control2 = new Point(reversed.control2);
-        this.end_point = new Point(reversed.end_point);
+        this.endPoint = new Point(reversed.endPoint);
     }
 
     rotate(center: PointProperties, angle: number) {
         const cubicCurveDef: CubicCurveProperties = rotateCubicCurve(
-            this.start_point.x, this.start_point.y, 
+            this.startPoint.x, this.startPoint.y, 
             this.control1.x, this.control1.y, 
             this.control2.x, this.control2.y, 
-            this.end_point.x, this.end_point.y,
+            this.endPoint.x, this.endPoint.y,
             center.x, center.y,
             angle
         );
-        this.start_point = new Point(cubicCurveDef.start_point);
+        this.startPoint = new Point(cubicCurveDef.startPoint);
         this.control1 = new Point(cubicCurveDef.control1);
         this.control2  = new Point(cubicCurveDef.control2);
-        this.end_point = new Point(cubicCurveDef.end_point);
+        this.endPoint = new Point(cubicCurveDef.endPoint);
     }
 
 }

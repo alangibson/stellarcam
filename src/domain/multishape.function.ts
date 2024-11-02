@@ -15,7 +15,7 @@ export function sortShapesInDirection(shapes: Shape[], direction: DirectionEnum)
     let sumX = 0;
     let sumY = 0;
     shapes.forEach((shape) => {
-        [shape.start_point, shape.end_point].forEach((point) => {
+        [shape.startPoint, shape.endPoint].forEach((point) => {
             const key = getPointKey(point);
             if (!pointMap.has(key)) {
                 pointMap.set(key, { point, key });
@@ -45,8 +45,8 @@ export function sortShapesInDirection(shapes: Shape[], direction: DirectionEnum)
     // Step 4: Map shapes between points
     const shapeMap = new Map();
     shapes.forEach((shape) => {
-        const startKey = getPointKey(shape.start_point);
-        const endKey = getPointKey(shape.end_point);
+        const startKey = getPointKey(shape.startPoint);
+        const endKey = getPointKey(shape.endPoint);
         const keyForward = `${startKey}->${endKey}`;
         const keyBackward = `${endKey}->${startKey}`;
         shapeMap.set(keyForward, { shape, reverse: false });

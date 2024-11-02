@@ -25,12 +25,12 @@ export class Multishape {
         this._direction = direction;
     }
 
-    get start_point(): Point {
-        return this.shapes[0].start_point;
+    get startPoint(): Point {
+        return this.shapes[0].startPoint;
     }
 
-    get end_point(): Point {
-        return this.shapes[this.shapes.length - 1].end_point;
+    get endPoint(): Point {
+        return this.shapes[this.shapes.length - 1].endPoint;
     }
 
     /** 
@@ -58,7 +58,7 @@ export class Multishape {
         let last_shape: Shape;
         for (let shape of this.shapes) {
             if (last_shape) {
-                if (last_shape.end_point.isEqual(shape.start_point)) {
+                if (last_shape.endPoint.isEqual(shape.startPoint)) {
                     // good result
                 } else {
                     // bad result

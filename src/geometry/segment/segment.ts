@@ -5,8 +5,8 @@ import { rotateSegment, segmentDirection } from "./segment.function";
 import { Shape } from "../shape";
 
 export interface SegmentProperties {
-    start_point: PointProperties;
-    end_point: PointProperties;
+    startPoint: PointProperties;
+    endPoint: PointProperties;
 }
 
 /**
@@ -16,26 +16,26 @@ export class Segment extends Shape implements SegmentProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
     
-    start_point: Point;
-    end_point: Point;
+    startPoint: Point;
+    endPoint: Point;
 
     bounding_box: Rectangle;
 
-    constructor({start_point, end_point}: SegmentProperties) {
+    constructor({startPoint, endPoint}: SegmentProperties) {
         super();
-        this.start_point = new Point(start_point);
-        this.end_point = new Point(end_point);
+        this.startPoint = new Point(startPoint);
+        this.endPoint = new Point(endPoint);
     }
 
     get boundary(): Rectangle {
         if (!this.bounding_box) {
-            this.bounding_box = new Rectangle(this.start_point, this.end_point);
+            this.bounding_box = new Rectangle(this.startPoint, this.endPoint);
         }
         return this.bounding_box;
     }
 
     get direction(): DirectionEnum {
-        return segmentDirection(this.start_point, this.end_point);
+        return segmentDirection(this.startPoint, this.endPoint);
     }
 
     set direction(direction: DirectionEnum) {
@@ -46,7 +46,7 @@ export class Segment extends Shape implements SegmentProperties {
     }
 
     get command(): string {
-        return `M ${this.start_point.x},${this.start_point.y} L ${this.end_point.x},${this.end_point.y}`;
+        return `M ${this.startPoint.x},${this.startPoint.y} L ${this.endPoint.x},${this.endPoint.y}`;
     }
 
     private bust() {
@@ -55,35 +55,35 @@ export class Segment extends Shape implements SegmentProperties {
 
     reverse() {
         this.bust();
-        const start_point = this.start_point;
-        this.start_point = this.end_point;
-        this.end_point = start_point;
+        const startPoint = this.startPoint;
+        this.startPoint = this.endPoint;
+        this.endPoint = startPoint;
     }
 
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
-        this.start_point.mirror(mirror, axisValue);
-        this.end_point.mirror(mirror, axisValue);
+        this.startPoint.mirror(mirror, axisValue);
+        this.endPoint.mirror(mirror, axisValue);
     }
 
     translate(dx: number, dy: number) {
-        this.start_point.translate(dx, dy);
-        this.end_point.translate(dx, dy);
+        this.startPoint.translate(dx, dy);
+        this.endPoint.translate(dx, dy);
     }
 
     rotate(center: PointProperties, angle: number) {
-        const segmentDef: SegmentProperties = rotateSegment(this.start_point.x, this.start_point.y, this.end_point.x, this.end_point.y, center.x, center.y, angle);
-        this.start_point = new Point(segmentDef.start_point);
-        this.end_point = new Point(segmentDef.end_point);
+        const segmentDef: SegmentProperties = rotateSegment(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y, center.x, center.y, angle);
+        this.startPoint = new Point(segmentDef.startPoint);
+        this.endPoint = new Point(segmentDef.endPoint);
     }
 
     // Unique identifier for each segment (handles both directions)
     toString() {
-        return `${this.start_point.toString()}-${this.end_point.toString()}`;
+        return `${this.startPoint.toString()}-${this.endPoint.toString()}`;
     }
 
     // Reverse identifier to handle bidirectional check
     reverseToString() {
-        return `${this.end_point.toString()}-${this.start_point.toString()}`;
+        return `${this.endPoint.toString()}-${this.startPoint.toString()}`;
     }
 
 }

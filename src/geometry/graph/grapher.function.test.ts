@@ -7,28 +7,28 @@ test('graphMultishapes', () => {
     // Given
     const shapes: Shape[] = [
         // polyline. closed. clockwise
-        new Segment({start_point: {x: 0, y: 0}, end_point: {x: 1, y: 1}}),
-        new Segment({start_point: {x: 1, y: 1}, end_point: {x: 2, y: 2}}),
-        new Segment({start_point: {x: 2, y: 2}, end_point: {x: 0, y: 0}}),
+        new Segment({startPoint: {x: 0, y: 0}, endPoint: {x: 1, y: 1}}),
+        new Segment({startPoint: {x: 1, y: 1}, endPoint: {x: 2, y: 2}}),
+        new Segment({startPoint: {x: 2, y: 2}, endPoint: {x: 0, y: 0}}),
         // polyline 1. closed. counterclockwise
-        new Segment({start_point: {x: 22, y: 22}, end_point: {x: 21, y: 21}}),
-        new Segment({start_point: {x: 21, y: 21}, end_point: {x: 20, y: 20}}),
-        new Segment({start_point: {x: 20, y: 20}, end_point: {x: 22, y: 22}}),
+        new Segment({startPoint: {x: 22, y: 22}, endPoint: {x: 21, y: 21}}),
+        new Segment({startPoint: {x: 21, y: 21}, endPoint: {x: 20, y: 20}}),
+        new Segment({startPoint: {x: 20, y: 20}, endPoint: {x: 22, y: 22}}),
         // single segment
-        new Segment({start_point: {x: 3, y: 3}, end_point: {x: 4, y: 4}}),
-        // polyline. open. end_point to end_point join
-        new Segment({start_point: {x: 5, y: 5}, end_point: {x: 6, y: 6}}),
-        new Segment({start_point: {x: 7, y: 7}, end_point: {x: 6, y: 6}}),
-        // polyline. open. start_point to start_point join
-        new Segment({start_point: {x: 8, y: 8}, end_point: {x: 9, y: 9}}),
-        new Segment({start_point: {x: 8, y: 8}, end_point: {x: 10, y: 10}}),
+        new Segment({startPoint: {x: 3, y: 3}, endPoint: {x: 4, y: 4}}),
+        // polyline. open. endPoint to endPoint join
+        new Segment({startPoint: {x: 5, y: 5}, endPoint: {x: 6, y: 6}}),
+        new Segment({startPoint: {x: 7, y: 7}, endPoint: {x: 6, y: 6}}),
+        // polyline. open. startPoint to startPoint join
+        new Segment({startPoint: {x: 8, y: 8}, endPoint: {x: 9, y: 9}}),
+        new Segment({startPoint: {x: 8, y: 8}, endPoint: {x: 10, y: 10}}),
         // polycurve. open. 
-        new Segment({start_point: {x: 30, y: 30}, end_point: {x: 31, y: 31}}),
-        new QuadraticCurve({control_points:[
-            {x: 33, y: 33},
-            {x: 32, y: 32},
-            {x: 31, y: 31}
-        ], knots: []})
+        new Segment({startPoint: {x: 30, y: 30}, endPoint: {x: 31, y: 31}}),
+        new QuadraticCurve({
+            startPoint: {x: 33, y: 33},
+            control1: {x: 32, y: 32},
+            endPoint: {x: 31, y: 31}
+        })
     ];
     // When
     const graph: Shape[][] = graphShapes(shapes);
@@ -36,8 +36,8 @@ test('graphMultishapes', () => {
     expect(graph.length).toBe(6);
 
     expect(graph[0].length).toBe(3);
-    expect(graph[0][0].start_point).toBe(shapes[0].start_point);
-    expect(graph[0][2].end_point).toBe(shapes[2].end_point);
+    expect(graph[0][0].startPoint).toBe(shapes[0].startPoint);
+    expect(graph[0][2].endPoint).toBe(shapes[2].endPoint);
 
     expect(graph[1].length).toBe(3);
     

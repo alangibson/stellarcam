@@ -55,7 +55,7 @@ export function rotateSegment(x1, y1, x2, y2, centerX, centerY, angle): SegmentP
   const p1: PointProperties = rotatePoint(x1, y1, centerX, centerY, angle);
   const p2: PointProperties = rotatePoint(x2, y2, centerX, centerY, angle);
   return {
-    start_point: p1,
-    end_point: p2
+    startPoint: p1,
+    endPoint: p2
   };
 }

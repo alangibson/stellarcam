@@ -60,10 +60,10 @@ export class Grapher2 {
             for (let col_i = 0; col_i < geometries.length; col_i++) {
                 // const next_vertex = new Vertex(geometries[col_i]);
 
-                // const connectedEndToStart = geometries[row_i].end_point.equals(geometries[col_i].start_point, TOLERANCE);
-                // const connectedStartToEnd = geometries[row_i].start_point.equals(geometries[col_i].end_point, TOLERANCE);
-                // const connectedEndToEnd = geometries[row_i].end_point.equals(geometries[col_i].end_point, TOLERANCE);
-                // const connectedStartToStart = geometries[row_i].start_point.equals(geometries[col_i].start_point, TOLERANCE);
+                // const connectedEndToStart = geometries[row_i].endPoint.equals(geometries[col_i].startPoint, TOLERANCE);
+                // const connectedStartToEnd = geometries[row_i].startPoint.equals(geometries[col_i].endPoint, TOLERANCE);
+                // const connectedEndToEnd = geometries[row_i].endPoint.equals(geometries[col_i].endPoint, TOLERANCE);
+                // const connectedStartToStart = geometries[row_i].startPoint.equals(geometries[col_i].startPoint, TOLERANCE);
                 
                 // if (connectedEndToStart) {
                 //     this_vertex.next = next_vertex;
@@ -91,15 +91,15 @@ export class Grapher2 {
 
                 // Previous way:
                 //
-                const endToStartDistance = geometries[row_i].end_point.distance(geometries[col_i].start_point);
+                const endToStartDistance = geometries[row_i].endPoint.distance(geometries[col_i].startPoint);
                 
                 // FIXME Both start-to-start and end-to-end results in broken links
                 // However, if only one is used then multishapes don't always get linked
-                const endToEndDistance = geometries[row_i].end_point.distance(geometries[col_i].end_point);
-                const startToStartDistance = geometries[row_i].start_point.distance(geometries[col_i].start_point);
+                const endToEndDistance = geometries[row_i].endPoint.distance(geometries[col_i].endPoint);
+                const startToStartDistance = geometries[row_i].startPoint.distance(geometries[col_i].startPoint);
 
                 // If this one is brought back, be sure to add it to 'distance' calculation below
-                // const startToEndDistance = geometries[col_i].end_point.distance(geometries[row_i].start_point);
+                // const startToEndDistance = geometries[col_i].endPoint.distance(geometries[row_i].startPoint);
                 const distance = Math.min(endToStartDistance, endToEndDistance, startToStartDistance);
                 if (row_i == col_i) {
                     // do nothing

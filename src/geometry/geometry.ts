@@ -7,8 +7,8 @@ export interface Geometry {
     type: GeometryTypeEnum;
     // Bounding box for this shape
     boundary: Rectangle;
-    start_point: Point;
-    end_point: Point;
+    startPoint: Point;
+    endPoint: Point;
     command: string;
     
     mirror(mirror: MirrorEnum, axisValue: number);

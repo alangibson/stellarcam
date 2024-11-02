@@ -111,10 +111,10 @@ export function cubicCurveDirection(P0, P1, P2, P3, samples = 100): DirectionEnu
  */
 export function mirrorCubicCurve(cubicCurve: CubicCurveProperties, mirror: MirrorEnum, axisValue: number): CubicCurveProperties {
     return {
-        start_point: mirrorPoint(cubicCurve.start_point, mirror, axisValue),
+        startPoint: mirrorPoint(cubicCurve.startPoint, mirror, axisValue),
         control1: mirrorPoint(cubicCurve.control1, mirror, axisValue),
         control2: mirrorPoint(cubicCurve.control2, mirror, axisValue),
-        end_point: mirrorPoint(cubicCurve.end_point, mirror, axisValue)
+        endPoint: mirrorPoint(cubicCurve.endPoint, mirror, axisValue)
     };
 }
 
@@ -128,10 +128,10 @@ export function mirrorCubicCurve(cubicCurve: CubicCurveProperties, mirror: Mirro
 export function reverseCubicCurve(cubicCurve: CubicCurveProperties): CubicCurveProperties {
     // Reverse the control points to reverse the curve's orientation
     return {
-        start_point: cubicCurve.end_point, // End point becomes the new start point
+        startPoint: cubicCurve.endPoint, // End point becomes the new start point
         control1: cubicCurve.control2, // Control point 2 becomes control point 1
         control2: cubicCurve.control1, // Control point 1 becomes control point 2
-        end_point: cubicCurve.start_point, // Start point becomes the new end point
+        endPoint: cubicCurve.startPoint, // Start point becomes the new end point
     };
 }
 
@@ -146,10 +146,10 @@ export function reverseCubicCurve(cubicCurve: CubicCurveProperties): CubicCurveP
  */
 export function translateCubicCurve(cubicCurve: CubicCurveProperties, dx: number, dy: number): CubicCurveProperties {
     return {
-        start_point: translatePoint(cubicCurve.start_point.x, cubicCurve.start_point.y, dx, dy),
+        startPoint: translatePoint(cubicCurve.startPoint.x, cubicCurve.startPoint.y, dx, dy),
         control1: translatePoint(cubicCurve.control1.x, cubicCurve.control1.y, dx, dy), 
         control2: translatePoint(cubicCurve.control2.x, cubicCurve.control2.y, dx, dy),
-        end_point: translatePoint(cubicCurve.end_point.x, cubicCurve.end_point.y, dx, dy)
+        endPoint: translatePoint(cubicCurve.endPoint.x, cubicCurve.endPoint.y, dx, dy)
     };
 }
 
@@ -175,9 +175,9 @@ export function rotateCubicCurve(startX, startY, cp1x, cp1y, cp2x, cp2y, endX, e
     const cp2: PointProperties = rotatePoint(cp2x, cp2y, centerX, centerY, angle);
     const p1: PointProperties = rotatePoint(endX, endY, centerX, centerY, angle);
     return {
-        start_point: p0,
+        startPoint: p0,
         control1: cp1,
         control2: cp2,
-        end_point: p1
+        endPoint: p1
     };
 }

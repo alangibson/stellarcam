@@ -11,7 +11,7 @@ export interface PointProperties {
 export class Point implements Geometry, PointProperties {
 
     type: GeometryTypeEnum = GeometryTypeEnum.POINT;
-    
+
     x: number;
     y: number;
 
@@ -29,11 +29,11 @@ export class Point implements Geometry, PointProperties {
         return `x:${this.x},y:${this.y}`;
     }
 
-    get start_point(): Point {
+    get startPoint(): Point {
         return this;
     }
 
-    get end_point(): Point {
+    get endPoint(): Point {
         return this;
     }
 

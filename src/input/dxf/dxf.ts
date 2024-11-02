@@ -16,8 +16,8 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
     switch (entity.type) {
         case 'LINE': {
             let segment = new Segment({
-                start_point: { x: entity.start.x, y: entity.start.y },
-                end_point: { x: entity.end.x, y: entity.end.y }
+                startPoint: { x: entity.start.x, y: entity.start.y },
+                endPoint: { x: entity.end.x, y: entity.end.y }
             });
             return [segment];
         }
@@ -52,7 +52,7 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
                         const arc = dxfBulgeToArc(last_point, this_point, last_vertex.bulge);
                         out.push(arc);
                     } else {
-                        const segment = new Segment({start_point: last_point, end_point: this_point});
+                        const segment = new Segment({startPoint: last_point, endPoint: this_point});
                         out.push(segment);
                     }
                 }
@@ -68,7 +68,7 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
             for (let vertex of entity.vertices) {
                 let this_point: Point = new Point(vertex);
                 if (last_point) {
-                    const segment = new Segment({start_point: last_point, end_point: this_point});
+                    const segment = new Segment({startPoint: last_point, endPoint: this_point});
                     // area.add();
                     out.push(segment);
                 }
@@ -78,11 +78,11 @@ function dxfEntityToShapes(entity, blocks): Shape[] {
             return out;
         }
         case 'SPLINE': { // Actually a Bezier curve
-            const control_points = [];
-            for (let cp of entity.controlPoints) {
-                control_points.push(new Point(cp));
-            }
-            const curve = new QuadraticCurve({ control_points, knots: entity.knots });
+            const curve = new QuadraticCurve({ 
+                startPoint: new Point(entity.controlPoints[0]),
+                control1: new Point(entity.controlPoints[1]),
+                endPoint: new Point(entity.controlPoints[2]),
+             });
             return [curve];
         }
         case 'INSERT': {

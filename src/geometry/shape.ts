@@ -8,8 +8,8 @@ export abstract class Shape implements Geometry {
     // From geometry
     abstract type: GeometryTypeEnum;
     abstract boundary: Rectangle;
-    abstract start_point: Point;
-    abstract end_point: Point;
+    abstract startPoint: Point;
+    abstract endPoint: Point;
     abstract command: string;
     abstract mirror(mirror: MirrorEnum, axisValue: number);
     abstract translate(dx: number, dy: number);
@@ -23,10 +23,10 @@ export abstract class Shape implements Geometry {
     
     isConnectedTo(shape: Shape, tolerance: number = 0.01) {
         return (
-            this.end_point.isEqual(shape.start_point, tolerance) ||
-            this.end_point.isEqual(shape.end_point, tolerance) ||
-            this.start_point.isEqual(shape.start_point, tolerance) ||
-            this.start_point.isEqual(shape.end_point, tolerance)
+            this.endPoint.isEqual(shape.startPoint, tolerance) ||
+            this.endPoint.isEqual(shape.endPoint, tolerance) ||
+            this.startPoint.isEqual(shape.startPoint, tolerance) ||
+            this.startPoint.isEqual(shape.endPoint, tolerance)
         );
     }
 

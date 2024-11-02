@@ -45,7 +45,7 @@ export class DebugVisualization implements Visualization {
     
                 // TODO move to end
                 // Multishape start point. This will also be cut start point.
-                multishape_elements.push(`<circle r="1" cx="${multishape.start_point.x}" cy="${multishape.start_point.y}" class="debug" style="stroke: yellow;" onClick='console.log(${JSON.stringify(multishape.start_point)})'/>`)
+                multishape_elements.push(`<circle r="1" cx="${multishape.startPoint.x}" cy="${multishape.startPoint.y}" class="debug" style="stroke: yellow;" onClick='console.log(${JSON.stringify(multishape.startPoint)})'/>`)
     
                 for (let shape of multishape.shapes) {
                     const shapeColor: string = getRandomColor();
@@ -65,55 +65,55 @@ export class DebugVisualization implements Visualization {
                             // FIXME why does direction need to be negated to be correct?
                             const direction: boolean = !(arc.direction == DirectionEnum.CW);
                             const {x, y} = pointAlongArc(arc.center.x, arc.center.y, arc.radius, arc.startAngle, arc.endAngle, length, direction)
-                            const end_point_on_arc: Point = new Point({x, y});
-                            multishape_elements.push(`<line x1="${arc.start_point.x}" y1="${arc.start_point.y}" x2="${end_point_on_arc.x}" y2="${end_point_on_arc.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.start_point)})'/>`);
-                            multishape_elements.push(`<circle r="0.4" cx="${arc.start_point.x}" cy="${arc.start_point.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.start_point)})'/>`)
-                            multishape_elements.push(`<circle r="0.4" cx="${arc.end_point.x}" cy="${arc.end_point.y}" class="debug end" onClick='console.log(${JSON.stringify(arc.end_point)})'/>`)
+                            const endPoint_on_arc: Point = new Point({x, y});
+                            multishape_elements.push(`<line x1="${arc.startPoint.x}" y1="${arc.startPoint.y}" x2="${endPoint_on_arc.x}" y2="${endPoint_on_arc.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.startPoint)})'/>`);
+                            multishape_elements.push(`<circle r="0.4" cx="${arc.startPoint.x}" cy="${arc.startPoint.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.startPoint)})'/>`)
+                            multishape_elements.push(`<circle r="0.4" cx="${arc.endPoint.x}" cy="${arc.endPoint.y}" class="debug end" onClick='console.log(${JSON.stringify(arc.endPoint)})'/>`)
                             break;
                         }
                         case (GeometryTypeEnum.CIRCLE): {
                             const circle = shape as Circle;
                             const length: number = 2;
                             const direction: boolean = (circle.direction == DirectionEnum.CW);
-                            const {x, y} = pointAlongCircle(circle.center.x, circle.center.y, circle.radius, circle.start_point.x, circle.start_point.y, length, direction);
-                            multishape_elements.push(`<circle r="0.4" cx="${circle.start_point.x}" cy="${circle.start_point.y}" class="debug start" />`)
-                            multishape_elements.push(`<line x1="${circle.start_point.x}" y1="${circle.start_point.y}" x2="${x}" y2="${y}" class="debug start" />`);
+                            const {x, y} = pointAlongCircle(circle.center.x, circle.center.y, circle.radius, circle.startPoint.x, circle.startPoint.y, length, direction);
+                            multishape_elements.push(`<circle r="0.4" cx="${circle.startPoint.x}" cy="${circle.startPoint.y}" class="debug start" />`)
+                            multishape_elements.push(`<line x1="${circle.startPoint.x}" y1="${circle.startPoint.y}" x2="${x}" y2="${y}" class="debug start" />`);
                             // Point for center
                             multishape_elements.push(`<circle r="0.4" cx="${circle.center.x}" cy="${circle.center.y}" class="debug middle" />`)
-                            // Line to start_point for radius
-                            multishape_elements.push(`<line x1="${circle.center.x}" y1="${circle.center.y}" x2="${circle.start_point.x}" y2="${circle.start_point.y}" class="debug middle" />`);
+                            // Line to startPoint for radius
+                            multishape_elements.push(`<line x1="${circle.center.x}" y1="${circle.center.y}" x2="${circle.startPoint.x}" y2="${circle.startPoint.y}" class="debug middle" />`);
                             break;
                         }
                         case (GeometryTypeEnum.QUADRATIC_CURVE): {
                             const curve = shape as QuadraticCurve;
                             // Dot or each point
-                            multishape_elements.push(`<circle r="0.4" cx="${curve.start_point.x}" cy="${curve.start_point.y}" class="debug start" />`)
-                            multishape_elements.push(`<line x1="${curve.start_point.x}" y1="${curve.start_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug start" />`);
-                            multishape_elements.push(`<circle r="0.4" cx="${curve.control_points[1].x}" cy="${curve.control_points[1].y}" class="debug" />`)
-                            multishape_elements.push(`<circle r="0.4" cx="${curve.end_point.x}" cy="${curve.end_point.y}" class="debug end" />`)
-                            multishape_elements.push(`<line x1="${curve.end_point.x}" y1="${curve.end_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug end" />`);
+                            multishape_elements.push(`<circle r="0.4" cx="${curve.startPoint.x}" cy="${curve.startPoint.y}" class="debug start" />`)
+                            multishape_elements.push(`<line x1="${curve.startPoint.x}" y1="${curve.startPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug start" />`);
+                            multishape_elements.push(`<circle r="0.4" cx="${curve.control1.x}" cy="${curve.control1.y}" class="debug" />`)
+                            multishape_elements.push(`<circle r="0.4" cx="${curve.endPoint.x}" cy="${curve.endPoint.y}" class="debug end" />`)
+                            multishape_elements.push(`<line x1="${curve.endPoint.x}" y1="${curve.endPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug end" />`);
                             break;
                         };
                         case (GeometryTypeEnum.CUBIC_CURVE): {
                             const curve = shape as CubicCurve;
                             // Dot or each point
-                            multishape_elements.push(`<circle r="0.4" cx="${curve.start_point.x}" cy="${curve.start_point.y}" class="debug start" />`)
-                            multishape_elements.push(`<circle r="0.4" cx="${curve.end_point.x}" cy="${curve.end_point.y}" class="debug end" />`)
+                            multishape_elements.push(`<circle r="0.4" cx="${curve.startPoint.x}" cy="${curve.startPoint.y}" class="debug start" />`)
+                            multishape_elements.push(`<circle r="0.4" cx="${curve.endPoint.x}" cy="${curve.endPoint.y}" class="debug end" />`)
                             // TODO bring back
-                            // multishape_elements.push(`<line x1="${curve.start_point.x}" y1="${curve.start_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug start" />`);
-                            // multishape_elements.push(`<circle r="0.4" cx="${curve.control_points[1].x}" cy="${curve.control_points[1].y}" class="debug" />`)
-                            // multishape_elements.push(`<line x1="${curve.end_point.x}" y1="${curve.end_point.y}" x2="${curve.control_points[1].x}" y2="${curve.control_points[1].y}" class="debug end" />`);
+                            // multishape_elements.push(`<line x1="${curve.startPoint.x}" y1="${curve.startPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug start" />`);
+                            // multishape_elements.push(`<circle r="0.4" cx="${curve.control1.x}" cy="${curve.control1.y}" class="debug" />`)
+                            // multishape_elements.push(`<line x1="${curve.endPoint.x}" y1="${curve.endPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug end" />`);
                             break;
                         };
                         case (GeometryTypeEnum.SEGMENT): {
                             const segment = shape as Segment;
                             const length: number = 2;
                             // Start and end line on segment
-                            const {x, y} = pointOnSegment(segment.start_point.x, segment.start_point.y, segment.end_point.x, segment.end_point.y, length);
-                            multishape_elements.push(`<line x1="${segment.start_point.x}" y1="${segment.start_point.y}" x2="${x}" y2="${y}" class="debug start" onClick='console.log(${JSON.stringify(segment.start_point)})'/>`);
+                            const {x, y} = pointOnSegment(segment.startPoint.x, segment.startPoint.y, segment.endPoint.x, segment.endPoint.y, length);
+                            multishape_elements.push(`<line x1="${segment.startPoint.x}" y1="${segment.startPoint.y}" x2="${x}" y2="${y}" class="debug start" onClick='console.log(${JSON.stringify(segment.startPoint)})'/>`);
                             // Dot for each point
-                            multishape_elements.push(`<circle r="0.4" cx="${segment.start_point.x}" cy="${segment.start_point.y}" class="debug start" onClick='console.log(${JSON.stringify(segment.start_point)})' />`)
-                            multishape_elements.push(`<circle r="0.4" cx="${segment.end_point.x}" cy="${segment.end_point.y}" class="debug end" onClick='console.log(${JSON.stringify(segment.end_point)})' />`)
+                            multishape_elements.push(`<circle r="0.4" cx="${segment.startPoint.x}" cy="${segment.startPoint.y}" class="debug start" onClick='console.log(${JSON.stringify(segment.startPoint)})' />`)
+                            multishape_elements.push(`<circle r="0.4" cx="${segment.endPoint.x}" cy="${segment.endPoint.y}" class="debug end" onClick='console.log(${JSON.stringify(segment.endPoint)})' />`)
                             break;
                         }
                     }

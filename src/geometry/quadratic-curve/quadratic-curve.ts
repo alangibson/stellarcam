@@ -5,57 +5,45 @@ import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 
 export interface QuadraticCurveProperties {
-    control_points: PointProperties[],
-    knots: number[]
+    startPoint: PointProperties;
+    control1: PointProperties;
+    endPoint: PointProperties;
 }
 
 export class QuadraticCurve extends Shape {
 
     type: GeometryTypeEnum = GeometryTypeEnum.QUADRATIC_CURVE;
     
-    control_points: Point[];
+    startPoint: Point;
+    control1: Point;
+    endPoint: Point;
 
     bounding_box: Rectangle;
 
-    constructor({ control_points }: QuadraticCurveProperties) {
+    constructor({ startPoint, control1, endPoint }: QuadraticCurveProperties) {
         super();
-        
-        this.control_points = control_points.map((pointDef) => new Point(pointDef));
-    }
-
-    get start_point(): Point {
-        return this.control_points[0];
-    }
-
-    set start_point(start_point: Point) {
-        this.control_points[0] = start_point;
+        this.startPoint = new Point(startPoint);
+        this.control1 = new Point(control1);
+        this.endPoint = new Point(endPoint);
     }
 
     get middle_point(): Point {
-        return quadraticBezierMidpoint(this.control_points[0], this.control_points[1], this.control_points[2]);
-    }
-
-    get end_point(): Point {
-        return this.control_points[2];
-    }
-
-    set end_point(end_point: Point) {
-        this.control_points[2] = end_point;
+        return quadraticBezierMidpoint(this.startPoint, this.control1, this.endPoint);
     }
 
     get boundary(): Rectangle {
         if (! this.bounding_box) {
             const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
-                this.control_points[0], 
-                this.control_points[1], 
-                this.control_points[2]);
+                this.startPoint, 
+                this.control1, 
+                this.endPoint);
             this.bounding_box = new Rectangle(new Point({ x: minX, y: minY }), new Point({ x: maxX, y: maxY }));
         }
         return this.bounding_box;
     }
 
     get direction(): DirectionEnum {
-        return quadraticBezierOrientation(this.control_points[0], this.control_points[1], this.control_points[2]);
+        return quadraticBezierOrientation(this.startPoint, this.control1, this.endPoint);
     }
 
     set direction(direction: DirectionEnum) {
@@ -67,7 +55,7 @@ export class QuadraticCurve extends Shape {
     }
 
     get command(): string {
-        return `M ${this.start_point.x},${this.start_point.y} Q ${this.control_points[1].x},${this.control_points[1].y} ${this.end_point.x},${this.end_point.y}`;
+        return `M ${this.startPoint.x},${this.startPoint.y} Q ${this.control1.x},${this.control1.y} ${this.endPoint.x},${this.endPoint.y}`;
     }
 
     private bust() {
@@ -75,20 +63,21 @@ export class QuadraticCurve extends Shape {
     }
 
     reverse() {
-        const end_point = this.control_points[2];
-        this.control_points[2] = this.control_points[0];
-        this.control_points[0] = end_point;
+        const endPoint = this.endPoint;
+        this.endPoint = this.startPoint;
+        this.startPoint = endPoint;
     }
     
     mirror(mirror: MirrorEnum, axisValue: number = 0) {
-        this.control_points[0].mirror(mirror, axisValue);
-        this.control_points[1].mirror(mirror, axisValue);
-        this.control_points[2].mirror(mirror, axisValue);
+        this.startPoint.mirror(mirror, axisValue);
+        this.control1.mirror(mirror, axisValue);
+        this.endPoint.mirror(mirror, axisValue);
     }
     
     translate(dx: number, dy: number) {
-        for (let p of this.control_points)
-            p.translate(dx, dy);
+        this.startPoint.translate(dx, dy);
+        this.control1.translate(dx, dy);
+        this.endPoint.translate(dx, dy);
     }
 
     rotate(center: PointProperties, angle: number) {

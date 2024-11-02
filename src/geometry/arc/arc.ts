@@ -69,13 +69,13 @@ export class Arc extends Shape implements ArcProperties {
         return this.endAngle * (180 / Math.PI);
     }
 
-    get start_point(): Point {
+    get startPoint(): Point {
         const { start } = arcPoints(this.center, this.radius, this.startAngle, this.endAngle);
         return start;
     }
 
-    set start_point(start_point: Point) {
-        this.startAngle = arcAngleAtPoint(this.center, start_point);
+    set startPoint(startPoint: Point) {
+        this.startAngle = arcAngleAtPoint(this.center, startPoint);
     }
 
     get middle_point(): Point {
@@ -83,13 +83,13 @@ export class Arc extends Shape implements ArcProperties {
         return new Point({ x, y });
     }
 
-    get end_point(): Point {
+    get endPoint(): Point {
         const { end } = arcPoints(this.center, this.radius, this.startAngle, this.endAngle);
         return end;
     }
 
-    set end_point(end_point: Point) {
-        this.endAngle = arcAngleAtPoint(this.center, end_point);
+    set endPoint(endPoint: Point) {
+        this.endAngle = arcAngleAtPoint(this.center, endPoint);
     }
 
     get command(): string {
@@ -99,7 +99,7 @@ export class Arc extends Shape implements ArcProperties {
         else
             sweep_flag = 0;
         const large_arc_flag = 0; // large=1, small=0
-        return `M ${this.start_point.x},${this.start_point.y} A ${this.radius} ${this.radius} ${this.angle_degrees} ${large_arc_flag} ${sweep_flag} ${this.end_point.x},${this.end_point.y}`
+        return `M ${this.startPoint.x},${this.startPoint.y} A ${this.radius} ${this.radius} ${this.angle_degrees} ${large_arc_flag} ${sweep_flag} ${this.endPoint.x},${this.endPoint.y}`
     }
 
     // Degrees between start angle and end angle
@@ -141,7 +141,7 @@ export class Arc extends Shape implements ArcProperties {
     }
 
     toJSON() {
-        return { ...this, start_point: this.start_point, end_point: this.end_point, 
+        return { ...this, startPoint: this.startPoint, endPoint: this.endPoint, 
             direction: this.direction, sweep_degrees: this.sweep_degrees };
     }
 
