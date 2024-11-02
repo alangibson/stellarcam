@@ -12,13 +12,15 @@
   "scripts": {
     "test": "jest",
     "build": "tsc && node dist/app.js",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "lint": "xo"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.3.12",
     "jest": "^29.7.0",
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "xo": "^0.59.3"
   }
 }

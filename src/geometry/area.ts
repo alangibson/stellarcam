@@ -19,8 +19,8 @@ export class Area {
     let min_x: number = Number.MAX_SAFE_INTEGER;
     let min_y: number = Number.MAX_SAFE_INTEGER;
     for (let geo of this.shapes) {
-      min_x = Math.min(min_x, geo.boundary.min.x);
-      min_y = Math.min(min_y, geo.boundary.min.y);
+      min_x = Math.min(min_x, geo.boundary.startPoint.x);
+      min_y = Math.min(min_y, geo.boundary.startPoint.y);
     }
     return new Point({ x: min_x, y: min_y });
   }
@@ -29,8 +29,8 @@ export class Area {
     let max_x: number = 0;
     let max_y: number = 0;
     for (let geo of this.shapes) {
-      max_x = Math.max(max_x, geo.boundary.max.x);
-      max_y = Math.max(max_y, geo.boundary.max.y);
+      max_x = Math.max(max_x, geo.boundary.endPoint.x);
+      max_y = Math.max(max_y, geo.boundary.endPoint.y);
     }
     return new Point({ x: max_x, y: max_y });
   }

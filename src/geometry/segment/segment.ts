@@ -28,7 +28,7 @@ export class Segment extends Shape implements SegmentProperties {
 
   get boundary(): Rectangle {
     if (!this.bounding_box) {
-      this.bounding_box = new Rectangle(this.startPoint, this.endPoint);
+      this.bounding_box = new Rectangle({startPoint:this.startPoint, endPoint:this.endPoint});
     }
     return this.bounding_box;
   }

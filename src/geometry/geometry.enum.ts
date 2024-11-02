@@ -17,6 +17,7 @@ export enum GeometryTypeEnum {
   QUADRATIC_CURVE = "quadratic_curve",
   CUBIC_CURVE = "cubic_curve",
   ELLIPSE = "ellipse",
+  RECTANGLE = "rectangle",
 }
 
 export enum OriginEnum {

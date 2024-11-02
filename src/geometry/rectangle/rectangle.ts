@@ -1,51 +1,90 @@
 import { rectangleCentroid } from "./rectangle.function";
 import { Point, PointProperties } from "../point/point";
+import { Shape } from "../shape";
+import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
 
-export class Rectangle {
-  // Bottom-left/min point
-  min: Point;
-  // Top-right/max point
-  max: Point;
+export interface RectangleProperties {
+  startPoint: PointProperties; // min
+  endPoint: PointProperties; // max
+}
 
-  constructor(startPoint: Point, endPoint: Point) {
-    this.min = startPoint;
-    this.max = endPoint;
+export class Rectangle extends Shape {
+
+  type: GeometryTypeEnum = GeometryTypeEnum.RECTANGLE;
+
+  startPoint: Point;
+  endPoint: Point;
+
+  constructor({startPoint, endPoint}: RectangleProperties) {
+    super();
+    this.startPoint = new Point(startPoint);
+    this.endPoint = new Point(endPoint);
   }
 
   get centroid(): Point {
     const pointdef: PointProperties = rectangleCentroid(
-      this.min.x,
-      this.min.y,
-      this.max.x,
-      this.max.y,
+      this.startPoint.x,
+      this.startPoint.y,
+      this.endPoint.x,
+      this.endPoint.y,
     );
     return new Point(pointdef);
   }
 
+  get boundary(): Rectangle {
+    return this;
+  }
+
+  get direction(): DirectionEnum {
+    // TODO is it OK to assume this?
+    return DirectionEnum.CW;
+  }
+
+  get command(): string {
+    // We don't use this shape for rendering
+    throw new Error("Method not implemented.");
+  }
+
   join(boundary: Rectangle) {
-    this.min.x = Math.min(
-      this.min.x,
-      this.max.x,
-      boundary.min.x,
-      boundary.max.x,
+    this.startPoint.x = Math.min(
+      this.startPoint.x,
+      this.endPoint.x,
+      boundary.startPoint.x,
+      boundary.endPoint.x,
     );
-    this.min.y = Math.min(
-      this.min.y,
-      this.max.y,
-      boundary.min.y,
-      boundary.max.y,
+    this.startPoint.y = Math.min(
+      this.startPoint.y,
+      this.endPoint.y,
+      boundary.startPoint.y,
+      boundary.endPoint.y,
     );
-    this.max.x = Math.min(
-      this.min.x,
-      this.max.x,
-      boundary.min.x,
-      boundary.max.x,
+    this.endPoint.x = Math.min(
+      this.startPoint.x,
+      this.endPoint.x,
+      boundary.startPoint.x,
+      boundary.endPoint.x,
     );
-    this.max.y = Math.min(
-      this.min.y,
-      this.max.y,
-      boundary.min.y,
-      boundary.max.y,
+    this.endPoint.y = Math.min(
+      this.startPoint.y,
+      this.endPoint.y,
+      boundary.startPoint.y,
+      boundary.endPoint.y,
     );
+  }
+
+  mirror(mirror: MirrorEnum, axisValue: number) {
+    throw new Error("Method not implemented.");
+  }
+
+  translate(dx: number, dy: number) {
+    throw new Error("Method not implemented.");
+  }
+
+  rotate(center: PointProperties, angle: number) {
+    throw new Error("Method not implemented.");
+  }
+
+  reverse() {
+    throw new Error("Method not implemented.");
   }
 }

@@ -58,10 +58,10 @@ export class Arc extends Shape implements ArcProperties {
         this.startAngle,
         this.endAngle,
       );
-      this.bounding_box = new Rectangle(
-        new Point({ x: minX, y: minY }),
-        new Point({ x: maxX, y: maxY }),
-      );
+      this.bounding_box = new Rectangle({
+        startPoint: new Point({ x: minX, y: minY }),
+        endPoint: new Point({ x: maxX, y: maxY })
+        });
     }
     return this.bounding_box;
   }

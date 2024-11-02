@@ -45,9 +45,10 @@ export class QuadraticCurve extends Shape {
         this.control1,
         this.endPoint,
       );
-      this.bounding_box = new Rectangle(
-        new Point({ x: minX, y: minY }),
-        new Point({ x: maxX, y: maxY }),
+      this.bounding_box = new Rectangle({
+        startPoint: { x: minX, y: minY },
+        endPoint: { x: maxX, y: maxY },
+      }
       );
     }
     return this.bounding_box;

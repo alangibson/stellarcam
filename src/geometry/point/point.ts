@@ -24,7 +24,7 @@ export class Point implements Geometry, PointProperties {
   }
 
   get boundary(): Rectangle {
-    return new Rectangle(this, this);
+    return new Rectangle({startPoint: this, endPoint: this});
   }
 
   // Generate a content-based hash

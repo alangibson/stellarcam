@@ -46,10 +46,10 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
       this.control2,
       this.endPoint,
     );
-    const boundary = new Rectangle(
-      new Point({ x: cbbb.minX, y: cbbb.minY }),
-      new Point({ x: cbbb.maxX, y: cbbb.maxY }),
-    );
+    const boundary = new Rectangle({
+      startPoint: { x: cbbb.minX, y: cbbb.minY },
+      endPoint: { x: cbbb.maxX, y: cbbb.maxY },
+    });
     return boundary;
   }
 

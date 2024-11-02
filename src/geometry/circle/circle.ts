@@ -31,7 +31,7 @@ export class Circle extends Shape implements CircleProperties {
         this.center,
         this.radius,
       );
-      const boundary = new Rectangle(bottomLeft, topRight);
+      const boundary = new Rectangle({startPoint:bottomLeft, endPoint:topRight});
       this.bounding_box = boundary;
     }
     return this.bounding_box;

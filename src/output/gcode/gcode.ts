@@ -1,6 +1,30 @@
 import { Drawing } from "../../domain/drawing";
 import { GeometryTypeEnum } from "../../geometry/geometry.enum";
 
+export interface GcodeConfig {
+  programBegin: string;
+  programEnd: string;
+
+  cutBegin: string;
+  cutEnd: string;
+
+  // G0
+  rapidTo: string;
+  // G1
+  lineTo: string;
+  // G2
+  arcCwTo: string;
+  // G3
+  arcCcwTo: string;
+  // G5
+  cubicCurveTo: string;
+  // G5.1
+  quadraticCurveTo: string;
+
+  // TODO hole
+  // TODO dimple
+}
+
 export class Gcode {
   gcode(drawing: Drawing): string[] {
     const lines: string[] = [];
@@ -18,7 +42,7 @@ export class Gcode {
               }
               case GeometryTypeEnum.CIRCLE: {
                 // TODO G2 or G3
-                // TODO or hole?
+                // TODO or hole? If hole, reduce feedrate
               }
               case GeometryTypeEnum.CUBIC_CURVE: {
                 // TODO G5
