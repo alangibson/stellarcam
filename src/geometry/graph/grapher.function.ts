@@ -1,7 +1,6 @@
 import { Shape } from "../shape";
 
 export function reorientShapes(shapes: Shape[], tolerance: number = 0.01) {
-
   // FIXME this is causing some arcs to be rendered upside down
 
   for (let i = 1; i < shapes.length; i++) {
@@ -13,7 +12,9 @@ export function reorientShapes(shapes: Shape[], tolerance: number = 0.01) {
     } else if (prevShape.endPoint.isEqual(currentShape.endPoint, tolerance)) {
       // Reverse the current segment to match the end to start
       currentShape.reverse();
-    } else if (prevShape.startPoint.isEqual(currentShape.startPoint, tolerance)) {
+    } else if (
+      prevShape.startPoint.isEqual(currentShape.startPoint, tolerance)
+    ) {
       // Reverse the previous segment to match the start to end
       prevShape.reverse();
     } else if (prevShape.startPoint.isEqual(currentShape.endPoint, tolerance)) {
@@ -52,7 +53,10 @@ export function sortShapes(shapes: Shape[], tolerance: number = 0.01): Shape[] {
   return result;
 }
 
-export function graphShapes(shapes: Shape[], tolerance: number = 0.01): Shape[][] {
+export function graphShapes(
+  shapes: Shape[],
+  tolerance: number = 0.01,
+): Shape[][] {
   const multishapes: Shape[][] = [];
   const visited = new Array(shapes.length).fill(false);
 

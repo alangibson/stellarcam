@@ -1,12 +1,10 @@
 import { Multishape } from "./multishape";
 
 export class Cut {
+  children: Multishape[];
 
-    children: Multishape[];
-
-    constructor(multishape: Multishape) {
-        this.children = [];
-        this.children.push(multishape);
-    }
-
+  constructor(multishape: Multishape) {
+    this.children = [];
+    this.children.push(multishape);
+  }
 }

@@ -1,32 +1,32 @@
-import { cubicCurveDirection } from './cubic-curve.function';
-import { DirectionEnum } from '../geometry.enum';
-import { PointProperties } from '../point/point';
+import { cubicCurveDirection } from "./cubic-curve.function";
+import { DirectionEnum } from "../geometry.enum";
+import { PointProperties } from "../point/point";
 
-test('cubicCurveDirection CW', () => {
-    // Given
-    // Clockwise example: a curve that goes in a clockwise direction
-    const P0: PointProperties = { x: 0, y: 0 };
-    const P1: PointProperties = { x: 1, y: -2 };
-    const P2: PointProperties = { x: 2, y: -1 };
-    const P3: PointProperties = { x: 3, y: 3 };
-    const samples = 100;
-    // When
-    const direction: DirectionEnum = cubicCurveDirection(P0, P1, P2, P3, samples);
-    // Then
-    expect(direction).toBe(DirectionEnum.CCW);
+test("cubicCurveDirection CW", () => {
+  // Given
+  // Clockwise example: a curve that goes in a clockwise direction
+  const P0: PointProperties = { x: 0, y: 0 };
+  const P1: PointProperties = { x: 1, y: -2 };
+  const P2: PointProperties = { x: 2, y: -1 };
+  const P3: PointProperties = { x: 3, y: 3 };
+  const samples = 100;
+  // When
+  const direction: DirectionEnum = cubicCurveDirection(P0, P1, P2, P3, samples);
+  // Then
+  expect(direction).toBe(DirectionEnum.CCW);
 });
 
-test('cubicCurveDirection CCW', () => {
-    // Given
-    const P0 = { x: 0, y: 0 };
-    const P1 = { x: 1, y: 2 };
-    const P2 = { x: 2, y: -1 };
-    const P3 = { x: 3, y: 0 };
-    const samples = 100;
-    // When
-    const direction: DirectionEnum = cubicCurveDirection(P0, P1, P2, P3, samples);
-    // Then
-    expect(direction).toBe(DirectionEnum.CW);
+test("cubicCurveDirection CCW", () => {
+  // Given
+  const P0 = { x: 0, y: 0 };
+  const P1 = { x: 1, y: 2 };
+  const P2 = { x: 2, y: -1 };
+  const P3 = { x: 3, y: 0 };
+  const samples = 100;
+  // When
+  const direction: DirectionEnum = cubicCurveDirection(P0, P1, P2, P3, samples);
+  // Then
+  expect(direction).toBe(DirectionEnum.CW);
 });
 
 // test('mirrorCubicCurve', () => {

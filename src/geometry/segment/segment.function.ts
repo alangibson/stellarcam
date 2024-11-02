@@ -28,7 +28,10 @@ export function pointOnSegment(x0, y0, x1, y1, distance) {
   return { x: x, y: y };
 }
 
-export function segmentDirection(start: PointProperties, end: PointProperties): DirectionEnum {
+export function segmentDirection(
+  start: PointProperties,
+  end: PointProperties,
+): DirectionEnum {
   const deltaX = end.x - start.x;
   const deltaY = end.y - start.y;
   const angle = Math.atan2(deltaY, deltaX); // Angle in radians between -π and π
@@ -51,11 +54,19 @@ export function segmentDirection(start: PointProperties, end: PointProperties): 
  * @param {number} angle - Rotation angle in radians.
  * @returns {Object} - Rotated line segment endpoints.
  */
-export function rotateSegment(x1, y1, x2, y2, centerX, centerY, angle): SegmentProperties {
+export function rotateSegment(
+  x1,
+  y1,
+  x2,
+  y2,
+  centerX,
+  centerY,
+  angle,
+): SegmentProperties {
   const p1: PointProperties = rotatePoint(x1, y1, centerX, centerY, angle);
   const p2: PointProperties = rotatePoint(x2, y2, centerX, centerY, angle);
   return {
     startPoint: p1,
-    endPoint: p2
+    endPoint: p2,
   };
 }
