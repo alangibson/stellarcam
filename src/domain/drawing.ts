@@ -10,4 +10,5 @@ export class Drawing {
     this.children = children;
     this.area = area;
   }
+
 }

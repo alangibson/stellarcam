@@ -1,8 +1,8 @@
+import * as fs from "fs";
 import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/geometry/graph/grapher";
 import { DxfFile } from "./src/input/dxf/dxf";
 import { Multishape } from "./src/domain/multishape";
-import { SvgFile } from "./src/output/html/svg/svg";
 import { Shape } from "./src/geometry/shape";
 import { MirrorEnum } from "./src/geometry/geometry.enum";
 import { reorientShapes } from "./src/geometry/graph/grapher.function";
@@ -11,6 +11,7 @@ import { Cut } from "./src/domain/cut";
 import { Layer } from "./src/domain/layer";
 import { DXFDrawing } from "./src/input/dxf/dxf-drawing";
 import { HtmlFile } from "./src/output/html/html";
+import { Output } from "./src/output/output";
 
 //
 // Parse DXF file
@@ -25,7 +26,7 @@ import { HtmlFile } from "./src/output/html/html";
 // Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
 const dxfDrawing: DXFDrawing = dxf.load(
-  "./test/dxf/Tractor Seat Mount - Left.dxf",
+  "./test/dxf/AFluegel Rippen b2 0201.dxf",
 );
 
 //
@@ -79,5 +80,8 @@ const drawing: Drawing = new Drawing(layers, area);
 // Render DXF
 //
 
-// new SvgFile().save(drawing, 'test.html');
 new HtmlFile().save(drawing, "test.html");
+
+// TODO pass in OutputApply from gcode
+import GcodeConfig from './src/output/gcode/gcode';
+new Output(drawing, GcodeConfig).save("test.gcode");
