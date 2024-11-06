@@ -48,7 +48,7 @@ const apply: OutputApply = {
   },
   part: {
     begin: (part: Part) => '(begin part)',
-    end: () => '(end layer)'
+    end: () => '(end part)'
   },
   cut: {
     // TODO a circle may optionally be treated as a hole (i.e. underspeed). Maybe only when no contained shapes?
@@ -78,7 +78,7 @@ const apply: OutputApply = {
   machine: {
     begin: (machine: MachineProperties) => `
       (begin machine setup)
-      ${machine.units == UnitEnum.IMPERIAL ? 'G20' : 'G21'}
+      ${machine.units == UnitEnum.IMPERIAL ? 'G20 (machine units = imperial) ' : 'G21 (machine units = metric)'}
       G40 (cutter compensation: off)
       G90 (distance mode: absolute)
       G17 (XY plane)
@@ -99,13 +99,23 @@ const apply: OutputApply = {
       (end machine shutdown)`
   },
   operation: {
-    begin: (o: OperationProperties) => `
+    begin: (o: OperationProperties) => (`
       (begin operation)
+      (begin select tool)
       T0 M6 (select plasma tool)
       G43 H0 (apply tool offsets)
-      (set temporary default material)
-      (o=0,kw=${o.kerfWidth}, ph=${o.pierceHeight}, pd=${o.pierceDelay}, ch=${o.cutHeight}, fr=${o.feedRate}, cv=${o.cutVolts}, pe=${o.pauseAtEndDelay}, jh=${o.puddleJumpHeight}, jd=${o.puddleJumpDelay})
-      F#<_hal[plasmac.cut-feed-rate]>`,
+      (end select tool)
+      (begin set material) \n`
+      + `(o=0,ph=${o.pierceHeight},pd=${o.pierceDelay},ch=${o.cutHeight},fr=${o.feedRate}`
+      + (o.kerfWidth ? `,kw=${o.kerfWidth}` : '')
+      + (o.cutVolts ? `,cv=${o.cutVolts}` : '')
+      + (o.pauseAtEndDelay ? `,pe=${o.pauseAtEndDelay}` : '')
+      + (o.puddleJumpHeight ? `,jh=${o.puddleJumpHeight}` : '')
+      + (o.puddleJumpDelay ? `,jd=${o.puddleJumpDelay}` : '')
+      + `) (temporary default)\n` 
+      + `F#<_hal[plasmac.cut-feed-rate]>
+      (end set material)
+      `),
     // TODO return to previous Operation state, if any
     end: () => '(end operation)'
   },

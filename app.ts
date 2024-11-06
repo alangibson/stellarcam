@@ -22,8 +22,6 @@ import { TravellingSalesman } from "./src/service/tsp/tsp";
 // Parse DXF file
 //
 
-const filePath = process.argv[2];
-
 // Contains LINE: ./test/dxf/1.dxf
 // Contains LWPOLYLINE with bulge: './test/dxf/AFluegel Rippen b2 0201.dxf'
 // Contains SPLINE: './test/dxf/Tractor Light Mount - Left.dxf'
@@ -31,15 +29,18 @@ const filePath = process.argv[2];
 // Contains POLYLINE: SchlittenBack.dxf; ADLER.dxf
 // Contains ELLIPS: ./test/dxf/test.dxf
 // Contains broken links: Tractor Seat Mount - Left.dxf
-const dxf = new DxfFile();
-const dxfDrawing: DXFDrawing = dxf.load(filePath);
+
+const filePath = process.argv[2];
+const dxfDrawing: DXFDrawing = new DxfFile().load(filePath);
 
 //
-// Derive and fix DXF data
+// Create Drawing
 //
+
+// TODO get from configuration file
+const TOLERANCE = 0.5;
 
 // Loop over DXF layers. One graph per layer
-const TOLERANCE = 0.5;
 const layers: Layer[] = [];
 const area = new Area();
 const tspPoints: TspPoint[] = [];
@@ -92,10 +93,8 @@ new TravellingSalesman().solve(tspPoints);
 const drawing: Drawing = new Drawing(layers, area);
 
 //
-// Render DXF
+// Create Program
 //
-
-new HtmlFile().save(drawing, "test.html");
 
 // TODO pass in OutputApply from gcode
 const program: Program = new Program({
@@ -106,13 +105,20 @@ const program: Program = new Program({
     operations: [
       {
         layers: layers,
-        feedRate: 999,
-        pierceDelay: 999,
-        pierceHeight: 999,
-        cutHeight: 999
+        feedRate: 2200,
+        pierceDelay: 0,
+        pierceHeight: 1.5,
+        cutHeight: 0.5
       }
     ]
   }
 });
 
+//
+// Render DXF
+//
+
+// to HTML
+new HtmlFile().save(drawing, "test.html");
+// and to Gcode
 new Output(drawing, GcodeConfig, program).save("test.gcode");
