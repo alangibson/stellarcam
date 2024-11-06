@@ -50,20 +50,17 @@ export class Arc extends Shape implements ArcProperties {
   }
 
   get boundary(): Rectangle {
-    if (!this.bounding_box) {
-      const { minX, minY, maxX, maxY, width, height } = arcBoundingBox(
-        this.center.x,
-        this.center.y,
-        this.radius,
-        this.startAngle,
-        this.endAngle,
-      );
-      this.bounding_box = new Rectangle({
-        startPoint: new Point({ x: minX, y: minY }),
-        endPoint: new Point({ x: maxX, y: maxY })
-        });
-    }
-    return this.bounding_box;
+    const { minX, minY, maxX, maxY, width, height } = arcBoundingBox(
+      this.center.x,
+      this.center.y,
+      this.radius,
+      this.startAngle,
+      this.endAngle,
+    );
+    return new Rectangle({
+      startPoint: new Point({ x: minX, y: minY }),
+      endPoint: new Point({ x: maxX, y: maxY })
+    });
   }
 
   get direction(): DirectionEnum {

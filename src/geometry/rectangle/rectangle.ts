@@ -1,4 +1,4 @@
-import { rectangleCentroid } from "./rectangle.function";
+import { joinRectangles, rectangleCentroid } from "./rectangle.function";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
@@ -46,30 +46,11 @@ export class Rectangle extends Shape {
   }
 
   join(boundary: Rectangle) {
-    this.startPoint.x = Math.min(
-      this.startPoint.x,
-      this.endPoint.x,
-      boundary.startPoint.x,
-      boundary.endPoint.x,
-    );
-    this.startPoint.y = Math.min(
-      this.startPoint.y,
-      this.endPoint.y,
-      boundary.startPoint.y,
-      boundary.endPoint.y,
-    );
-    this.endPoint.x = Math.min(
-      this.startPoint.x,
-      this.endPoint.x,
-      boundary.startPoint.x,
-      boundary.endPoint.x,
-    );
-    this.endPoint.y = Math.min(
-      this.startPoint.y,
-      this.endPoint.y,
-      boundary.startPoint.y,
-      boundary.endPoint.y,
-    );
+    const newBoudary = joinRectangles(this, boundary);
+    this.startPoint.x = newBoudary.startPoint.x;
+    this.startPoint.y = newBoudary.startPoint.y;
+    this.endPoint.x = newBoudary.endPoint.x;
+    this.endPoint.y = newBoudary.endPoint.y;
   }
 
   mirror(mirror: MirrorEnum, axisValue: number) {

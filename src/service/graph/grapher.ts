@@ -1,6 +1,5 @@
-import { Geometry } from "../geometry";
-import { Point } from "../point/point";
-import { Shape } from "../shape";
+import { Geometry } from "../../geometry/geometry";
+import { Shape } from "../../geometry/shape";
 import { graphShapes } from "./grapher.function";
 
 export enum ConnectionEnum {
@@ -151,7 +150,9 @@ export class Grapher2 {
 }
 
 export class Grapher {
-  graph(shapes: Shape[], tolerance: number = 0.01): Shape[][] {
+
+  solve(shapes: Shape[], tolerance: number = 0.01): Shape[][] {
     return graphShapes(shapes, tolerance);
   }
+
 }

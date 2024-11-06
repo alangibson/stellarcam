@@ -21,8 +21,6 @@ export class QuadraticCurve extends Shape {
   control1: Point;
   endPoint: Point;
 
-  bounding_box: Rectangle;
-
   constructor({ startPoint, control1, endPoint }: QuadraticCurveProperties) {
     super();
     this.startPoint = new Point(startPoint);
@@ -39,19 +37,16 @@ export class QuadraticCurve extends Shape {
   }
 
   get boundary(): Rectangle {
-    if (!this.bounding_box) {
-      const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
-        this.startPoint,
-        this.control1,
-        this.endPoint,
-      );
-      this.bounding_box = new Rectangle({
-        startPoint: { x: minX, y: minY },
-        endPoint: { x: maxX, y: maxY },
-      }
-      );
+    const { minX, minY, maxX, maxY } = quadraticBezierBoundingBox(
+      this.startPoint,
+      this.control1,
+      this.endPoint,
+    );
+    return new Rectangle({
+      startPoint: { x: minX, y: minY },
+      endPoint: { x: maxX, y: maxY },
     }
-    return this.bounding_box;
+    );
   }
 
   get direction(): DirectionEnum {
@@ -65,16 +60,11 @@ export class QuadraticCurve extends Shape {
   set direction(direction: DirectionEnum) {
     if (direction == this.direction) return;
     // Change direction
-    this.bust();
     this.reverse();
   }
 
   get command(): string {
     return `M ${this.startPoint.x},${this.startPoint.y} Q ${this.control1.x},${this.control1.y} ${this.endPoint.x},${this.endPoint.y}`;
-  }
-
-  private bust() {
-    this.bounding_box = null;
   }
 
   reverse() {

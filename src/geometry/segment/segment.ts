@@ -18,8 +18,6 @@ export class Segment extends Shape implements SegmentProperties {
   startPoint: Point;
   endPoint: Point;
 
-  bounding_box: Rectangle;
-
   constructor({ startPoint, endPoint }: SegmentProperties) {
     super();
     this.startPoint = new Point(startPoint);
@@ -27,10 +25,7 @@ export class Segment extends Shape implements SegmentProperties {
   }
 
   get boundary(): Rectangle {
-    if (!this.bounding_box) {
-      this.bounding_box = new Rectangle({startPoint:this.startPoint, endPoint:this.endPoint});
-    }
-    return this.bounding_box;
+    return new Rectangle({startPoint:this.startPoint, endPoint:this.endPoint});
   }
 
   get direction(): DirectionEnum {
@@ -47,12 +42,7 @@ export class Segment extends Shape implements SegmentProperties {
     return `M ${this.startPoint.x},${this.startPoint.y} L ${this.endPoint.x},${this.endPoint.y}`;
   }
 
-  private bust() {
-    this.bounding_box = null;
-  }
-
   reverse() {
-    this.bust();
     const startPoint = this.startPoint;
     this.startPoint = this.endPoint;
     this.endPoint = startPoint;

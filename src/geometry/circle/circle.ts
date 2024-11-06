@@ -15,8 +15,6 @@ export class Circle extends Shape implements CircleProperties {
 
   center: Point;
   radius: number;
-
-  bounding_box: Rectangle;
   private _direction: DirectionEnum = DirectionEnum.CW;
 
   constructor({ center, radius }: CircleProperties) {
@@ -26,15 +24,11 @@ export class Circle extends Shape implements CircleProperties {
   }
 
   get boundary(): Rectangle {
-    if (!this.bounding_box) {
-      const { bottomLeft, topRight } = circleBoundingBox(
-        this.center,
-        this.radius,
-      );
-      const boundary = new Rectangle({startPoint:bottomLeft, endPoint:topRight});
-      this.bounding_box = boundary;
-    }
-    return this.bounding_box;
+    const { bottomLeft, topRight } = circleBoundingBox(
+      this.center,
+      this.radius,
+    );
+    return new Rectangle({ startPoint: bottomLeft, endPoint: topRight });
   }
 
   // Start point is always top center (ie 0 degrees).

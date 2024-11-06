@@ -55,6 +55,7 @@ const apply: OutputApply = {
     begin: (cut: Cut) => `
     (begin cut)
     M3 $0 S1 (plasma start)`,
+    rapidTo: (cut: Cut) => `G0 X${cut.rapidTo.endPoint.x} Y${cut.rapidTo.endPoint.y} (rapid)`,
     end: () => `
     M5 $0 (plasma end)
     (end cut)`

@@ -14,6 +14,7 @@ import { pointOnSegment } from "../../geometry/segment/segment.function";
 import { Visualization } from "./visualization";
 import { CubicCurve } from "../../geometry/cubic-curve/cubic-curve";
 import { Layer } from "../../domain/layer";
+import { Rapid } from "../../domain/rapid";
 
 function getRandomColor() {
   var letters = "0123456789ABCDEF";
@@ -37,10 +38,16 @@ export class DebugVisualization implements Visualization {
     elements.push(".debug.start { stroke: green; opacity: 1;}");
     elements.push(".debug.middle { stroke: blue; }");
     elements.push(".debug.end { stroke: red; stroke-width: 0.5; opacity: 1; }");
+    elements.push(".info {stroke: blue; stroke-width: 1; stroke-dasharray: 1; stroke-opacity: 0.5");
     elements.push("</style>");
 
     for (const part of layer.children) {
       for (const cut of part.children) {
+
+        // Draw line for rapid
+        const rapid: Rapid = cut.rapidTo;
+        elements.push(`<line class="info rapid" x1="${rapid.startPoint.x}" y1="${rapid.startPoint.y}" x2="${rapid.endPoint.x}" y2="${rapid.endPoint.y}" />`);
+
         const multishapes: Multishape[] = cut.children;
 
         for (let multishape of multishapes) {
@@ -54,7 +61,7 @@ export class DebugVisualization implements Visualization {
             `<circle r="1" cx="${multishape.startPoint.x}" cy="${multishape.startPoint.y}" class="debug" style="stroke: yellow;" onClick='console.log(${JSON.stringify(multishape.startPoint)})'/>`,
           );
 
-          for (let shape of multishape.shapes) {
+          for (let shape of multishape.children) {
             const shapeColor: string = getRandomColor();
             multishape_svg_path += shape.command;
 

@@ -15,6 +15,9 @@ export class SvgFile {
         <svg id="drawing" class="drawing" width="100%" height="100vh" preserveAspectRatio="none">
         `;
 
+        // TODO draw box around drawing
+        // const drawingBoundingBox: Rectangle = drawing.boundary;
+
         for (const layer of drawing.children) {
             html += `<g class="layer" layer-name="${layer.name}">`;
 

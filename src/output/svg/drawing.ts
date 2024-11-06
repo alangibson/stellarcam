@@ -12,7 +12,7 @@ export class DrawingVisualization implements Visualization {
         for (let multishape of multishapes) {
           const stroke: string = "black";
           let svg_path = "";
-          for (let shape of multishape.shapes) {
+          for (let shape of multishape.children) {
             svg_path += shape.command;
           }
           elements.push(

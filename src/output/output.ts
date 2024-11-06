@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { Drawing } from "../domain/drawing"
 import { GeometryTypeEnum } from "../geometry/geometry.enum"
 import { ProgramProperties } from "../domain/program";
+import { Rapid } from "../domain/rapid";
 
 export interface OutputApply {
     drawing?: {
@@ -18,6 +19,8 @@ export interface OutputApply {
     };
     cut?: {
         begin?,
+        rapidTo?,
+        rapidAway?,
         end?
     };
     shape?: {
@@ -102,11 +105,13 @@ export class Output {
                     // Part begin
                     output.push(this.config.part?.begin?.(part));
                     for (const cut of part.children) {
+                        // Rapid to Cut
+                        output.push(this.config.cut?.rapidTo?.(cut));
                         // Cut begin
                         output.push(this.config.cut?.begin?.(cut));
                         // Multishape
                         for (const multishape of cut.children) {
-                            for (const shape of multishape.shapes) {
+                            for (const shape of multishape.children) {
                                 // Shape begin
                                 output.push(this.config.shape?.begin?.(shape));
                                 switch (shape.type) {

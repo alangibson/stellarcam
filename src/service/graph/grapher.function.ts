@@ -1,4 +1,4 @@
-import { Shape } from "../shape";
+import { Shape } from "../../geometry/shape";
 
 export function reorientShapes(shapes: Shape[], tolerance: number = 0.01) {
   // FIXME this is causing some arcs to be rendered upside down
