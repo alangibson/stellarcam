@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/geometry/graph/grapher";
 import { DxfFile } from "./src/input/dxf/dxf";
@@ -8,10 +7,14 @@ import { MirrorEnum } from "./src/geometry/geometry.enum";
 import { reorientShapes } from "./src/geometry/graph/grapher.function";
 import { Drawing } from "./src/domain/drawing";
 import { Cut } from "./src/domain/cut";
+import { Part } from "./src/domain/part";
 import { Layer } from "./src/domain/layer";
 import { DXFDrawing } from "./src/input/dxf/dxf-drawing";
 import { HtmlFile } from "./src/output/html/html";
 import { Output } from "./src/output/output";
+import GcodeConfig from './src/output/gcode/gcode';
+import { Program } from "./src/domain/program";
+import { UnitEnum } from "./src/domain/machine";
 
 //
 // Parse DXF file
@@ -26,7 +29,7 @@ import { Output } from "./src/output/output";
 // Contains broken links: Tractor Seat Mount - Left.dxf
 const dxf = new DxfFile();
 const dxfDrawing: DXFDrawing = dxf.load(
-  "./test/dxf/AFluegel Rippen b2 0201.dxf",
+  "/home/alangibson/Documents/JAG eU/Plasma Cutter/Marketing/Content/2024-11-04/lines.dxf",
 );
 
 //
@@ -63,8 +66,11 @@ for (const layerName in dxfDrawing.layers) {
 
   // TODO reorganize cuts into parts
   // const parts: Part[] = new Parter().part(cuts);
+  // HACK
+  const part: Part = new Part(cuts);
+  const parts: Part[] = [part];
 
-  layers.push(new Layer(layerName, cuts));
+  layers.push(new Layer(layerName, parts));
 }
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
@@ -83,5 +89,21 @@ const drawing: Drawing = new Drawing(layers, area);
 new HtmlFile().save(drawing, "test.html");
 
 // TODO pass in OutputApply from gcode
-import GcodeConfig from './src/output/gcode/gcode';
-new Output(drawing, GcodeConfig).save("test.gcode");
+const program: Program = new Program({
+  machine: {
+    cutterCompensation: undefined,
+    units: UnitEnum.METRIC,
+    distanceMode: undefined,
+    operations: [
+      {
+        layers: layers,
+        feedRate: 999,
+        pierceDelay: 999,
+        pierceHeight: 999,
+        cutHeight: 999
+      }
+    ]
+  }
+});
+
+new Output(drawing, GcodeConfig, program).save("test.gcode");

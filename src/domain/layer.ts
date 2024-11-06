@@ -1,12 +1,13 @@
-import { Cut } from "./cut";
 
 /** A DXF layer */
 
+import { Part } from "./part";
+
 export class Layer {
   name: string;
-  children: Cut[];
+  children: Part[];
 
-  constructor(name: string, children: Cut[]) {
+  constructor(name: string, children: Part[]) {
     this.name = name;
     this.children = children;
   }

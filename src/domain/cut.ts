@@ -1,3 +1,4 @@
+import { Segment } from "../geometry/segment/segment";
 import { Multishape } from "./multishape";
 
 export class Cut {
@@ -7,4 +8,5 @@ export class Cut {
     this.children = [];
     this.children.push(multishape);
   }
+
 }

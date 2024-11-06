@@ -44,29 +44,38 @@
         {{#children}}
         <li>
         <details open>
-        <summary>Cut: {{cut}}</summary>
+        <summary>Part</summary>
 
         <ul>
             {{#children}}
             <li>
             <details>
-            <summary>Multishape: {{multishape}}</summary>
+            <summary>Cut</summary>
 
-            <ul>
-                {{#shapes}}
-                <li>
-                <details>
-                <summary>Shape: {{shape.type}}</summary>
-    
-                </details>
-                </li>        
-                {{/shapes}}
-            </ul>
+                <ul>
+                    {{#children}}
+                    <li>
+                    <details>
+                    <summary>Multishape</summary>
+
+                    <ul>
+                        {{#shapes}}
+                        <li>
+                        <details>
+                            <summary>Shape: {{.type}}</summary>
+                        </details>
+                        </li>        
+                        {{/shapes}}
+                    </ul>
+
+                    </details>
+                    </li>        
+                    {{/children}}
+                </ul>
 
             </details>
-            </li>        
+            </li>
             {{/children}}
-        </ul>
 
         </details>
         </li>
