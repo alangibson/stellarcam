@@ -1,9 +1,9 @@
-import { Segment } from "../segment/segment";
-import { Shape } from "../shape";
+import { Shape } from "../../geometry/shape";
+import { QuadraticCurve } from "../../geometry/quadratic-curve/quadratic-curve";
+import { Segment } from "../../geometry/segment/segment";
 import { graphShapes } from "./grapher.function";
-import { QuadraticCurve } from "../quadratic-curve/quadratic-curve";
 
-test("graphMultishapes", () => {
+test("graphChains", () => {
   // Given
   const shapes: Shape[] = [
     // polyline. closed. clockwise

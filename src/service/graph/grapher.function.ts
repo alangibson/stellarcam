@@ -57,7 +57,7 @@ export function graphShapes(
   shapes: Shape[],
   tolerance: number = 0.01,
 ): Shape[][] {
-  const multishapes: Shape[][] = [];
+  const chains: Shape[][] = [];
   const visited = new Array(shapes.length).fill(false);
 
   function dfs(index, group) {
@@ -75,9 +75,9 @@ export function graphShapes(
     if (!visited[i]) {
       const group: Shape[] = [];
       dfs(i, group);
-      multishapes.push(group);
+      chains.push(group);
     }
   }
 
-  return multishapes;
+  return chains;
 }

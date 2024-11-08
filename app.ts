@@ -1,7 +1,7 @@
 import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/service/graph/grapher";
 import { DxfFile } from "./src/input/dxf/dxf";
-import { Multishape } from "./src/domain/multishape";
+import { Chain } from "./src/domain/chain";
 import { Shape } from "./src/geometry/shape";
 import { MirrorEnum } from "./src/geometry/geometry.enum";
 import { reorientShapes } from "./src/service/graph/grapher.function";
@@ -58,7 +58,7 @@ for (const layerName in dxfDrawing.layers) {
     // TODO do this in Grapher.solve()?
     reorientShapes(graph, TOLERANCE);
 
-    const multishape = new Multishape();
+    const multishape = new Chain();
     let lastShape: Shape;
     for (let shape of graph) {
       multishape.add(shape);

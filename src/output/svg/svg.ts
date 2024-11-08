@@ -22,8 +22,8 @@ export class SvgFile {
             html += `<g class="layer" layer-name="${layer.name}">`;
 
             // TODO Loop over layers in drawing.children then create visualization per layer
-            // const drawing_elements = new DrawingVisualization().to_svg(multishapes);
-            // const debug_elements = new DebugVisualization().to_svg(multishapes);
+            // const drawing_elements = new DrawingVisualization().to_svg(chains);
+            // const debug_elements = new DebugVisualization().to_svg(chains);
             // const drawing_elements = new DrawingVisualization().to_svg(layer);
             const debug_elements = new DebugVisualization().toSVG(layer);
 
@@ -33,7 +33,7 @@ export class SvgFile {
             // for (const cut of layer.children) {
             // }
 
-            // Multishape visualization
+            // Chain visualization
             // for (let element of drawing_elements) {
             //     html += element;
             // }

@@ -108,9 +108,9 @@ export class Output {
                         output.push(this.config.cut?.rapidTo?.(cut));
                         // Cut begin
                         output.push(this.config.cut?.begin?.(cut));
-                        // Multishape
-                        for (const multishape of cut.children) {
-                            for (const shape of multishape.children) {
+                        // Chain
+                        for (const chain of cut.children) {
+                            for (const shape of chain.children) {
                                 // Shape begin
                                 output.push(this.config.shape?.begin?.(shape));
                                 switch (shape.type) {
@@ -167,9 +167,9 @@ export class Output {
             for (const cut of layer.children) {
                 // Cut begin
                 output.push(this.config.cut?.begin?.(cut));
-                // Multishape
-                for (const multishape of cut.children) {
-                    for (const shape of multishape.shapes) {
+                // Chain
+                for (const chain of cut.children) {
+                    for (const shape of chain.shapes) {
                         // Shape begin
                         output.push(this.config.shape?.begin?.(shape));
                         switch (shape.type) {

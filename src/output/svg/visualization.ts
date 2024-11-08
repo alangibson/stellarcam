@@ -1,5 +1,5 @@
 import { Layer } from "../../domain/layer";
-import { Multishape } from "../../domain/multishape";
+import { Chain } from "../../domain/chain";
 
 export interface Visualization {
   toSVG(layer: Layer): string[];

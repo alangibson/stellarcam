@@ -3,9 +3,9 @@ import { DirectionEnum } from "../geometry/geometry.enum";
 import { Point } from "../geometry/point/point";
 import { Rectangle } from "../geometry/rectangle/rectangle";
 import { Shape } from "../geometry/shape";
-import { sortShapesInDirection } from "./multishape.function";
+import { sortShapesInDirection } from "./chain.function";
 
-export class Multishape extends Parent {
+export class Chain extends Parent {
 
   children: Shape[];
   // Direction starts out as undefined since shapes can be oriented

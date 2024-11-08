@@ -92,7 +92,7 @@ export class Grapher2 {
         );
 
         // FIXME Both start-to-start and end-to-end results in broken links
-        // However, if only one is used then multishapes don't always get linked
+        // However, if only one is used then chains don't always get linked
         const endToEndDistance = geometries[row_i].endPoint.distance(
           geometries[col_i].endPoint,
         );

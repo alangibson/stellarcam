@@ -1,4 +1,4 @@
-import { Multishape } from "../../domain/multishape";
+import { Chain } from "../../domain/chain";
 import { Arc } from "../../geometry/arc/arc";
 import { pointAlongArc } from "../../geometry/arc/arc.function";
 import { Circle } from "../../geometry/circle/circle";
@@ -32,7 +32,7 @@ export class DebugVisualization implements Visualization {
     elements.push(
       ".debug { fill:none; stroke: gray; opacity: 1; stroke-width: 0.2; }",
     );
-    elements.push("path.debug.multishape { stroke-width: 1; opacity: 1; }");
+    elements.push("path.debug.chain { stroke-width: 1; opacity: 1; }");
     elements.push("path.debug.shape { stroke-width: 0.5; opacity: 1; }");
     elements.push("line.debug.middle { stroke-dasharray: 0.5; }");
     elements.push(".debug.start { stroke: green; opacity: 1;}");
@@ -48,24 +48,24 @@ export class DebugVisualization implements Visualization {
         const rapid: Rapid = cut.rapidTo;
         elements.push(`<line class="info rapid" x1="${rapid.startPoint.x}" y1="${rapid.startPoint.y}" x2="${rapid.endPoint.x}" y2="${rapid.endPoint.y}" />`);
 
-        const multishapes: Multishape[] = cut.children;
+        const chains: Chain[] = cut.children;
 
-        for (let multishape of multishapes) {
-          let multishape_elements: string[] = [];
-          let multishape_svg_path = "";
-          const multishapeColor: string = getRandomColor();
+        for (let chain of chains) {
+          let chain_elements: string[] = [];
+          let chain_svg_path = "";
+          const chainColor: string = getRandomColor();
 
           // TODO move to end
-          // Multishape start point. This will also be cut start point.
-          multishape_elements.push(
-            `<circle r="1" cx="${multishape.startPoint.x}" cy="${multishape.startPoint.y}" class="debug" style="stroke: yellow;" onClick='console.log(${JSON.stringify(multishape.startPoint)})'/>`,
+          // Chain start point. This will also be cut start point.
+          chain_elements.push(
+            `<circle r="1" cx="${chain.startPoint.x}" cy="${chain.startPoint.y}" class="debug" style="stroke: yellow;" onClick='console.log(${JSON.stringify(chain.startPoint)})'/>`,
           );
 
-          for (let shape of multishape.children) {
+          for (let shape of chain.children) {
             const shapeColor: string = getRandomColor();
-            multishape_svg_path += shape.command;
+            chain_svg_path += shape.command;
 
-            multishape_elements.push(
+            chain_elements.push(
               `<path class="debug shape" style="stroke:${shapeColor}" d="${shape.command}" onClick='console.log(${JSON.stringify(shape)})' />`,
             );
 
@@ -73,11 +73,11 @@ export class DebugVisualization implements Visualization {
               case GeometryTypeEnum.ARC: {
                 const arc = shape as Arc;
                 // Line to midpoint for radius
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${arc.center.x}" y1="${arc.center.y}" x2="${arc.middle_point.x}" y2="${arc.middle_point.y}" class="debug middle" onClick='console.log(${JSON.stringify(arc.center)}, ${JSON.stringify(arc.middle_point)})' />`,
                 );
                 // Point for center
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${arc.center.x}" cy="${arc.center.y}" class="debug middle" onClick='console.log(${JSON.stringify(arc.center)})'/>`,
                 );
                 // Add direction arrows
@@ -94,13 +94,13 @@ export class DebugVisualization implements Visualization {
                   direction,
                 );
                 const endPoint_on_arc: Point = new Point({ x, y });
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${arc.startPoint.x}" y1="${arc.startPoint.y}" x2="${endPoint_on_arc.x}" y2="${endPoint_on_arc.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.startPoint)})'/>`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${arc.startPoint.x}" cy="${arc.startPoint.y}" class="debug start" onClick='console.log(${JSON.stringify(arc.startPoint)})'/>`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${arc.endPoint.x}" cy="${arc.endPoint.y}" class="debug end" onClick='console.log(${JSON.stringify(arc.endPoint)})'/>`,
                 );
                 break;
@@ -118,18 +118,18 @@ export class DebugVisualization implements Visualization {
                   length,
                   direction,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${circle.startPoint.x}" cy="${circle.startPoint.y}" class="debug start" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${circle.startPoint.x}" y1="${circle.startPoint.y}" x2="${x}" y2="${y}" class="debug start" />`,
                 );
                 // Point for center
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${circle.center.x}" cy="${circle.center.y}" class="debug middle" />`,
                 );
                 // Line to startPoint for radius
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${circle.center.x}" y1="${circle.center.y}" x2="${circle.startPoint.x}" y2="${circle.startPoint.y}" class="debug middle" />`,
                 );
                 break;
@@ -137,19 +137,19 @@ export class DebugVisualization implements Visualization {
               case GeometryTypeEnum.QUADRATIC_CURVE: {
                 const curve = shape as QuadraticCurve;
                 // Dot or each point
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${curve.startPoint.x}" cy="${curve.startPoint.y}" class="debug start" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${curve.startPoint.x}" y1="${curve.startPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug start" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${curve.control1.x}" cy="${curve.control1.y}" class="debug" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${curve.endPoint.x}" cy="${curve.endPoint.y}" class="debug end" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${curve.endPoint.x}" y1="${curve.endPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug end" />`,
                 );
                 break;
@@ -157,16 +157,16 @@ export class DebugVisualization implements Visualization {
               case GeometryTypeEnum.CUBIC_CURVE: {
                 const curve = shape as CubicCurve;
                 // Dot or each point
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${curve.startPoint.x}" cy="${curve.startPoint.y}" class="debug start" />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${curve.endPoint.x}" cy="${curve.endPoint.y}" class="debug end" />`,
                 );
                 // TODO bring back
-                // multishape_elements.push(`<line x1="${curve.startPoint.x}" y1="${curve.startPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug start" />`);
-                // multishape_elements.push(`<circle r="0.4" cx="${curve.control1.x}" cy="${curve.control1.y}" class="debug" />`)
-                // multishape_elements.push(`<line x1="${curve.endPoint.x}" y1="${curve.endPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug end" />`);
+                // chain_elements.push(`<line x1="${curve.startPoint.x}" y1="${curve.startPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug start" />`);
+                // chain_elements.push(`<circle r="0.4" cx="${curve.control1.x}" cy="${curve.control1.y}" class="debug" />`)
+                // chain_elements.push(`<line x1="${curve.endPoint.x}" y1="${curve.endPoint.y}" x2="${curve.control1.x}" y2="${curve.control1.y}" class="debug end" />`);
                 break;
               }
               case GeometryTypeEnum.SEGMENT: {
@@ -180,14 +180,14 @@ export class DebugVisualization implements Visualization {
                   segment.endPoint.y,
                   length,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<line x1="${segment.startPoint.x}" y1="${segment.startPoint.y}" x2="${x}" y2="${y}" class="debug start" onClick='console.log(${JSON.stringify(segment.startPoint)})'/>`,
                 );
                 // Dot for each point
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${segment.startPoint.x}" cy="${segment.startPoint.y}" class="debug start" onClick='console.log(${JSON.stringify(segment.startPoint)})' />`,
                 );
-                multishape_elements.push(
+                chain_elements.push(
                   `<circle r="0.4" cx="${segment.endPoint.x}" cy="${segment.endPoint.y}" class="debug end" onClick='console.log(${JSON.stringify(segment.endPoint)})' />`,
                 );
                 break;
@@ -195,13 +195,13 @@ export class DebugVisualization implements Visualization {
             }
           }
 
-          // Draw path for multishape. stroke width is 2x shape width
-          multishape_elements.unshift(
-            `<path class="debug multishape" style="stroke:${multishapeColor}" d="${multishape_svg_path}" onClick='console.log(${JSON.stringify(multishape)})'/>`,
+          // Draw path for chain. stroke width is 2x shape width
+          chain_elements.unshift(
+            `<path class="debug chain" style="stroke:${chainColor}" d="${chain_svg_path}" onClick='console.log(${JSON.stringify(chain)})'/>`,
           );
 
-          // Append multishape_elements to elements
-          elements.push(...multishape_elements);
+          // Append chain_elements to elements
+          elements.push(...chain_elements);
         }
       }
     }
