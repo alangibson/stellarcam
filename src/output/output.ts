@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import { Drawing } from "../domain/drawing"
 import { GeometryTypeEnum } from "../geometry/geometry.enum"
-import { ProgramProperties } from "../domain/program";
-import { Rapid } from "../domain/rapid";
+import { Program, ProgramProperties } from "../domain/program";
 
 export interface OutputApply {
     drawing?: {
@@ -53,9 +52,9 @@ export class Output {
 
     drawing: Drawing;
     config: OutputApply;
-    program: ProgramProperties;
+    program: Program;
 
-    constructor(drawing: Drawing, config: OutputApply, program: ProgramProperties) {
+    constructor(drawing: Drawing, config: OutputApply, program: Program) {
         this.drawing = drawing;
         this.config = config;
         this.program = program;

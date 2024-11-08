@@ -37,7 +37,7 @@ export class Machine implements MachineProperties {
     units: UnitEnum;
     cutterCompensation: CutterCompensationEnum;
     distanceMode: DistanceModeEnum;
-    operations: OperationProperties[];
+    operations: Operation[];
     
     constructor(props: MachineProperties) {
         this.units = props.units;

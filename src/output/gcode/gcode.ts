@@ -2,7 +2,7 @@ import { Cut } from "../../domain/cut";
 import { Drawing } from "../../domain/drawing";
 import { Layer } from "../../domain/layer";
 import { MachineProperties, UnitEnum } from "../../domain/machine";
-import { OperationProperties } from "../../domain/operation";
+import { Operation, OperationProperties } from "../../domain/operation";
 import { Part } from "../../domain/part";
 import { Arc } from "../../geometry/arc/arc";
 import { Circle } from "../../geometry/circle/circle";
@@ -99,7 +99,7 @@ const apply: OutputApply = {
       (end machine shutdown)`
   },
   operation: {
-    begin: (o: OperationProperties) => (`
+    begin: (o: Operation) => (`
       (begin operation)
       (begin select tool)
       T0 M6 (select plasma tool)

@@ -17,6 +17,7 @@ import { Program } from "./src/domain/program";
 import { UnitEnum } from "./src/domain/machine";
 import { TspPoint } from "./src/service/tsp/tsp-point";
 import { TravellingSalesman } from "./src/service/tsp/tsp";
+import { Operation, OperationProperties } from "./src/domain/operation";
 
 //
 // Parse DXF file
@@ -96,23 +97,45 @@ const drawing: Drawing = new Drawing(layers, area);
 // Create Program
 //
 
-// TODO pass in OutputApply from gcode
+const operation1: OperationProperties = {
+  // TODO Need to set different operation per layer for 5 lines svg
+  // Maybe add id to Entity and link by entity id
+  feedRate: 2200,
+  pierceDelay: 0,
+  pierceHeight: 1.5,
+  cutHeight: 0.5
+};
+
+const operationToKey = {
+  'operation-1': operation1
+};
+
+const operationLinks = [
+  {
+    operationKey: 'operation-1',
+    layerName: ['Layer 1', 'Layer 2', 'Layer 3', 'Layer 4', 'Layer 5'],
+  }
+];
+
+// TODO map operation to layer(s) using keys and names
+const operations: Operation[] = operationLinks.map((operationLink) => {
+  const operation: Operation = operationToKey[operationLink.operationKey];
+  // TODO look up layer
+  return operation;
+});
+
+
 const program: Program = new Program({
   machine: {
     cutterCompensation: undefined,
     units: UnitEnum.METRIC,
     distanceMode: undefined,
-    operations: [
-      {
-        layers: layers,
-        feedRate: 2200,
-        pierceDelay: 0,
-        pierceHeight: 1.5,
-        cutHeight: 0.5
-      }
-    ]
+    operations: operations
   }
 });
+
+// console.log(JSON.stringify(program));
+// console.log(drawing.children);
 
 //
 // Render DXF

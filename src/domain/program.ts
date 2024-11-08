@@ -8,7 +8,7 @@ export interface ProgramProperties {
 
 export class Program implements ProgramProperties {
 
-    machine: MachineProperties;
+    machine: Machine;
 
     constructor(props: ProgramProperties) {
         this.machine = new Machine(props.machine);

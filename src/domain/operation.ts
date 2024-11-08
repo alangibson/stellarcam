@@ -20,7 +20,7 @@ export interface OperationProperties {
     // From Tool
     kerfWidth?: number; // in machine units. magic param: kw, optional
 
-    layers: Layer[];
+    // layers: Layer[];
 
 }
 
@@ -37,6 +37,7 @@ export class Operation implements OperationProperties {
     cutMode?: number;
     puddleJumpHeight?: number;
     puddleJumpDelay?: number;
+    pauseAtEndDelay?: number; // in seconds. magic param: pe, optional
     kerfWidth?: number;
 
     layers: Layer[];
@@ -53,8 +54,9 @@ export class Operation implements OperationProperties {
         this.cutMode = def.cutMode;
         this.puddleJumpHeight = def.puddleJumpHeight;
         this.puddleJumpDelay = def.puddleJumpDelay;
+        this.pauseAtEndDelay = def.pauseAtEndDelay;
         this.kerfWidth = def.kerfWidth;
-        this.layers = def.layers;
+        this.layers = [];
     }
 
 }
