@@ -20,11 +20,13 @@ export interface OperationProperties {
     // From Tool
     kerfWidth?: number; // in machine units. magic param: kw, optional
 
-    // layers: Layer[];
-
 }
 
-export class Operation implements OperationProperties {
+export interface IOperation extends OperationProperties {
+    layers: Layer[];
+}
+
+export class Operation implements IOperation {
 
     feedRate: number;
     pierceDelay: number;
@@ -42,21 +44,21 @@ export class Operation implements OperationProperties {
 
     layers: Layer[];
 
-    constructor(def: OperationProperties) {
-        this.feedRate = def.feedRate;
-        this.pierceDelay = def.pierceDelay;
-        this.pierceHeight = def.pierceHeight;
-        this.cutHeight = def.cutHeight;
-        this.thcState = def.thcState;
-        this.cutAmps = def.cutAmps;
-        this.cutVolts = def.cutVolts;
-        this.gasPressure = def.gasPressure;
-        this.cutMode = def.cutMode;
-        this.puddleJumpHeight = def.puddleJumpHeight;
-        this.puddleJumpDelay = def.puddleJumpDelay;
-        this.pauseAtEndDelay = def.pauseAtEndDelay;
-        this.kerfWidth = def.kerfWidth;
-        this.layers = [];
+    constructor(c: IOperation) {
+        this.feedRate = c.feedRate;
+        this.pierceDelay = c.pierceDelay;
+        this.pierceHeight = c.pierceHeight;
+        this.cutHeight = c.cutHeight;
+        this.thcState = c.thcState;
+        this.cutAmps = c.cutAmps;
+        this.cutVolts = c.cutVolts;
+        this.gasPressure = c.gasPressure;
+        this.cutMode = c.cutMode;
+        this.puddleJumpHeight = c.puddleJumpHeight;
+        this.puddleJumpDelay = c.puddleJumpDelay;
+        this.pauseAtEndDelay = c.pauseAtEndDelay;
+        this.kerfWidth = c.kerfWidth;
+        this.layers = c.layers;
     }
 
 }

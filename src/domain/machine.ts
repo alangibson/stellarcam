@@ -13,7 +13,6 @@ export enum DistanceModeEnum {
     // TODO
 }
 
-
 export interface MachineProperties {
     // G21 (units: metric)
     units: UnitEnum
@@ -29,21 +28,24 @@ export interface MachineProperties {
     // M68 E3 Q0 (velocity 100%)
     // G64 P0.254 Q0.025 (tracking tolerances: 0.254mm)
 
-    operations: OperationProperties[];
 }
 
-export class Machine implements MachineProperties {
+export interface IMachine extends MachineProperties {
+    operations: Operation[];
+}
+
+export class Machine implements IMachine {
     
     units: UnitEnum;
     cutterCompensation: CutterCompensationEnum;
     distanceMode: DistanceModeEnum;
     operations: Operation[];
     
-    constructor(props: MachineProperties) {
-        this.units = props.units;
-        this.cutterCompensation = props.cutterCompensation;
-        this.distanceMode = props.distanceMode;
-        this.operations = props.operations.map((operationDef) => new Operation(operationDef));
+    constructor(c: IMachine) {
+        this.units = c.units;
+        this.cutterCompensation = c.cutterCompensation;
+        this.distanceMode = c.distanceMode;
+        this.operations = c.operations;
     }
 
 }

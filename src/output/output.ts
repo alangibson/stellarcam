@@ -93,6 +93,7 @@ export class Output {
 
         // Switch to driving loop with Operations, not Layers
         // Note that Layers without operations will not be rendered
+        console.log(this.program.machine.operations);
         for (const operation of this.program.machine.operations) {
             // Operation begin
             output.push(this.config.operation?.begin?.(operation));

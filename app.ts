@@ -1,6 +1,5 @@
 import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/service/graph/grapher";
-import { DxfFile } from "./src/input/dxf/dxf";
 import { Chain } from "./src/domain/chain";
 import { Shape } from "./src/geometry/shape";
 import { MirrorEnum } from "./src/geometry/geometry.enum";
@@ -9,15 +8,20 @@ import { Drawing } from "./src/domain/drawing";
 import { Cut } from "./src/domain/cut";
 import { Part } from "./src/domain/part";
 import { Layer } from "./src/domain/layer";
-import { DXFDrawing } from "./src/input/dxf/dxf-drawing";
+import { InputDrawing } from "./src/input/drawing";
 import { HtmlFile } from "./src/output/html/html";
 import { Output } from "./src/output/output";
 import GcodeConfig from './src/output/gcode/gcode';
 import { Program } from "./src/domain/program";
-import { UnitEnum } from "./src/domain/machine";
+import { Machine, UnitEnum } from "./src/domain/machine";
 import { TspPoint } from "./src/service/tsp/tsp-point";
 import { TravellingSalesman } from "./src/service/tsp/tsp";
 import { Operation, OperationProperties } from "./src/domain/operation";
+import { InputFile } from "./src/input/input";
+
+function dump(o) {
+  console.log(JSON.stringify(o, null, 4));
+}
 
 //
 // Parse DXF file
@@ -32,10 +36,10 @@ import { Operation, OperationProperties } from "./src/domain/operation";
 // Contains broken links: Tractor Seat Mount - Left.dxf
 
 const filePath = process.argv[2];
-const dxfDrawing: DXFDrawing = new DxfFile().load(filePath);
+const inputDrawing: InputDrawing = new InputFile().load(filePath);
 
 //
-// Create Drawing
+// Create Drawing from input
 //
 
 // TODO get from configuration file
@@ -45,8 +49,8 @@ const TOLERANCE = 0.5;
 const layers: Layer[] = [];
 const area = new Area();
 const tspPoints: TspPoint[] = [];
-for (const layerName in dxfDrawing.layers) {
-  const shapes: Shape[] = dxfDrawing.layers[layerName].shapes;
+for (const layerName in inputDrawing.layers) {
+  const shapes: Shape[] = inputDrawing.layers[layerName].shapes;
 
   // Each Multishape is a Cut
   const cuts: Cut[] = [];
@@ -94,9 +98,10 @@ new TravellingSalesman().solve(tspPoints);
 const drawing: Drawing = new Drawing(layers, area);
 
 //
-// Create Program
+// Load settings
 //
 
+// These are our saved Operation settings
 const operation1: OperationProperties = {
   // TODO Need to set different operation per layer for 5 lines svg
   // Maybe add id to Entity and link by entity id
@@ -105,37 +110,41 @@ const operation1: OperationProperties = {
   pierceHeight: 1.5,
   cutHeight: 0.5
 };
-
-const operationToKey = {
-  'operation-1': operation1
-};
-
+// These links automatically apply Operations to Layers
 const operationLinks = [
   {
     operationKey: 'operation-1',
-    layerName: ['Layer 1', 'Layer 2', 'Layer 3', 'Layer 4', 'Layer 5'],
+    layerNames: ['Layer 1', 'Layer 2', 'Layer 3', 'Layer 4', 'Layer 5'],
   }
 ];
 
-// TODO map operation to layer(s) using keys and names
+//
+// Create Program
+//
+
+// Map operation to layer(s) using keys and names
+const operationToKey = {
+  // TODO use [operation1.key] instead
+  ['operation-1']: operation1
+};
 const operations: Operation[] = operationLinks.map((operationLink) => {
   const operation: Operation = operationToKey[operationLink.operationKey];
-  // TODO look up layer
+  const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name))
+  operation.layers = layers;
   return operation;
 });
 
-
-const program: Program = new Program({
-  machine: {
-    cutterCompensation: undefined,
+const machine: Machine = new Machine(
+  {
     units: UnitEnum.METRIC,
+    // TODO cutterCompensation
+    cutterCompensation: undefined,
+    // TODO distanceMode
     distanceMode: undefined,
-    operations: operations
+    operations
   }
-});
-
-// console.log(JSON.stringify(program));
-// console.log(drawing.children);
+);
+const program: Program = new Program({machine});
 
 //
 // Render DXF

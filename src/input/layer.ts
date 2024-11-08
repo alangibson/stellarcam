@@ -1,6 +1,6 @@
-import { Shape } from "../../geometry/shape";
+import { Shape } from "../geometry/shape";
 
-export class DXFLayer {
+export class InputLayer {
   name: string;
   shapes: Shape[];
 

@@ -1,17 +1,18 @@
 import { Machine, MachineProperties } from "./machine";
 
 export interface ProgramProperties {
-    
-    machine: MachineProperties;
-    
 }
 
-export class Program implements ProgramProperties {
+export interface IProgram extends ProgramProperties {
+    machine: Machine;
+}
+
+export class Program implements IProgram {
 
     machine: Machine;
 
-    constructor(props: ProgramProperties) {
-        this.machine = new Machine(props.machine);
+    constructor(c: IProgram) {
+        this.machine = c.machine;
     }
 
 }

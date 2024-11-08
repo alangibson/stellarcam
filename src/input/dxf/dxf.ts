@@ -9,8 +9,8 @@ import { Ellipse } from "../../geometry/ellipse/ellipse";
 import { Shape } from "../../geometry/shape";
 import { dxfBulgeToArc } from "../../input/dxf/dxf.function";
 import { degreesToRadians } from "../../geometry/arc/arc.function";
-import { DXFDrawing } from "../../input/dxf/dxf-drawing";
-import { DXFLayer } from "../../input/dxf/dxf-layer";
+import { InputDrawing } from "../drawing";
+import { InputLayer } from "../layer";
 
 function dxfEntityToShapes(entity, blocks): Shape[] {
   switch (entity.type) {
@@ -136,7 +136,7 @@ function dxfToDrawing(
   dxfEntities: {}[],
   dxfBlocks: {}[],
   dxfLayers: { [key: string]: {}[] },
-): DXFDrawing {
+): InputDrawing {
   // Make map of blocks to use with insert elements later
   const dxfBlocksLookup: {} = {};
   for (let block of dxfBlocks) {
@@ -144,20 +144,20 @@ function dxfToDrawing(
   }
 
   // Build up list of Shape by layer name
-  const layerNameToDxfLayerMap: { [key: string]: DXFLayer } = {};
+  const layerNameToDxfLayerMap: { [key: string]: InputLayer } = {};
   for (const dxfEntity of dxfEntities) {
     const layerName: string = dxfEntity["layer"];
     if (!layerNameToDxfLayerMap.hasOwnProperty(layerName))
-      layerNameToDxfLayerMap[layerName] = new DXFLayer(layerName);
+      layerNameToDxfLayerMap[layerName] = new InputLayer(layerName);
     const shapes: Shape[] = dxfEntityToShapes(dxfEntity, dxfBlocksLookup);
     layerNameToDxfLayerMap[layerName].shapes.push(...shapes);
   }
 
-  return new DXFDrawing(layerNameToDxfLayerMap);
+  return new InputDrawing(layerNameToDxfLayerMap);
 }
 
 export class DxfFile {
-  load(path: string): DXFDrawing {
+  load(path: string): InputDrawing {
     const parsed = parseString(fs.readFileSync(path, "utf-8"));
     return dxfToDrawing(parsed.entities, parsed.blocks, parsed.tables.layers);
   }
