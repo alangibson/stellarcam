@@ -44,7 +44,7 @@ export class Operation implements IOperation {
 
     layers: Layer[];
 
-    constructor(c: IOperation) {
+    constructor(c: OperationProperties) {
         this.feedRate = c.feedRate;
         this.pierceDelay = c.pierceDelay;
         this.pierceHeight = c.pierceHeight;
@@ -58,7 +58,7 @@ export class Operation implements IOperation {
         this.puddleJumpDelay = c.puddleJumpDelay;
         this.pauseAtEndDelay = c.pauseAtEndDelay;
         this.kerfWidth = c.kerfWidth;
-        this.layers = c.layers;
+        this.layers = [];
     }
 
 }
