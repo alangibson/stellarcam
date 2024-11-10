@@ -102,19 +102,72 @@ const drawing: Drawing = new Drawing(layers, area);
 //
 
 // These are our saved Operation settings
-const operation1: OperationProperties = {
-  // TODO Need to set different operation per layer for 5 lines svg
-  // Maybe add id to Entity and link by entity id
-  feedRate: 2200,
-  pierceDelay: 0,
-  pierceHeight: 1.5,
-  cutHeight: 0.5
+// Map operation to layer(s) using keys and names
+const operationLookup: {[key: string]: OperationProperties } = {
+  // TODO use [operation1.key] instead
+  'operation-3200': {
+    feedRate: 3200,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
+  'operation-3000': {
+    feedRate: 3000,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
+  'operation-2800': {
+    feedRate: 2800,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
+  'operation-2600': {
+    feedRate: 2600,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
+  'operation-2400': {
+    feedRate: 2400,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
 };
+
 // These links automatically apply Operations to Layers
 const operationLinks = [
   {
-    operationKey: 'operation-1',
-    layerNames: ['Layer 1', 'Layer 2', 'Layer 3', 'Layer 4', 'Layer 5'],
+    operationKey: 'operation-3200',
+    layerNames: ['Layer 5'],
+  },
+  {
+    operationKey: 'operation-3000',
+    layerNames: ['Layer 4'],
+  },
+  {
+    operationKey: 'operation-2800',
+    layerNames: ['Layer 3'],
+  },
+  {
+    operationKey: 'operation-2600',
+    layerNames: ['Layer 2'],
+  },
+  {
+    operationKey: 'operation-2400',
+    layerNames: ['Layer 1'],
   }
 ];
 
@@ -122,16 +175,11 @@ const operationLinks = [
 // Create Program
 //
 
-// Map operation to layer(s) using keys and names
-const operationToKey = {
-  // TODO use [operation1.key] instead
-  ['operation-1']: operation1
-};
 const operations: Operation[] = operationLinks.map((operationLink) => {
-  const operation: Operation = operationToKey[operationLink.operationKey];
+  const operation: Operation = new Operation(operationLookup[operationLink.operationKey]);
   const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name))
   operation.layers = layers;
-  return operation;
+  return new Operation(operation);
 });
 
 const machine: Machine = new Machine(
@@ -144,7 +192,7 @@ const machine: Machine = new Machine(
     operations
   }
 );
-const program: Program = new Program({machine});
+const program: Program = new Program({ machine });
 
 //
 // Render DXF
