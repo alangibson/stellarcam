@@ -74,7 +74,7 @@ export class DebugVisualization implements Visualization {
                 const arc = shape as Arc;
                 // Line to midpoint for radius
                 chain_elements.push(
-                  `<line x1="${arc.center.x}" y1="${arc.center.y}" x2="${arc.middle_point.x}" y2="${arc.middle_point.y}" class="debug middle" onClick='console.log(${JSON.stringify(arc.center)}, ${JSON.stringify(arc.middle_point)})' />`,
+                  `<line x1="${arc.center.x}" y1="${arc.center.y}" x2="${arc.middlePoint.x}" y2="${arc.middlePoint.y}" class="debug middle" onClick='console.log(${JSON.stringify(arc.center)}, ${JSON.stringify(arc.middlePoint)})' />`,
                 );
                 // Point for center
                 chain_elements.push(

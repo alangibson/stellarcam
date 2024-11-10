@@ -1,7 +1,7 @@
 import { degreesToRadians } from '../arc/arc.function';
 import { DirectionEnum } from "../geometry.enum";
 import { SegmentProperties } from "./segment";
-import { segmentDirection, transformSegment } from "./segment.function";
+import { segmentDirection, segmentMiddlePoint, transformSegment } from "./segment.function";
 
 test("segmentDirection vertical upwards", () => {
   // Given
@@ -89,4 +89,16 @@ test('transformSegment scale, rotate, translate', () => {
   // Then
   expect(transformedSegment.startPoint).toStrictEqual({ x: 139.9519052838329, y: 161.60254037844388 });
   expect(transformedSegment.endPoint).toStrictEqual({ x: 244.8557158514987, y: 298.20508075688775 });
+});
+
+test('segmentMiddlePoint', () => {
+  // Given
+  const segment: SegmentProperties = {
+    startPoint: { x: 2, y: 3 },
+    endPoint: { x: 8, y: 7 }
+  };
+  // When
+  const midpoint = segmentMiddlePoint(segment);
+  // Then
+  expect(midpoint).toStrictEqual({ x: 5, y: 5 });
 });

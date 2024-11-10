@@ -1,4 +1,5 @@
-import { ellipseIsClosed, ellipseToCubicCurves } from "./ellipse.function";
+import { EllipseProperties } from "./ellipse";
+import { ellipseIsClosed, ellipseMiddlePoint, ellipseToCubicCurves } from "./ellipse.function";
 
 test("ellipseIsClosed -> true because full sweep", () => {
   // Given
@@ -40,15 +41,13 @@ test("ellipseToCubicCurve open", () => {
   const startAngle = 1.286463370861387;
   const endAngle = 4.502415467522527;
   // When
-  const curves = ellipseToCubicCurves(
-    cx,
-    cy,
-    rx,
-    ry,
+  const curves = ellipseToCubicCurves({
+    center: {x: cx, y: cy},
+    focus: { x: rx, y: ry},
     axisRatio,
     startAngle,
     endAngle,
-  );
+  });
   // Then
   expect(curves.length).toBe(3);
   // console.log(curves);
@@ -64,18 +63,31 @@ test("ellipseToCubicCurve closed", () => {
   const startAngle = 0;
   const endAngle = 2 * Math.PI;
   // When
-  const curves = ellipseToCubicCurves(
-    cx,
-    cy,
-    rx,
-    ry,
+  const curves = ellipseToCubicCurves({
+    center: {x: cx, y: cy},
+    focus: { x: rx, y: ry},
     axisRatio,
     startAngle,
     endAngle,
-  );
+  });
   // TODO Then
   // console.log(curves);
   // expect(curves.length).toBe(5);
+});
+
+test('ellipseMiddlePoint', () => {
+  // Given
+  const ellipse: EllipseProperties = {
+    center: { x: 0, y: 0 },
+    focus: { x: 5, y: 0 },
+    axisRatio: 0.5,
+    startAngle: 0,
+    endAngle: Math.PI / 2,
+  };
+  // When
+  const midpoint = ellipseMiddlePoint(ellipse);
+  // Then
+  expect(midpoint).toStrictEqual({ x: 3.5355339059327378, y: 1.7677669529663687 });
 });
 
 // test('estimateSegmentCount', () => {

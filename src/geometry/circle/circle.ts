@@ -1,6 +1,6 @@
 import { DirectionEnum, MirrorEnum } from "../geometry.enum";
 import { Rectangle } from "../rectangle/rectangle";
-import { circleBoundingBox, circlePath, rotateCircle, transformCircle } from "./circle.function";
+import { circleBoundingBox, circlePath, circlePointToAngle, rotateCircle, transformCircle } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
@@ -55,8 +55,12 @@ export class Circle extends Shape implements CircleProperties {
     // TODO implement this because we need it to set optimal start point
   }
 
-  get angle_degrees(): number {
-    return 360;
+  get startAngle(): number {
+    return circlePointToAngle(this, this.startPoint);
+  }
+
+  get endAngle(): number {
+    return circlePointToAngle(this, this.endPoint);
   }
 
   get direction(): DirectionEnum {

@@ -2,6 +2,7 @@ import { Rectangle } from "../rectangle/rectangle";
 import {
   cubicCurveBoundingBox,
   cubicCurveDirection,
+  cubicCurveMiddlePoint,
   mirrorCubicCurve,
   reverseCubicCurve,
   rotateCubicCurve,
@@ -39,6 +40,10 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
     this.control1 = new Point(control1);
     this.control2 = new Point(control2);
     this.endPoint = new Point(endPoint);
+  }
+
+  get middlePoint(): Point {
+    return new Point(cubicCurveMiddlePoint(this));
   }
 
   get boundary(): Rectangle {

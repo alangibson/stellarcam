@@ -107,21 +107,21 @@ export function arcToCubicCurve(
  * @returns
  */
 export function ellipseToCubicCurves(
-  cx,
-  cy,
-  fx,
-  fy,
-  axisRatio,
-  startAngle,
-  endAngle,
+  {
+    center,
+    focus,
+    axisRatio,
+    startAngle,
+    endAngle
+  }: EllipseProperties
 ): CubicCurveProperties[] {
   const curves = [];
   const step = Math.PI / 2; // Split the ellipse into segments (quarter arcs)
 
   // Adjust ry based on the axis ratio
-  fy = fx * axisRatio;
+  focus.y = focus.x * axisRatio;
 
-  const rotationAngle: number = ellipseRotation(cx, cy, fx, fy);
+  const rotationAngle: number = ellipseRotation(center.x, center.y, focus.x, focus.y);
   // const rotationAngle = 0;
 
   // Determine if the ellipse should be closed
@@ -131,10 +131,10 @@ export function ellipseToCubicCurves(
   for (let angle = startAngle; angle < endAngle; angle += step) {
     const segmentEnd = Math.min(angle + step, endAngle);
     const bezierCurve = arcToCubicCurve(
-      cx,
-      cy,
-      fx,
-      fy,
+      center.x,
+      center.y,
+      focus.x,
+      focus.y,
       angle,
       segmentEnd,
       rotationAngle,
@@ -145,10 +145,10 @@ export function ellipseToCubicCurves(
   // If the ellipse is closed and spans 2π, add an extra segment to close the shape
   if (isClosed && startAngle !== endAngle) {
     const closingCurve = arcToCubicCurve(
-      cx,
-      cy,
-      fx,
-      fy,
+      center.x,
+      center.y,
+      focus.x,
+      focus.y,
       endAngle,
       startAngle,
       rotationAngle,
@@ -157,6 +157,48 @@ export function ellipseToCubicCurves(
   }
 
   return curves;
+}
+
+/**
+ * Approximate midpoint on countour by Simple Angle Averaging.
+ * Midpoint by Arc Length is more accurate.
+ */
+export function ellipseMiddlePoint(ellipse: EllipseProperties): PointProperties {
+  const {
+    center,
+    focus,
+    axisRatio,
+    startAngle,
+    endAngle,
+  } = ellipse;
+
+  // Calculate the averaged angle
+  let midAngle = (startAngle + endAngle) / 2;
+
+  // Ensure angles are within 0 to 2π
+  midAngle = (midAngle + 2 * Math.PI) % (2 * Math.PI);
+
+  // Compute the lengths of the semi-major and semi-minor axes
+  const a = Math.hypot(focus.x, focus.y);
+  const b = a * axisRatio;
+
+  // Compute the angle of rotation of the ellipse
+  const rotation = Math.atan2(focus.y, focus.x);
+
+  // Calculate the point on the ellipse at midAngle
+  const cosMidAngle = Math.cos(midAngle);
+  const sinMidAngle = Math.sin(midAngle);
+
+  const x =
+    center.x +
+    a * cosMidAngle * Math.cos(rotation) -
+    b * sinMidAngle * Math.sin(rotation);
+  const y =
+    center.y +
+    a * cosMidAngle * Math.sin(rotation) +
+    b * sinMidAngle * Math.cos(rotation);
+
+  return { x, y };
 }
 
 // TODO

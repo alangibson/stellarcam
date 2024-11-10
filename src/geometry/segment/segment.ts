@@ -1,7 +1,7 @@
 import { Rectangle } from "../rectangle/rectangle";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
-import { rotateSegment, segmentDirection, transformSegment } from "./segment.function";
+import { rotateSegment, segmentDirection, segmentMiddlePoint, transformSegment } from "./segment.function";
 import { Shape } from "../shape";
 
 export interface SegmentProperties {
@@ -23,6 +23,10 @@ export class Segment extends Shape implements SegmentProperties {
     super();
     this.startPoint = new Point(startPoint);
     this.endPoint = new Point(endPoint);
+  }
+
+  get middlePoint(): Point {
+    return new Point(segmentMiddlePoint(this));
   }
 
   get boundary(): Rectangle {

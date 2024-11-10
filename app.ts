@@ -27,6 +27,9 @@ function dump(o) {
 // Parse DXF file
 //
 
+// TODO Arcs arc in wrong direction:
+// 1.dxf, 2.dxf, 132_2000.dxf
+
 // Contains LINE: ./test/dxf/1.dxf
 // Contains LWPOLYLINE with bulge: './test/dxf/AFluegel Rippen b2 0201.dxf'
 // Contains SPLINE: './test/dxf/Tractor Light Mount - Left.dxf'
@@ -88,6 +91,7 @@ for (const layerName in inputDrawing.layers) {
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
 area.translate(-area.min.x, -area.min.y);
 
+// FIXME flip dxf, don't flip SVG
 // Flip coordinate origin from bottom-left to top-right
 // area.flip(MirrorEnum.HORIZONTAL);
 
@@ -104,6 +108,14 @@ const drawing: Drawing = new Drawing(layers, area);
 // These are our saved Operation settings
 // Map operation to layer(s) using keys and names
 const operationLookup: {[key: string]: OperationProperties } = {
+  'default': {
+    feedRate: 3000,
+    pierceDelay: 0,
+    pierceHeight: 2.5,
+    cutHeight: 0.5,
+    cutVolts: 148,
+    kerfWidth: 1
+  },
   // TODO use [operation1.key] instead
   'operation-3200': {
     feedRate: 3200,
@@ -175,12 +187,21 @@ const operationLinks = [
 // Create Program
 //
 
-const operations: Operation[] = operationLinks.map((operationLink) => {
-  const operation: Operation = new Operation(operationLookup[operationLink.operationKey]);
-  const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name));
-  operation.layers = layers;
+// TODO move to object or function
+//
+// Use operationLinks to link operations via layer name
+// const operations: Operation[] = operationLinks.map((operationLink) => {
+//   const operation: Operation = new Operation(operationLookup[operationLink.operationKey]);
+//   const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name));
+//   operation.layers = layers;
+//   return operation;
+// });
+// 
+// Link all layers to default operation
+const operation: Operation = drawing.children.reduce<Operation>((operation: Operation, layer: Layer) => {
+  operation.layers.push(layer);
   return operation;
-});
+}, new Operation(operationLookup['default']));
 
 const machine: Machine = new Machine(
   {
@@ -189,7 +210,7 @@ const machine: Machine = new Machine(
     cutterCompensation: undefined,
     // TODO distanceMode
     distanceMode: undefined,
-    operations
+    operations: [operation]
   }
 );
 const program: Program = new Program({ machine });

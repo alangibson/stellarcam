@@ -78,6 +78,10 @@ export function transformSegment(segment: SegmentProperties, matrix: number[]): 
   };
 }
 
-// export function segmentMiddlePoint(segment: SegmentProperties): PointProperties {
-
-// }
+export function segmentMiddlePoint(segment: SegmentProperties): PointProperties {
+  // Calculate the midpoint coordinates
+  const midX = (segment.startPoint.x + segment.endPoint.x) / 2;
+  const midY = (segment.startPoint.y + segment.endPoint.y) / 2;
+  // Return the midpoint as an object
+  return { x: midX, y: midY };
+}

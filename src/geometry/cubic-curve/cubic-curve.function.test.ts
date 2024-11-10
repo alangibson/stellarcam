@@ -1,4 +1,4 @@
-import { cubicCurveDirection, transformCubicCurve } from "./cubic-curve.function";
+import { cubicCurveDirection, transformCubicCurve, cubicCurveMiddlePoint } from "./cubic-curve.function";
 import { DirectionEnum } from "../geometry.enum";
 import { PointProperties } from "../point/point";
 import { CubicCurveProperties } from "./cubic-curve";
@@ -58,6 +58,21 @@ test('transformCubicCurve', () => {
   expect(transformedCubicCurve.control2).toStrictEqual({ x: 400, y: 350 });
   expect(transformedCubicCurve.endPoint).toStrictEqual({ x: 200, y: 350 });
 });
+
+test('cubicCurveMiddlePoint', () => {
+  // Given
+  const curve: CubicCurveProperties = {
+    startPoint: { x: 0, y: 0 },
+    control1: { x: 1, y: 2 },
+    control2: { x: 3, y: 2 },
+    endPoint: { x: 4, y: 0 }
+  };
+  // When
+  const midpoint = cubicCurveMiddlePoint(curve);
+  // Then
+  expect(midpoint).toStrictEqual({ x: 2, y: 1.5 });
+});
+
 
 // test('mirrorCubicCurve', () => {
 // TODO

@@ -1,5 +1,6 @@
+import { PointProperties } from '../point/point';
 import { CircleProperties } from './circle';
-import { transformCircle } from './circle.function';
+import { circlePointToAngle, transformCircle } from './circle.function';
 
 test('transformCircle translate and scale', () => {
     // Given
@@ -15,6 +16,36 @@ test('transformCircle translate and scale', () => {
     expect(transformedCircle.center.y).toBe(230);
     expect(transformedCircle.radius).toBe(100); 
 });
+
+
+// // Example usage:
+// const circle = {
+//     x: 0,
+//     y: 0,
+//     radius: 5,
+//     startAngle: 0,
+//     endAngle: Math.PI / 2, // 90 degrees in radians
+// };
+// 
+// const midpoint = findCircleMidpoint(circle);
+// console.log(midpoint); // Outputs the midpoint coordinates
+// Output:
+// 
+// { x: 3.5355339059327378, y: 3.5355339059327373 }
+
+test('circlePointToAngle', () => {
+    // Given
+    const circle: CircleProperties = {
+        center: {x: 0, y: 0},
+        radius: 5
+    };
+    const point: PointProperties = {x: 3.5355339059327378, y: 3.5355339059327373};
+    // When
+    const angleInRadians = circlePointToAngle(circle, point);
+    // Then
+    expect(angleInRadians).toBe(0.7853981633974483);
+});
+
 
 // TODO support transforming Circle into Ellipse?
 // test('transformCircle into Ellipse', () => {

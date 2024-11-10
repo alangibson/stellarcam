@@ -26,7 +26,7 @@ export class SvgFile {
         .point { stroke-width: 1; }
         .start.point { stroke: green; }
         .end.point { stroke: red; }
-        .middle.point { stroke: yellow; }
+        .middle.point { stroke: blue; }
         .center.point { stroke: yellow; }
         .control.point { stroke: blue; }
 

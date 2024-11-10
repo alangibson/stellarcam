@@ -99,7 +99,7 @@ export class Arc extends Shape implements ArcProperties {
     this.startAngle = arcAngleAtPoint(this.center, startPoint);
   }
 
-  get middle_point(): Point {
+  get middlePoint(): Point {
     const { x, y } = arcMidpoint(
       this.center.x,
       this.center.y,

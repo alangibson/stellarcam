@@ -1,4 +1,4 @@
-import { CircleProperties } from "./circle";
+import { Circle, CircleProperties } from "./circle";
 import { Point, PointProperties } from "../point/point";
 import { rotatePoint, transformPoint } from "../point/point.function";
 
@@ -99,4 +99,51 @@ export function transformCircle(circle: CircleProperties, matrix: number[]): Cir
     center: transformPoint(circle.center, matrix),
     radius: circle.radius
   };
+}
+
+/** Find middle point along the contour of a circle */
+// export function circleMiddlePoint(circle: CircleProperties): PointProperties {
+//   // Normalize angles between 0 and 2π
+//   let angleStart = circle.startAngle % (2 * Math.PI);
+//   let angleEnd = circle.endAngle % (2 * Math.PI);
+
+//   // Ensure angleEnd is greater than angleStart
+//   if (angleEnd < angleStart) {
+//     angleEnd += 2 * Math.PI;
+//   }
+
+//   // Calculate the mid-angle
+//   const midAngle = (angleStart + angleEnd) / 2;
+
+//   // Compute the point at midAngle using circle parametric equations
+//   const x = circle.center.x + circle.radius * Math.cos(midAngle);
+//   const y = circle.center.y + circle.radius * Math.sin(midAngle);
+
+//   return { x, y };
+// }
+
+/** Find the angle of a point along a circle contour */
+export function circlePointToAngle(circle: CircleProperties, point: PointProperties): number {
+  // Calculate the vector from the center to the point
+  const dx = point.x - circle.center.x;
+  const dy = point.y - circle.center.y;
+
+  // Calculate the distance from the center to the point
+  const distance = Math.hypot(dx, dy);
+
+  // Check if the point lies approximately on the circle
+  const tolerance = 1e-6; // Adjust tolerance as needed
+  if (Math.abs(distance - circle.radius) > tolerance) {
+      throw new Error('The point does not lie on the circle.');
+  }
+
+  // Calculate the angle using atan2
+  let angle = Math.atan2(dy, dx);
+
+  // Normalize angle to be between 0 and 2π
+  if (angle < 0) {
+      angle += 2 * Math.PI;
+  }
+
+  return angle; // Angle in radians
 }

@@ -258,3 +258,27 @@ export function transformCubicCurve(curve: CubicCurveProperties, matrix: number[
     endPoint: transformPoint(curve.endPoint, matrix)
   };
 }
+
+/** Approximate middle point of cubic curve. 
+ * Dividing into arcs first would give a more accurate result.
+ */
+export function cubicCurveMiddlePoint(curve: CubicCurveProperties): PointProperties {
+  // Calculate the point at t = 0.5
+  const t = 0.5;
+  const oneMinusT = 1 - t;
+
+  const x =
+      oneMinusT ** 3 * curve.startPoint.x +
+      3 * oneMinusT ** 2 * t * curve.control1.x +
+      3 * oneMinusT * t ** 2 * curve.control2.x +
+      t ** 3 * curve.endPoint.x;
+
+  const y =
+      oneMinusT ** 3 * curve.startPoint.y +
+      3 * oneMinusT ** 2 * t * curve.control1.y +
+      3 * oneMinusT * t ** 2 * curve.control2.y +
+      t ** 3 * curve.endPoint.y;
+
+  // Return the point at t = 0.5
+  return { x, y };
+}
