@@ -1,6 +1,7 @@
-import { cubicCurveDirection } from "./cubic-curve.function";
+import { cubicCurveDirection, transformCubicCurve } from "./cubic-curve.function";
 import { DirectionEnum } from "../geometry.enum";
 import { PointProperties } from "../point/point";
+import { CubicCurveProperties } from "./cubic-curve";
 
 test("cubicCurveDirection CW", () => {
   // Given
@@ -27,6 +28,35 @@ test("cubicCurveDirection CCW", () => {
   const direction: DirectionEnum = cubicCurveDirection(P0, P1, P2, P3, samples);
   // Then
   expect(direction).toBe(DirectionEnum.CW);
+});
+
+test('transformCubicCurve', () => {
+  // Given
+  const curve: CubicCurveProperties = {
+    startPoint: { x: 50, y: 50 },
+    control1: { x: 150, y: 50 },
+    control2: { x: 150, y: 150 },
+    endPoint: { x: 50, y: 150 }
+  };
+  // scale the curve by a factor of 2 and translate it by (100, 50).
+  const scaleX = 2;
+  const scaleY = 2;
+  const translateX = 100;
+  const translateY = 50;
+  const a = scaleX;
+  const b = 0;
+  const c = translateX;
+  const d = 0;
+  const e = scaleY;
+  const f = translateY;
+  const matrix = [a, b, c, d, e, f, 0, 0, 1];
+  // When
+  const transformedCubicCurve = transformCubicCurve(curve, matrix);
+  // Then
+  expect(transformedCubicCurve.startPoint).toStrictEqual({ x: 200, y: 150 });
+  expect(transformedCubicCurve.control1).toStrictEqual({ x: 400, y: 150 });
+  expect(transformedCubicCurve.control2).toStrictEqual({ x: 400, y: 350 });
+  expect(transformedCubicCurve.endPoint).toStrictEqual({ x: 200, y: 350 });
 });
 
 // test('mirrorCubicCurve', () => {

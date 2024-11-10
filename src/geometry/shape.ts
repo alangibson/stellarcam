@@ -13,6 +13,7 @@ export abstract class Shape implements Geometry {
   abstract mirror(mirror: MirrorEnum, axisValue: number);
   abstract translate(dx: number, dy: number);
   abstract rotate(center: PointProperties, angle: number);
+  abstract transform(matrix: number[]);
   // Defined on Shape
   abstract direction: DirectionEnum;
 

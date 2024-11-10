@@ -1,5 +1,5 @@
 import { ArcProperties } from "./arc";
-import { arcOrientation, arcSweep, rotateArc } from "../arc/arc.function";
+import { arcOrientation, arcSweep, rotateArc, transformArc } from "../arc/arc.function";
 import { DirectionEnum } from "../geometry.enum";
 
 const PI = Math.PI;
@@ -72,4 +72,28 @@ test("rotateArc", () => {
   expect(arcdef.radius).toBe(50);
   expect(arcdef.startAngle).toBe(0.7853981633974483);
   expect(arcdef.endAngle).toBe(3.9269908169872414);
+});
+
+test('transformArc', () => {
+  // Given
+  // Define the 3x3 transformation matrix (e.g., scale and translate)
+  const matrix = [
+    1, 0, 50,  // a, b, c
+    0, 1, 50,  // d, e, f
+    0, 0, 1    // g, h, i (usually 0, 0, 1 in 2D transformations)
+  ];
+  const arc: ArcProperties = {
+    center: {x:100, y:100},
+    radius: 50,
+    startAngle: 0,
+    endAngle: Math.PI / 2
+  };
+  // When
+  const transformedArc = transformArc(arc, matrix);
+  // TODO Then
+  expect(transformedArc.center.x).toBe(150);
+  expect(transformedArc.center.y).toBe(150);
+  expect(transformedArc.radius).toBe(arc.radius);
+  expect(transformedArc.startAngle).toBe(arc.startAngle);
+  expect(transformedArc.endAngle).toBe(arc.endAngle);
 });

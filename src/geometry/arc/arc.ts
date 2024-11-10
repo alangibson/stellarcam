@@ -7,6 +7,7 @@ import {
   mirrorArc,
   arcAngleAtPoint,
   rotateArc,
+  transformArc,
 } from "./arc.function";
 import { Rectangle } from "../rectangle/rectangle";
 import { GeometryTypeEnum } from "../geometry.enum";
@@ -21,6 +22,7 @@ export interface ArcProperties {
 }
 
 export class Arc extends Shape implements ArcProperties {
+
   type: GeometryTypeEnum = GeometryTypeEnum.ARC;
 
   center: Point;
@@ -137,6 +139,14 @@ export class Arc extends Shape implements ArcProperties {
 
   private bust() {
     this.bounding_box = null;
+  }
+
+  transform(matrix: number[]) {
+    const transformed = transformArc(this, matrix);
+    this.center = new Point(transformed.center);
+    this.radius = transformed.radius;
+    this.startAngle = transformed.startAngle
+    this.endAngle = transformed.endAngle
   }
 
   // Does not change internal direction to avoid rendering arc upside down

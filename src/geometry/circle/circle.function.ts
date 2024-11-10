@@ -1,6 +1,6 @@
 import { CircleProperties } from "./circle";
 import { Point, PointProperties } from "../point/point";
-import { rotatePoint } from "../point/point.function";
+import { rotatePoint, transformPoint } from "../point/point.function";
 
 /**
  * Calculate bounding box for a circle.
@@ -92,4 +92,11 @@ export function rotateCircle(
 ): CircleProperties {
   const center: PointProperties = rotatePoint(x, y, centerX, centerY, angle);
   return { center, radius: radius };
+}
+
+export function transformCircle(circle: CircleProperties, matrix: number[]): CircleProperties {
+  return {
+    center: transformPoint(circle.center, matrix),
+    radius: circle.radius
+  };
 }

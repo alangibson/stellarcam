@@ -4,6 +4,7 @@ import { PointProperties } from "../point/point";
 import {
   mirrorPoint,
   rotatePoint,
+  transformPoint,
   translatePoint,
 } from "../point/point.function";
 
@@ -246,5 +247,14 @@ export function rotateCubicCurve(
     control1: cp1,
     control2: cp2,
     endPoint: p1,
+  };
+}
+
+export function transformCubicCurve(curve: CubicCurveProperties, matrix: number[]): CubicCurveProperties {
+  return {
+    startPoint: transformPoint(curve.startPoint, matrix),
+    control1: transformPoint(curve.control1, matrix),
+    control2: transformPoint(curve.control2, matrix),
+    endPoint: transformPoint(curve.endPoint, matrix)
   };
 }

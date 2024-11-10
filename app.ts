@@ -89,7 +89,7 @@ for (const layerName in inputDrawing.layers) {
 area.translate(-area.min.x, -area.min.y);
 
 // Flip coordinate origin from bottom-left to top-right
-area.flip(MirrorEnum.HORIZONTAL);
+// area.flip(MirrorEnum.HORIZONTAL);
 
 // Use TSP to build rapids between cuts
 // Rapids get added to Cut in the apply() method
@@ -167,7 +167,7 @@ const operationLinks = [
   },
   {
     operationKey: 'operation-2400',
-    layerNames: ['Layer 1'],
+    layerNames: ['Layer 1', 'suhe', 'muhe', 'fly', 'outline'],
   }
 ];
 
@@ -177,9 +177,9 @@ const operationLinks = [
 
 const operations: Operation[] = operationLinks.map((operationLink) => {
   const operation: Operation = new Operation(operationLookup[operationLink.operationKey]);
-  const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name))
+  const layers: Layer[] = drawing.children.filter((layer: Layer) => operationLink.layerNames.includes(layer.name));
   operation.layers = layers;
-  return new Operation(operation);
+  return operation;
 });
 
 const machine: Machine = new Machine(
@@ -199,6 +199,6 @@ const program: Program = new Program({ machine });
 //
 
 // to HTML
-new HtmlFile().save(drawing, "test.html");
+new HtmlFile().save(drawing, "test.html", program);
 // and to Gcode
 new Output(drawing, GcodeConfig, program).save("test.gcode");

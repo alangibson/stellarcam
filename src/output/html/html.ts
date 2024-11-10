@@ -2,9 +2,10 @@ import * as fs from "fs";
 import * as Mustache from "mustache";
 import { Drawing } from "../../domain/drawing";
 import { SvgFile } from "../svg/svg";
+import { Program } from "../../domain/program";
 
 export class HtmlFile {
-  save(drawing: Drawing, path: string) {
+  save(drawing: Drawing, path: string, program: Program) {
 
     // Left
     const left = Mustache.render(
@@ -13,7 +14,7 @@ export class HtmlFile {
     );
 
     // Middle
-    const svg = new SvgFile().toHtml(drawing);
+    const svg = new SvgFile().toHtml(drawing, program);
     const middle = Mustache.render(
       fs.readFileSync("./src/output/html/middle.mustache", "utf-8"),
       { drawing, svg },

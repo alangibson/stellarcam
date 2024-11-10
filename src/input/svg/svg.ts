@@ -9,7 +9,8 @@ import { CubicCurve } from '../../geometry/cubic-curve/cubic-curve';
 import { Shape } from '../../geometry/shape';
 import { QuadraticCurve } from '../../geometry/quadratic-curve/quadratic-curve';
 import { optimize } from 'svgo';
-import SvgFlatten from "svg-flatten";
+// import SvgFlatten from "svg-flatten";
+import * as SvgTransformParser from 'svg-transform-parser';
 
 function parsePathElement(element): Shape[] {
     const shapes: Shape[] = [];
@@ -76,98 +77,92 @@ function parsePathElement(element): Shape[] {
     return shapes;
 }
 
-function parseChildren(layerChildren): Shape[] {
+function parseChildren(layerChildren, svgTransformMatrix?: number[]): Shape[] {
     const shapes: Shape[] = [];
     for (const element of layerChildren) {
         if (element.tagName == 'g') {
             // Found a <g> element, so recurse
-            // HACK Apply transform from group to all children
-            // SVGO does not support this natively
-            //  transform="matrix(0.78524526,0.14476901,-0.16548466,0.89760962,-65.496387,-115.39898)"
-            // if (element.properties.hasOwnProperty('transform')) {
-            //     // Copy transform to all children
-            // }
-            const elementShapes: Shape[] = parseChildren(element.children);
+            let matrix: number[];
+            if (element.properties.hasOwnProperty('transform')) {
+                // Copy transform to all children
+                const svgTransform = SvgTransformParser.parse(element.properties.transform);
+                // TODO there are other possible transform functions, like translate
+                const m = svgTransform.matrix;
+                matrix = [m.a, m.b, m.c, m.d, m.e, m.f];
+            }
+            const elementShapes: Shape[] = parseChildren(element.children, matrix);
             shapes.push(...elementShapes);
         } else if (element.tagName == 'path') {
             const elementShapes: Shape[] = parsePathElement(element);
+            // Apply transform from group to all children
+            // SVGO does not support this natively
+            if (svgTransformMatrix){
+                // HACK
+                // Note: SVG 3x3 transform matrix is [a, c, e, b, d, f]
+                const matrix: number[] = [
+                    svgTransformMatrix[0],
+                    svgTransformMatrix[2],
+                    svgTransformMatrix[4],
+                    svgTransformMatrix[1],
+                    svgTransformMatrix[3],
+                    svgTransformMatrix[5]
+                ]
+                for (const shape of elementShapes)
+                    shape.transform(matrix);
+            }
             shapes.push(...elementShapes);
         }
     }
     return shapes;
 }
 
-// import * as applyTransforms from 'svgo/plugins/applyTransforms';
-// console.log(applyTransforms.applyTransforms);
-
 export class SvgFile {
     load(path: string): InputDrawing {
         let content: string = fs.readFileSync(path, "utf-8");
         // content = new SvgFlatten(content).transform().value()
-        // const optimized = optimize(content, {
-        //     plugins: [
-        //       {
-        //         name: 'convertPathData',
-        //         params: {
-        //             // If to apply transforms to paths
-        //             applyTransforms: true,
-        //             // If to apply transforms to paths with a stroke.
-        //             applyTransformsStroked: true,
-        //             // If to convert from curves to arcs when possible.
-        //             // makeArcs: {
-        //             //     threshold,
-        //             //     tolerance
-        //             // },
-        //             straightCurves: false,
-        //             // If to convert cubic beziers to quadratic beziers when they effectively are.
-        //             convertToQ: false,
-        //             // If to convert regular lines to an explicit horizontal or vertical line where possible.
-        //             lineShorthands: false,
-        //             // If to convert lines that go to the start to a `z` command.
-        //             convertToZ: false,
-        //             // If to convert curves to smooth curves where possible.
-        //             curveSmoothShorthands: false,
-        //             // Number of decimal places to round to, using conventional rounding rules.
-        //             floatPrecision: 3,
-        //             // Number of decimal places to round to, using conventional rounding rules.
-        //             transformPrecision: 5,
-        //             // Round the radius of circular arcs when the effective change is under the error. 
-        //             smartArcRounding: false,
-        //             // Remove redundant path commands that don't draw anything.
-        //             removeUseless: false,
-        //             // Collapse repeated commands when they can be merged into one.
-        //             collapseRepeated: false,
-        //             // If to convert between absolute or relative coordinates, whichever is shortest.
-        //             utilizeAbsolute: false,
-        //             negativeExtraSpace: false,
-        //             // If to always convert to absolute coordinates, even if it adds more bytes.
-        //             forceAbsolutePath: true
-        //         }
-        //       },
-        //       {
-        //         name: 'convertTransform',
-        //         params: {
-        //             // Convert transforms to their shorthand alternatives.
-        //             convertToShorts: false,
-        //             // Number of decimal places to round degrees values to, using conventional rounding rules. Used for `rotate` and `skew`.
-        //             degPrecision: 4,
-        //             // Number of decimal places to round to, using conventional rounding rules.
-        //             floatPrecision: 3,
-        //             // Number of decimal places to round to, using conventional rounding rules.
-        //             transformPrecision: 5,
-        //             // If decompose matrices into simple transforms. See [Decomposition of 2D-transform matrices](https://frederic-wang.fr/decomposition-of-2d-transform-matrices.html) for more context.
-        //             matrixToTransform: false,
-        //             // shortTranslate?: boolean;
-        //             // shortScale?: boolean;
-        //             // shortRotate?: boolean;
-        //             // removeUseless?: boolean;
-        //             // collapseIntoOne?: boolean;
-        //             // leadingZero?: boolean;
-        //             // negativeExtraSpace?: boolean;
-        //         }
-        //       }
-        //     ],
-        //   });
+        const optimized = optimize(content, {
+            plugins: [
+              {
+                name: 'convertPathData',
+                params: {
+                    // If to apply transforms to paths
+                    applyTransforms: false,
+                    // If to apply transforms to paths with a stroke.
+                    applyTransformsStroked: false,
+                    // If to convert from curves to arcs when possible.
+                    // makeArcs: {
+                    //     threshold,
+                    //     tolerance
+                    // },
+                    straightCurves: false,
+                    // If to convert cubic beziers to quadratic beziers when they effectively are.
+                    convertToQ: false,
+                    // If to convert regular lines to an explicit horizontal or vertical line where possible.
+                    lineShorthands: false,
+                    // If to convert lines that go to the start to a `z` command.
+                    convertToZ: false,
+                    // If to convert curves to smooth curves where possible.
+                    curveSmoothShorthands: false,
+                    // Number of decimal places to round to, using conventional rounding rules.
+                    floatPrecision: 3,
+                    // Number of decimal places to round to, using conventional rounding rules.
+                    transformPrecision: 5,
+                    // Round the radius of circular arcs when the effective change is under the error. 
+                    smartArcRounding: false,
+                    // Remove redundant path commands that don't draw anything.
+                    removeUseless: false,
+                    // Collapse repeated commands when they can be merged into one.
+                    collapseRepeated: false,
+                    // If to convert between absolute or relative coordinates, whichever is shortest.
+                    utilizeAbsolute: false,
+                    negativeExtraSpace: false,
+                    // If to always convert to absolute coordinates, even if it adds more bytes.
+                    forceAbsolutePath: true
+                }
+              }
+            ],
+          });
+        content = optimized.data;
         const xml = parse(content);
 
         // if <svg xmlns:inkscape>, then treat as Inkscape SVG

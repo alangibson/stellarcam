@@ -1,6 +1,8 @@
 import { QuadraticCurveProperties } from "../quadratic-curve/quadratic-curve";
-import { Point } from "../point/point";
+import { Point, PointProperties } from "../point/point";
 import { CubicCurveProperties } from "../cubic-curve/cubic-curve";
+import { Ellipse, EllipseProperties } from "./ellipse";
+import { transformPoint } from "../point/point.function";
 
 export function ellipseAngleRange(startAngle, endAngle) {
   return Math.abs(endAngle - startAngle);
@@ -156,3 +158,51 @@ export function ellipseToCubicCurves(
 
   return curves;
 }
+
+// TODO
+// export function transformEllipse(ellipse: EllipseProperties, matrix: number[]): EllipseProperties {
+//   // function transformEllipse(cx, cy, radiusX, radiusY, rotation, matrix) {
+
+//     // Transform the center point of the ellipse
+//     const center: PointProperties = {
+//       x: ellipse.x,
+//       y: ellipse.y
+//     }
+//     const transformedCenter = transformPoint(center, matrix);
+
+//     // Vectors representing the ellipse's axes before rotation
+//     const ux = radiusX * Math.cos(rotation);
+//     const uy = radiusX * Math.sin(rotation);
+//     const vx = -radiusY * Math.sin(rotation);
+//     const vy = radiusY * Math.cos(rotation);
+
+//     // Extract linear transformation components from the matrix
+//     const a = matrix[0], b = matrix[1];
+//     const d = matrix[3], e = matrix[4];
+
+//     // Transform the axes vectors
+//     const transformedUx = {
+//         x: a * ux + b * uy,
+//         y: d * ux + e * uy
+//     };
+//     const transformedVy = {
+//         x: a * vx + b * vy,
+//         y: d * vx + e * vy
+//     };
+
+//     // Compute the lengths of the transformed axes (semi-major and semi-minor)
+//     const newRadiusX = Math.hypot(transformedUx.x, transformedUx.y);
+//     const newRadiusY = Math.hypot(transformedVy.x, transformedVy.y);
+
+//     // Compute the rotation angle of the transformed ellipse
+//     const newRotation = Math.atan2(transformedUx.y, transformedUx.x);
+
+//     // Return the transformed ellipse parameters
+//     return {
+//         x: transformedCenter.x,
+//         y: transformedCenter.y,
+//         radiusX: newRadiusX,
+//         radiusY: newRadiusY,
+//         rotation: newRotation
+//     };
+// }

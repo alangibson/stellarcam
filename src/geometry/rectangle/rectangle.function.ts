@@ -1,4 +1,5 @@
 import { PointProperties } from "../point/point";
+import { transformPoint } from "../point/point.function";
 import { RectangleProperties } from "./rectangle";
 
 export function rectangleCentroid(x1, y1, x2, y2): PointProperties {
@@ -25,4 +26,11 @@ export function joinRectangles(rect1: RectangleProperties, rect2: RectanglePrope
       y: endPointY
     }
   }
+}
+
+export function transformRectangle(rect: RectangleProperties, matrix: number[]): RectangleProperties {
+  return {
+    startPoint: transformPoint(rect.startPoint, matrix),
+    endPoint: transformPoint(rect.endPoint, matrix),
+  };
 }

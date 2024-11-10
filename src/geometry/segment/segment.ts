@@ -1,7 +1,7 @@
 import { Rectangle } from "../rectangle/rectangle";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
-import { rotateSegment, segmentDirection } from "./segment.function";
+import { rotateSegment, segmentDirection, transformSegment } from "./segment.function";
 import { Shape } from "../shape";
 
 export interface SegmentProperties {
@@ -13,6 +13,7 @@ export interface SegmentProperties {
  * A line anchored at two points
  */
 export class Segment extends Shape implements SegmentProperties {
+
   type: GeometryTypeEnum = GeometryTypeEnum.SEGMENT;
 
   startPoint: Point;
@@ -42,6 +43,12 @@ export class Segment extends Shape implements SegmentProperties {
     return `M ${this.startPoint.x},${this.startPoint.y} L ${this.endPoint.x},${this.endPoint.y}`;
   }
 
+  transform(matrix: number[]) {
+    const transformed = transformSegment(this, matrix);
+    this.startPoint = new Point(transformed.startPoint);
+    this.endPoint = new Point(transformed.endPoint);
+  }
+  
   reverse() {
     const startPoint = this.startPoint;
     this.startPoint = this.endPoint;

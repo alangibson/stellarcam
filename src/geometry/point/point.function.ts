@@ -74,3 +74,17 @@ export function rotatePoint(x, y, centerX, centerY, angle): PointProperties {
   const yRotated = dx * sin + dy * cos + centerY;
   return { x: xRotated, y: yRotated };
 }
+
+/**
+ * Transform point using 3x3 matrix.
+ * 
+ * @param x 
+ * @param y 
+ * @param matrix 3x3 matrix in flat array form
+ * @returns 
+ */
+export function transformPoint(point: PointProperties, matrix: number[]): PointProperties {
+  const newX = matrix[0] * point.x + matrix[1] * point.y + matrix[2];
+  const newY = matrix[3] * point.x + matrix[4] * point.y + matrix[5];
+  return {x: newX, y: newY};
+}

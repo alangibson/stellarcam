@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { Drawing } from "../domain/drawing"
 import { GeometryTypeEnum } from "../geometry/geometry.enum"
 import { Program, ProgramProperties } from "../domain/program";
+import { Operation } from "../domain/operation";
 
 export interface OutputApply {
     drawing?: {
@@ -20,6 +21,12 @@ export interface OutputApply {
         begin?,
         rapidTo?,
         rapidAway?,
+        end?
+    };
+    chain?: {
+        begin?,
+        startPoint?,
+        endPoint?,
         end?
     };
     shape?: {
@@ -93,7 +100,8 @@ export class Output {
 
         // Switch to driving loop with Operations, not Layers
         // Note that Layers without operations will not be rendered
-        for (const operation of this.program.machine.operations) {
+        const operations: Operation[] = this.program.machine.operations;
+        for (const operation of operations) {
             // Operation begin
             output.push(this.config.operation?.begin?.(operation));
             // Loop over layers that Operation links to
@@ -108,8 +116,10 @@ export class Output {
                         output.push(this.config.cut?.rapidTo?.(cut));
                         // Cut begin
                         output.push(this.config.cut?.begin?.(cut));
-                        // Chain
                         for (const chain of cut.children) {
+                            // Chain begin
+                            output.push(this.config.chain?.begin?.(chain));
+                            output.push(this.config.chain?.startPoint?.(chain));
                             for (const shape of chain.children) {
                                 // Shape begin
                                 output.push(this.config.shape?.begin?.(shape));
@@ -146,6 +156,9 @@ export class Output {
                                 // Shape end
                                 output.push(this.config.shape?.end?.(shape));
                             }
+                            // Chain end
+                            output.push(this.config.chain?.endPoint?.(chain));
+                            output.push(this.config.chain?.end?.(chain));
                         }
                         // Cut end
                         output.push(this.config.cut?.end?.(cut));

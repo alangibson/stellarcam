@@ -1,6 +1,6 @@
 import { DirectionEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
-import { rotatePoint } from "../point/point.function";
+import { rotatePoint, transformPoint } from "../point/point.function";
 import { SegmentProperties } from "./segment";
 
 /**
@@ -70,3 +70,14 @@ export function rotateSegment(
     endPoint: p2,
   };
 }
+
+export function transformSegment(segment: SegmentProperties, matrix: number[]): SegmentProperties {
+  return {
+    startPoint: transformPoint(segment.startPoint, matrix),
+    endPoint: transformPoint(segment.endPoint, matrix)
+  };
+}
+
+// export function segmentMiddlePoint(segment: SegmentProperties): PointProperties {
+
+// }

@@ -1,4 +1,4 @@
-import { joinRectangles, rectangleCentroid } from "./rectangle.function";
+import { joinRectangles, rectangleCentroid, transformRectangle } from "./rectangle.function";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
@@ -51,6 +51,12 @@ export class Rectangle extends Shape {
     this.startPoint.y = newBoudary.startPoint.y;
     this.endPoint.x = newBoudary.endPoint.x;
     this.endPoint.y = newBoudary.endPoint.y;
+  }
+
+  transform(matrix: number[]) {
+    const transformed = transformRectangle(this, matrix);
+    this.startPoint = new Point(transformed.startPoint);
+    this.endPoint = new Point(transformed.endPoint);
   }
 
   mirror(mirror: MirrorEnum, axisValue: number) {

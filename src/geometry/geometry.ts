@@ -13,4 +13,5 @@ export interface Geometry {
   mirror(mirror: MirrorEnum, axisValue: number);
   translate(dx: number, dy: number);
   rotate(center: PointProperties, angle: number);
+  transform(matrix: number[]);
 }

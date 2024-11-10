@@ -1,6 +1,6 @@
 import { DirectionEnum, MirrorEnum } from "../geometry.enum";
 import { Rectangle } from "../rectangle/rectangle";
-import { circleBoundingBox, circlePath, rotateCircle } from "./circle.function";
+import { circleBoundingBox, circlePath, rotateCircle, transformCircle } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
@@ -11,6 +11,7 @@ export interface CircleProperties {
 }
 
 export class Circle extends Shape implements CircleProperties {
+
   type: GeometryTypeEnum = GeometryTypeEnum.CIRCLE;
 
   center: Point;
@@ -72,6 +73,12 @@ export class Circle extends Shape implements CircleProperties {
     else sweep_flag = 0;
     const large_arc_flag = 0; // large=1, small=0
     return circlePath(this.center, this.radius);
+  }
+
+  transform(matrix: number[]) {
+    const transformed = transformCircle(this, matrix);
+    this.center = new Point(transformed.center);
+    this.radius = transformed.radius;
   }
 
   reverse() {

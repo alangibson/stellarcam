@@ -1,6 +1,6 @@
 import { DirectionEnum, MirrorEnum, OriginEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
-import { rotatePoint } from "../point/point.function";
+import { rotatePoint, transformPoint } from "../point/point.function";
 import { ArcProperties } from "./arc";
 
 /** Convert degrees to radians */
@@ -432,5 +432,14 @@ export function rotateArc(
     radius,
     startAngle: newStartAngle,
     endAngle: newEndAngle,
+  };
+}
+
+export function transformArc(arc: ArcProperties, matrix: number[]): ArcProperties {
+  return {
+    center: transformPoint(arc.center, matrix),
+    radius: arc.radius,
+    startAngle: arc.startAngle,
+    endAngle: arc.endAngle
   };
 }

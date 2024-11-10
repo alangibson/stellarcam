@@ -10,6 +10,7 @@ import {
 import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
+import { transformPoint } from "../point/point.function";
 
 export interface CubicCurveProperties {
   startPoint: PointProperties;
@@ -19,6 +20,7 @@ export interface CubicCurveProperties {
 }
 
 export class CubicCurve extends Shape implements CubicCurveProperties {
+
   type: GeometryTypeEnum = GeometryTypeEnum.CUBIC_CURVE;
 
   startPoint: Point;
@@ -64,6 +66,13 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
 
   get command(): string {
     return `M ${this.startPoint.x},${this.startPoint.y} C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.endPoint.x} ${this.endPoint.y}`;
+  }
+
+  transform(matrix: number[]) {
+    this.startPoint = new Point(transformPoint(this.startPoint, matrix));
+    this.control1 = new Point(transformPoint(this.control1, matrix));
+    this.control2 = new Point(transformPoint(this.control2, matrix));
+    this.endPoint = new Point(transformPoint(this.endPoint, matrix));
   }
 
   mirror(mirror: MirrorEnum, axisValue: number) {

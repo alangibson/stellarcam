@@ -1,4 +1,4 @@
-import { angleBetweenPoints, distanceBetweenPoints } from "./point.function";
+import { angleBetweenPoints, distanceBetweenPoints, transformPoint } from "./point.function";
 
 test("angleBetweenPoints north", () => {
   expect(angleBetweenPoints(1, 1, 1, 10)).toBe(0);
@@ -25,3 +25,19 @@ test("distanceBetweenPoints negative mirrored", () => {
   // TODO Then
   expect(distance).toBe(120.0);
 });
+
+test('transformPoint', () => {
+  // Given
+  const point = { x: 10, y: 20 };
+  // Define a 3x3 transformation matrix (e.g., translate by 50 in x and 30 in y)
+  const matrix = [
+      1, 0, 50,  // a, b, c
+      0, 1, 30,  // d, e, f
+      0, 0, 1    // g, h, i (usually 0, 0, 1 in 2D transformations)
+  ];
+  // When
+  const transformedPoint = transformPoint(point, matrix);
+  // Then
+  expect(transformedPoint.x).toBe(60);
+  expect(transformedPoint.y).toBe(50);
+})

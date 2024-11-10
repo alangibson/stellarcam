@@ -1,5 +1,7 @@
 import { DirectionEnum } from "../geometry.enum";
 import { Point } from "../point/point";
+import { transformPoint } from "../point/point.function";
+import { QuadraticCurveProperties } from "./quadratic-curve";
 
 export function quadraticBezierBoundingBox(p0: Point, p1: Point, p2: Point) {
   // Function to evaluate the quadratic Bezier curve at a given t
@@ -146,4 +148,12 @@ export function pointAlongQuadraticBezier(x0, y0, x1, y1, x2, y2, distance) {
 
   // Compute the point at parameter t
   return getPoint(t);
+}
+
+export function transformQuadraticCurve(curve: QuadraticCurveProperties, matrix: number[]): QuadraticCurveProperties {
+  return {
+    startPoint: transformPoint(curve.startPoint, matrix),
+    control1: transformPoint(curve.control1, matrix),
+    endPoint: transformPoint(curve.endPoint, matrix)
+  };
 }

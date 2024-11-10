@@ -3,6 +3,7 @@ import {
   quadraticBezierBoundingBox,
   quadraticBezierMidpoint,
   quadraticBezierOrientation,
+  transformQuadraticCurve,
 } from "./quadratic-curve.function";
 import { DirectionEnum, GeometryTypeEnum, MirrorEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
@@ -15,6 +16,7 @@ export interface QuadraticCurveProperties {
 }
 
 export class QuadraticCurve extends Shape {
+
   type: GeometryTypeEnum = GeometryTypeEnum.QUADRATIC_CURVE;
 
   startPoint: Point;
@@ -59,12 +61,18 @@ export class QuadraticCurve extends Shape {
 
   set direction(direction: DirectionEnum) {
     if (direction == this.direction) return;
-    // Change direction
     this.reverse();
   }
 
   get command(): string {
     return `M ${this.startPoint.x},${this.startPoint.y} Q ${this.control1.x},${this.control1.y} ${this.endPoint.x},${this.endPoint.y}`;
+  }
+
+  transform(matrix: number[]) {
+    const transformed = transformQuadraticCurve(this, matrix);
+    this.startPoint = new Point(transformed.startPoint);
+    this.control1 = new Point(transformed.control1);
+    this.endPoint = new Point(transformed.endPoint);
   }
 
   reverse() {

@@ -5,6 +5,7 @@ import {
   distanceBetweenPoints,
   mirrorPoint,
   rotatePoint,
+  transformPoint,
 } from "./point.function";
 
 export interface PointProperties {
@@ -13,6 +14,7 @@ export interface PointProperties {
 }
 
 export class Point implements Geometry, PointProperties {
+
   type: GeometryTypeEnum = GeometryTypeEnum.POINT;
 
   x: number;
@@ -42,6 +44,12 @@ export class Point implements Geometry, PointProperties {
 
   get command(): string {
     return "";
+  }
+
+  transform(matrix: number[]) {
+    const transformed: PointProperties = transformPoint(this, matrix);
+    this.x = transformed.x;
+    this.y = transformed.y;
   }
 
   mirror(mirror: MirrorEnum, axisValue: number) {

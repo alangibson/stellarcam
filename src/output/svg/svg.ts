@@ -1,9 +1,12 @@
 import * as fs from "fs";
 import { DebugVisualization } from "./debug";
 import { Drawing } from "../../domain/drawing";
+import { Output } from "../output";
+import SvgConfig from './elements';
+import { Program } from "../../domain/program";
 
 export class SvgFile {
-    toHtml(drawing: Drawing): string {
+    toHtml(drawing: Drawing, program: Program): string {
         // The value of the viewBox attribute is a list of four
         // numbers separated by whitespace and/or a comma: min-x, min-y, width, and height.
         // ' viewBox="' + (-1 + bbox.minX) + ' ' + (-1) + ' ' +  (bbox.width + 2) + ' ' + (bbox.height + 2) + '"';
@@ -12,41 +15,49 @@ export class SvgFile {
         // width="${area.width+2}" height="${area.height+2}"
         let html = `
         <script src="./lib/svg-pan-zoom.min.js"></script>
-        <svg id="drawing" class="drawing" width="100%" height="100vh" preserveAspectRatio="none">
-        `;
+        <style>
+        svg { 
+            stroke: gray; 
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        .point { stroke-width: 1; }
+        .start.point { stroke: green; }
+        .end.point { stroke: red; }
+        .middle.point { stroke: yellow; }
+        .center.point { stroke: yellow; }
+        .control.point { stroke: blue; }
 
-        // TODO draw box around drawing
-        // const drawingBoundingBox: Rectangle = drawing.boundary;
+        .radius { stroke: yellow; }
 
-        for (const layer of drawing.children) {
-            html += `<g class="layer" layer-name="${layer.name}">`;
+        .line {}
+        .control.line { stroke: none;}
 
-            // TODO Loop over layers in drawing.children then create visualization per layer
-            // const drawing_elements = new DrawingVisualization().to_svg(chains);
-            // const debug_elements = new DebugVisualization().to_svg(chains);
-            // const drawing_elements = new DrawingVisualization().to_svg(layer);
-            const debug_elements = new DebugVisualization().toSVG(layer);
-
-            // const svgLines: string[] = new Output(drawing).apply(SvgConfig);
-            // const html: string = svgLines.reduce((prev: string, curr: string) => prev += curr);
-
-            // for (const cut of layer.children) {
-            // }
-
-            // Chain visualization
-            // for (let element of drawing_elements) {
-            //     html += element;
-            // }
-            // Debug visualization
-            for (let element of debug_elements) {
-                html += element;
-            }
-
-            html += `</g>`;
+        .rapid { 
+            stroke: blue; 
+            stroke-dasharray: 1; 
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            stroke-opacity: 0.5;
         }
 
+        .chain { }
+
+        /** TODO debug elements
+        .debug { fill:none; stroke: gray; opacity: 1; stroke-width: 0.2; }
+        .debug.chain { stroke-width: 1; opacity: 1; }
+        .debug.shape { stroke-width: 0.5; opacity: 1; }
+        .debug.middle { stroke-dasharray: 0.5; }
+        .debug.start { stroke: green; opacity: 1;}
+        .debug.middle { stroke: blue; }
+        .debug.end { stroke: red; stroke-width: 0.5; opacity: 1; }
+        */
+        </style>
+        `;
+        html += new Output(drawing, SvgConfig, program).render();
         html += `
-        </svg>
         <script>
             window.onload = function() {
                 // Expose to window namespase for testing purposes
@@ -55,13 +66,12 @@ export class SvgFile {
                     center: 1
                 });
             };
-        </script>
-        `;
+        </script>`;
         return html;
     }
 
-    save(drawing: Drawing, path: string) {
-        const html = this.toHtml(drawing);
-        fs.writeFile(path, html, (e) => { });
-    }
+    // save(drawing: Drawing, path: string) {
+    //     const html = this.toHtml(drawing);
+    //     fs.writeFile(path, html, (e) => { });
+    // }
 }
