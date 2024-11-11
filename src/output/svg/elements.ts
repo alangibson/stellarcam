@@ -12,9 +12,12 @@ import { QuadraticCurve } from "../../geometry/quadratic-curve/quadratic-curve";
 import { Segment } from "../../geometry/segment/segment";
 import { OutputApply } from "../output";
 
+// TODO get from somewhere
+const units = 'mm';
+
 const apply: OutputApply = {
     drawing: {
-        begin: (drawing: Drawing) => `<svg id="drawing" width="100%" height="100vh" preserveAspectRatio="none">`,
+        begin: (drawing: Drawing) => `<svg id="drawing" width="${drawing.width}${drawing.units}" height="${drawing.height}${drawing.units}" viewBox="0 0 ${drawing.width} ${drawing.height}" preserveAspectRatio="none">`,
         end: () => '</svg>'
     },
     layer: {

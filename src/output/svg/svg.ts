@@ -7,18 +7,13 @@ import { Program } from "../../domain/program";
 
 export class SvgFile {
     toHtml(drawing: Drawing, program: Program): string {
-        // The value of the viewBox attribute is a list of four
-        // numbers separated by whitespace and/or a comma: min-x, min-y, width, and height.
-        // ' viewBox="' + (-1 + bbox.minX) + ' ' + (-1) + ' ' +  (bbox.width + 2) + ' ' + (bbox.height + 2) + '"';
-        // const view_box: string = `${(-1 + area.min.x)} -1 ${(area.width + 2)} ${(area.height + 2)}`;
-
-        // width="${area.width+2}" height="${area.height+2}"
         let html = `
-        <script src="./lib/svg-pan-zoom.min.js"></script>
+        <!-- script src="./lib/svg-pan-zoom.min.js"></script -->
         <style>
         svg { 
             stroke: gray; 
             fill: none;
+            stroke-width: 1;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -45,20 +40,11 @@ export class SvgFile {
 
         .chain { }
 
-        /** TODO debug elements
-        .debug { fill:none; stroke: gray; opacity: 1; stroke-width: 0.2; }
-        .debug.chain { stroke-width: 1; opacity: 1; }
-        .debug.shape { stroke-width: 0.5; opacity: 1; }
-        .debug.middle { stroke-dasharray: 0.5; }
-        .debug.start { stroke: green; opacity: 1;}
-        .debug.middle { stroke: blue; }
-        .debug.end { stroke: red; stroke-width: 0.5; opacity: 1; }
-        */
         </style>
         `;
         html += new Output(drawing, SvgConfig, program).render();
         html += `
-        <script>
+        <!-- script>
             window.onload = function() {
                 // Expose to window namespase for testing purposes
                 svgPanZoom('#drawing', {
@@ -66,7 +52,7 @@ export class SvgFile {
                     center: 1
                 });
             };
-        </script>`;
+        </script -->`;
         return html;
     }
 

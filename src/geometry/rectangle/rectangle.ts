@@ -31,6 +31,14 @@ export class Rectangle extends Shape {
     return new Point(pointdef);
   }
 
+  get width(): number {
+    return this.endPoint.x - this.startPoint.x;
+  }
+
+  get height(): number {
+    return this.endPoint.y - this.startPoint.y;
+  }
+
   get boundary(): Rectangle {
     return this;
   }
@@ -45,12 +53,13 @@ export class Rectangle extends Shape {
     throw new Error("Method not implemented.");
   }
 
-  join(boundary: Rectangle) {
+  join(boundary: Rectangle): Rectangle {
     const newBoudary = joinRectangles(this, boundary);
     this.startPoint.x = newBoudary.startPoint.x;
     this.startPoint.y = newBoudary.startPoint.y;
     this.endPoint.x = newBoudary.endPoint.x;
     this.endPoint.y = newBoudary.endPoint.y;
+    return this;
   }
 
   transform(matrix: number[]) {
