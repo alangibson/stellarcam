@@ -1,5 +1,5 @@
 import { QuadraticCurveProperties } from "./quadratic-curve";
-import { transformQuadraticCurve } from "./quadratic-curve.function";
+import { offsetQuadraticCurve, transformQuadraticCurve } from "./quadratic-curve.function";
 
 test('transformQuadraticCurve', () => {
     // Given
@@ -30,4 +30,21 @@ test('transformQuadraticCurve', () => {
     expect(transformedCurve.startPoint).toStrictEqual({ x: 139.9519052838329, y: 139.9519052838329 });
     expect(transformedCurve.control1).toStrictEqual({ x: 269.8557158514987, y: 189.9519052838329 });
     expect(transformedCurve.endPoint).toStrictEqual({ x: 154.9038105676658, y: 294.8557158514987 });
+});
+
+test('offsetQuadraticCurve', () => {
+    // Given
+    const curve: QuadraticCurveProperties = {
+        startPoint: { x: 0, y: 0 },
+        control1: { x: 50, y: 100 },
+        endPoint: { x: 100, y: 0 }
+    };
+    const offsetDistance = 10;
+    const numSamples = 100;
+    // When
+    const offsets = offsetQuadraticCurve(curve, offsetDistance, numSamples);
+    // Then
+    expect(offsets.inner[0]).toStrictEqual({ x: 8.94427190999916, y: -4.47213595499958 });
+    // expect(offsets.innerPoints[99]).toStrictEqual({ x: 8.94427190999916, y: -4.47213595499958 });
+    expect(offsets.outer[0]).toStrictEqual( {x: -8.94427190999916, y: 4.47213595499958 });
 });

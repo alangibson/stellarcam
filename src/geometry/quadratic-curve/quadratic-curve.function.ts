@@ -1,5 +1,5 @@
 import { DirectionEnum } from "../geometry.enum";
-import { Point } from "../point/point";
+import { Point, PointProperties } from "../point/point";
 import { transformPoint } from "../point/point.function";
 import { QuadraticCurveProperties } from "./quadratic-curve";
 
@@ -150,10 +150,56 @@ export function pointAlongQuadraticBezier(x0, y0, x1, y1, x2, y2, distance) {
   return getPoint(t);
 }
 
+/** Tranform quadratic curve with 3x3 transform matrix */
 export function transformQuadraticCurve(curve: QuadraticCurveProperties, matrix: number[]): QuadraticCurveProperties {
   return {
     startPoint: transformPoint(curve.startPoint, matrix),
     control1: transformPoint(curve.control1, matrix),
     endPoint: transformPoint(curve.endPoint, matrix)
+  };
+}
+
+export function offsetQuadraticCurve(curve: QuadraticCurveProperties, distance: number, samples: number = 100) {
+  var innerOffsetPoints: PointProperties[] = [];
+  var outerOffsetPoints: PointProperties[] = [];
+
+  for (var i = 0; i <= samples; i++) {
+      var t = i / samples;
+
+      // Compute point on the curve B(t)
+      var Bx = Math.pow(1 - t, 2) * curve.startPoint.x + 2 * (1 - t) * t * curve.control1.x + Math.pow(t, 2) * curve.endPoint.x;
+      var By = Math.pow(1 - t, 2) * curve.startPoint.y + 2 * (1 - t) * t * curve.control1.y + Math.pow(t, 2) * curve.endPoint.y;
+
+      // Compute derivative B'(t)
+      var Bdx = 2 * (1 - t) * (curve.control1.x - curve.startPoint.x) + 2 * t * (curve.endPoint.x - curve.control1.x);
+      var Bdy = 2 * (1 - t) * (curve.control1.y - curve.startPoint.y) + 2 * t * (curve.endPoint.y - curve.control1.y);
+
+      // Compute normal vector N(t) = [-B'_y, B'_x]
+      var Nx = -Bdy;
+      var Ny = Bdx;
+
+      // Normalize N(t)
+      var N_length = Math.sqrt(Nx * Nx + Ny * Ny);
+      if (N_length === 0) {
+          // Handle zero length (tangent is zero vector), skip this point
+          continue;
+      }
+      var Nx_unit = Nx / N_length;
+      var Ny_unit = Ny / N_length;
+
+      // Compute inner offset point (offset towards -N direction)
+      var innerX = Bx - distance * Nx_unit;
+      var innerY = By - distance * Ny_unit;
+      innerOffsetPoints.push({ x: innerX, y: innerY });
+
+      // Compute outer offset point (offset towards +N direction)
+      var outerX = Bx + distance * Nx_unit;
+      var outerY = By + distance * Ny_unit;
+      outerOffsetPoints.push({ x: outerX, y: outerY });
+  }
+
+  return {
+      inner: innerOffsetPoints,
+      outer: outerOffsetPoints
   };
 }

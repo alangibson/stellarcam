@@ -30,6 +30,8 @@ export class SvgFile {
         .line {}
         .control.line { stroke: none;}
 
+        .offset { }
+
         .rapid { 
             stroke: blue; 
             stroke-dasharray: 1; 

@@ -1,7 +1,7 @@
 import { DirectionEnum, MirrorEnum, OriginEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { rotatePoint, transformPoint } from "../point/point.function";
-import { ArcProperties } from "./arc";
+import { Arc, ArcProperties } from "./arc";
 
 /** Convert degrees to radians */
 export function degreesToRadians(degrees: number): number {
@@ -442,4 +442,28 @@ export function transformArc(arc: ArcProperties, matrix: number[]): ArcPropertie
     startAngle: arc.startAngle,
     endAngle: arc.endAngle
   };
+}
+
+export function offsetArc(arc: ArcProperties, distance: number): ArcProperties[] {
+  // Calculate the inner and outer radii
+  const innerRadius: number = arc.radius - distance;
+  const outerRadius: number = arc.radius + distance;
+
+  // Inner offset arc
+  var innerArc: ArcProperties = {
+      center: arc.center,
+      radius: innerRadius,
+      startAngle: arc.startAngle,
+      endAngle: arc.endAngle
+  };
+
+  // Outer offset arc
+  var outerArc: ArcProperties = {
+      center: arc.center,
+      radius: outerRadius,
+      startAngle: arc.startAngle,
+      endAngle: arc.endAngle
+  };
+
+  return [innerArc, outerArc];
 }

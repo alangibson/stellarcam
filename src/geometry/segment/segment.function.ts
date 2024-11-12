@@ -1,7 +1,7 @@
 import { DirectionEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { rotatePoint, transformPoint } from "../point/point.function";
-import { SegmentProperties } from "./segment";
+import { Segment, SegmentProperties } from "./segment";
 
 /**
  * Calculates a point at a specified distance along a line segment.
@@ -84,4 +84,18 @@ export function segmentMiddlePoint(segment: SegmentProperties): PointProperties 
   const midY = (segment.startPoint.y + segment.endPoint.y) / 2;
   // Return the midpoint as an object
   return { x: midX, y: midY };
+}
+
+// Transform two or more points into one or more segments 
+export function segmentsFromPoints(points: PointProperties[]): SegmentProperties[] {
+  if (points.length < 2)
+    throw new Error('Two or more points required');
+  const segments: SegmentProperties[] = [];
+  let lastPoint: PointProperties = points[0];
+  for (let i = 1; i < points.length; i++) {
+    const point = points[i];
+    segments.push(new Segment({startPoint: lastPoint, endPoint: point}));
+    lastPoint = point;
+  }
+  return segments;
 }

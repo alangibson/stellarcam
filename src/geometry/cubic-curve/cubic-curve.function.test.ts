@@ -73,6 +73,9 @@ test('cubicCurveMiddlePoint', () => {
   expect(midpoint).toStrictEqual({ x: 2, y: 1.5 });
 });
 
+// test('offsetCubicCurve', () => {
+
+// });
 
 // test('mirrorCubicCurve', () => {
 // TODO

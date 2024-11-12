@@ -4,6 +4,7 @@ import {
   cubicCurveDirection,
   cubicCurveMiddlePoint,
   mirrorCubicCurve,
+  offsetCubicCurve,
   reverseCubicCurve,
   rotateCubicCurve,
   translateCubicCurve,
@@ -12,6 +13,9 @@ import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 import { transformPoint } from "../point/point.function";
+import { Chain } from "../../domain/chain";
+import { segmentsFromPoints } from "../segment/segment.function";
+import { Segment, SegmentProperties } from "../segment/segment";
 
 export interface CubicCurveProperties {
   startPoint: PointProperties;
@@ -78,6 +82,22 @@ export class CubicCurve extends Shape implements CubicCurveProperties {
     this.control1 = new Point(transformPoint(this.control1, matrix));
     this.control2 = new Point(transformPoint(this.control2, matrix));
     this.endPoint = new Point(transformPoint(this.endPoint, matrix));
+  }
+
+  /**
+    * Produce new offset shape. Does not modify this object.
+    */
+  offset(distance: number): Chain[] {
+    const [inner, outer] = offsetCubicCurve(this, distance);
+    // Make chain of line segments with new pointsToSegments function
+    const innerSegments: Segment[] = segmentsFromPoints(inner).map((s: SegmentProperties) => new Segment(s))
+    const innerChain: Chain = new Chain(innerSegments);
+    const outerSegments: Segment[] = segmentsFromPoints(outer).map((s: SegmentProperties) => new Segment(s))
+    const outerChain: Chain = new Chain(outerSegments);
+    return [
+      innerChain,
+      outerChain
+    ];
   }
 
   mirror(mirror: MirrorEnum, axisValue: number) {

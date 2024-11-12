@@ -8,6 +8,7 @@ import {
   arcAngleAtPoint,
   rotateArc,
   transformArc,
+  offsetArc,
 } from "./arc.function";
 import { Rectangle } from "../rectangle/rectangle";
 import { GeometryTypeEnum } from "../geometry.enum";
@@ -137,8 +138,12 @@ export class Arc extends Shape implements ArcProperties {
     return this.end_angle_degrees - this.start_angle_degrees;
   }
 
-  private bust() {
-    this.bounding_box = null;
+  /**
+   * Produce new offset shape. Does not modify this object.
+   */
+  offset(distance: number): Arc[] {
+    const [inner, outer] =  offsetArc(this, distance);
+    return [new Arc(inner), new Arc(outer)];
   }
 
   transform(matrix: number[]) {

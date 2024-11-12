@@ -147,3 +147,23 @@ export function circlePointToAngle(circle: CircleProperties, point: PointPropert
 
   return angle; // Angle in radians
 }
+
+export function offsetCircle(circle: CircleProperties, distance:number): CircleProperties[] {
+  // Calculate the inner and outer radii
+  var innerRadius = circle.radius - distance;
+  var outerRadius = circle.radius + distance;
+
+  // Inner offset circle
+  var innerCircle = {
+      center: circle.center,
+      radius: innerRadius
+  };
+
+  // Outer offset circle
+  var outerCircle = {
+      center: circle.center,
+      radius: outerRadius
+  };
+
+  return [innerCircle, outerCircle];
+}

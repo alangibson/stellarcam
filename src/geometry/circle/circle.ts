@@ -1,6 +1,6 @@
 import { DirectionEnum, MirrorEnum } from "../geometry.enum";
 import { Rectangle } from "../rectangle/rectangle";
-import { circleBoundingBox, circlePath, circlePointToAngle, rotateCircle, transformCircle } from "./circle.function";
+import { circleBoundingBox, circlePath, circlePointToAngle, offsetCircle, rotateCircle, transformCircle } from "./circle.function";
 import { GeometryTypeEnum, OriginEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
@@ -77,6 +77,14 @@ export class Circle extends Shape implements CircleProperties {
     else sweep_flag = 0;
     const large_arc_flag = 0; // large=1, small=0
     return circlePath(this.center, this.radius);
+  }
+
+  /**
+   * Produce new offset shapes. Does not modify this object.
+   */
+  offset(distance: number): Circle[] {
+    const [inner, outer] = offsetCircle(this, distance);
+    return [new Circle(inner), new Circle(outer)];
   }
 
   transform(matrix: number[]) {

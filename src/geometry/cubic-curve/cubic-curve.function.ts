@@ -282,3 +282,57 @@ export function cubicCurveMiddlePoint(curve: CubicCurveProperties): PointPropert
   // Return the point at t = 0.5
   return { x, y };
 }
+
+export function offsetCubicCurve(curve: CubicCurveProperties, distance: number, samples: number = 100): PointProperties[][] {
+  var innerOffsetPoints: PointProperties[] = [];
+  var outerOffsetPoints: PointProperties[] = [];
+
+  for (var i = 0; i <= samples; i++) {
+      var t = i / samples;
+
+      // Compute point on the curve B(t)
+      var Bx = Math.pow(1 - t, 3) * curve.startPoint.x
+             + 3 * Math.pow(1 - t, 2) * t * curve.control1.x
+             + 3 * (1 - t) * Math.pow(t, 2) * curve.control2.x
+             + Math.pow(t, 3) * curve.endPoint.x;
+      var By = Math.pow(1 - t, 3) * curve.startPoint.y
+             + 3 * Math.pow(1 - t, 2) * t * curve.control1.y
+             + 3 * (1 - t) * Math.pow(t, 2) * curve.control2.y
+             + Math.pow(t, 3) * curve.endPoint.y;
+
+      // Compute derivative B'(t)
+      var Bdx = -3 * Math.pow(1 - t, 2) * curve.startPoint.x
+                + 3 * (Math.pow(1 - t, 2) - 2 * t * (1 - t)) * curve.control1.x
+                + 3 * ((2 * t * (1 - t) - Math.pow(t, 2))) * curve.control2.x
+                + 3 * Math.pow(t, 2) * curve.endPoint.x;
+      var Bdy = -3 * Math.pow(1 - t, 2) * curve.startPoint.y
+                + 3 * (Math.pow(1 - t, 2) - 2 * t * (1 - t)) * curve.control1.y
+                + 3 * ((2 * t * (1 - t) - Math.pow(t, 2))) * curve.control2.y
+                + 3 * Math.pow(t, 2) * curve.endPoint.y;
+
+      // Compute normal vector N(t) = [-B'_y, B'_x]
+      var Nx = -Bdy;
+      var Ny = Bdx;
+
+      // Normalize N(t)
+      var N_length = Math.sqrt(Nx * Nx + Ny * Ny);
+      if (N_length === 0) {
+          // Handle zero length (tangent is zero vector), skip this point
+          continue;
+      }
+      var Nx_unit = Nx / N_length;
+      var Ny_unit = Ny / N_length;
+
+      // Compute inner offset point (offset towards -N direction)
+      var innerX = Bx - distance * Nx_unit;
+      var innerY = By - distance * Ny_unit;
+      innerOffsetPoints.push({ x: innerX, y: innerY });
+
+      // Compute outer offset point (offset towards +N direction)
+      var outerX = Bx + distance * Nx_unit;
+      var outerY = By + distance * Ny_unit;
+      outerOffsetPoints.push({ x: outerX, y: outerY });
+  }
+
+  return [innerOffsetPoints, outerOffsetPoints];
+}

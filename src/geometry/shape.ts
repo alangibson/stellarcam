@@ -16,6 +16,7 @@ export abstract class Shape implements Geometry {
   abstract transform(matrix: number[]);
   // Defined on Shape
   abstract direction: DirectionEnum;
+  // abstract offset(distance: number): Shape[];
 
   // Swap start and end points, at a minimum.
   // Implementing classes must also take care of any points in between.
