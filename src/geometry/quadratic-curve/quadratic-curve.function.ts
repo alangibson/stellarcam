@@ -203,3 +203,22 @@ export function offsetQuadraticCurve(curve: QuadraticCurveProperties, distance: 
       outer: outerOffsetPoints
   };
 }
+
+// Downsample a QuadraticCurve into an array of points
+export function quadraticCurveToPoints(curve: QuadraticCurveProperties, segments: number = 20): PointProperties[] {
+  const points: PointProperties[] = [];
+  for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      let point;
+      // Quadratic Bezier Curve: P = (1 - t)^2 * P0 + 2(1 - t)t * P1 + t^2 * P2
+      const p0 = curve.startPoint;
+      const p1 = curve.control1;
+      const p2 = curve.endPoint;
+      point = {
+          x: Math.pow(1 - t, 2) * p0.x + 2 * (1 - t) * t * p1.x + Math.pow(t, 2) * p2.x,
+          y: Math.pow(1 - t, 2) * p0.y + 2 * (1 - t) * t * p1.y + Math.pow(t, 2) * p2.y,
+      };
+      points.push(point);
+  }
+  return points;
+}

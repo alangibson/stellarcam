@@ -11,6 +11,10 @@ export class Program implements IProgram {
 
     machine: Machine;
 
+    width: number;
+    height: number;
+    units: string;
+
     constructor(c: IProgram) {
         this.machine = c.machine;
     }

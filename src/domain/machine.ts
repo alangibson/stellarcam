@@ -1,4 +1,5 @@
 import { Operation, OperationProperties } from "./operation";
+import { Stock } from "./stock";
 
 export enum UnitEnum {
     METRIC = 'metric',
@@ -31,7 +32,7 @@ export interface MachineProperties {
 }
 
 export interface IMachine extends MachineProperties {
-    operations: Operation[];
+    stock: Stock;
 }
 
 export class Machine implements IMachine {
@@ -39,13 +40,13 @@ export class Machine implements IMachine {
     units: UnitEnum;
     cutterCompensation: CutterCompensationEnum;
     distanceMode: DistanceModeEnum;
-    operations: Operation[];
+    stock: Stock;
     
     constructor(c: IMachine) {
         this.units = c.units;
         this.cutterCompensation = c.cutterCompensation;
         this.distanceMode = c.distanceMode;
-        this.operations = c.operations;
+        this.stock = c.stock;
     }
 
 }

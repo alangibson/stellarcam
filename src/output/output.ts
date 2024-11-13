@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import { Drawing } from "../domain/drawing"
 import { GeometryTypeEnum } from "../geometry/geometry.enum"
-import { Program, ProgramProperties } from "../domain/program";
-import { Operation } from "../domain/operation";
+import { Program } from "../domain/program";
 
 export interface OutputApply {
     drawing?: {
@@ -94,10 +93,72 @@ export class Output {
         // Program begin
         output.push(this.config.program?.begin?.(this.program));
         // Drawing begin
-        output.push(this.config.drawing?.begin?.(this.drawing));
+        // output.push(this.config.drawing?.begin?.(this.drawing));
         // Machine begin
         output.push(this.config.machine?.begin?.(this.program.machine));
+        // TODO Stock begin
+        // output.push(this.config.stock?.begin?.(this.program.machine.stock));
 
+        for (const part of this.program.machine.stock.children) {
+            // Part begin
+            output.push(this.config.part?.begin?.(part));
+            for (const cut of part.children) {
+                // Rapid to Cut
+                output.push(this.config.cut?.rapidTo?.(cut));
+                // Cut begin
+                output.push(this.config.cut?.begin?.(cut));
+                for (const chain of cut.children) {
+                    // Chain begin
+                    output.push(this.config.chain?.begin?.(chain));
+                    output.push(this.config.chain?.startPoint?.(chain));
+                    for (const shape of chain.children) {
+                        // Shape begin
+                        output.push(this.config.shape?.begin?.(shape));
+                        switch (shape.type) {
+                            case GeometryTypeEnum.ARC: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.ARC]?.(shape));
+                                break;
+                            }
+                            case GeometryTypeEnum.CIRCLE: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.CIRCLE]?.(shape));
+                                break;
+                            }
+                            case GeometryTypeEnum.CUBIC_CURVE: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.CUBIC_CURVE]?.(shape));
+                                break;
+                            }
+                            case GeometryTypeEnum.ELLIPSE: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.ELLIPSE]?.(shape));
+                                break;
+                            }
+                            case GeometryTypeEnum.POINT: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.POINT]?.(shape));
+                                break
+                            }
+                            case GeometryTypeEnum.QUADRATIC_CURVE: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.QUADRATIC_CURVE]?.(shape));
+                                break
+                            }
+                            case GeometryTypeEnum.SEGMENT: {
+                                output.push(this.config.shape?.[GeometryTypeEnum.SEGMENT]?.(shape));
+                                break
+                            }
+                        }
+                        // Shape end
+                        output.push(this.config.shape?.end?.(shape));
+                    }
+                    // Chain end
+                    output.push(this.config.chain?.endPoint?.(chain));
+                    output.push(this.config.chain?.end?.(chain));
+                }
+                // Cut end
+                output.push(this.config.cut?.end?.(cut));
+            }
+            // Part end
+            output.push(this.config.part?.end?.(part));
+        }
+
+        /** FIXME
         // Switch to driving loop with Operations, not Layers
         // Note that Layers without operations will not be rendered
         const operations: Operation[] = this.program.machine.operations;
@@ -173,6 +234,8 @@ export class Output {
             output.push(this.config.operation?.end?.(operation));
         }
 
+        */
+
         /**
         for (const layer of this.drawing.children) {
             // Layer begin
@@ -230,7 +293,7 @@ export class Output {
         // Machine end
         output.push(this.config.machine?.end?.(this.program.machine));
         // Drawing end
-        output.push(this.config.drawing?.end?.(this.drawing));
+        // output.push(this.config.drawing?.end?.(this.drawing));
         // Program end
         output.push(this.config.program?.end?.(this.program));
 

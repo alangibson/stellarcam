@@ -3,9 +3,11 @@ import { PointProperties } from "../geometry/point/point";
 import { Chain } from "./chain";
 import { Rapid } from "./rapid";
 
-export class Cut extends Parent {
+export class Cut extends Parent<Chain> {
+
   children: Chain[];
   rapidTo: Rapid;
+  chain: Chain;
 
   get startPoint(): PointProperties {
     // FIXME assumes only one chain, but is array
@@ -19,6 +21,7 @@ export class Cut extends Parent {
 
   constructor(chain: Chain) {
     super([chain]);
+    this.chain = chain;
   }
 
 }

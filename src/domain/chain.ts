@@ -1,11 +1,12 @@
 import { Parent } from "../entity/parent";
+import { chainContains } from "../geometry/chain/chain.function";
 import { DirectionEnum } from "../geometry/geometry.enum";
 import { Point } from "../geometry/point/point";
 import { Rectangle } from "../geometry/rectangle/rectangle";
 import { Shape } from "../geometry/shape";
 import { sortShapesInDirection } from "./chain.function";
 
-export class Chain extends Parent {
+export class Chain extends Parent<Shape> {
 
   children: Shape[];
   // Direction starts out as undefined since shapes can be oriented
@@ -41,6 +42,31 @@ export class Chain extends Parent {
     return boundary;
   }
 
+  /** Returns true if, starting with first shape, each subsequent shape is connected end-to-start point */
+  closed(): boolean {
+    let last_shape: Shape;
+    for (let shape of this.children) {
+      if (last_shape) {
+        if (last_shape.endPoint.isEqual(shape.startPoint)) {
+          // good result
+        } else {
+          // bad result
+          return false;
+        }
+      }
+      last_shape = shape;
+    }
+    return true;
+  }
+
+  contains(that: Chain): boolean {
+    return chainContains(this, that);
+  }
+
+  add(shape: Shape) {
+    this.children.push(shape);
+  }
+
   /**
    * Sort shapes, using start and end points, in correct order according
    * to this._direction
@@ -59,26 +85,5 @@ export class Chain extends Parent {
     // const sortedShapesCounterClockwise = sortShapes(shapes, "counterclockwise");
     // console.log("Counterclockwise:", sortedShapesCounterClockwise);
     this.children = sortShapesInDirection(this.children, this._direction);
-  }
-
-  /** Returns true if, starting with first shape, each subsequent shape is connected end-to-start point */
-  isConnected(): boolean {
-    let last_shape: Shape;
-    for (let shape of this.children) {
-      if (last_shape) {
-        if (last_shape.endPoint.isEqual(shape.startPoint)) {
-          // good result
-        } else {
-          // bad result
-          return false;
-        }
-      }
-      last_shape = shape;
-    }
-    return true;
-  }
-
-  add(shape: Shape) {
-    this.children.push(shape);
   }
 }

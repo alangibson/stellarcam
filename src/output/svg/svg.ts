@@ -1,5 +1,3 @@
-import * as fs from "fs";
-import { DebugVisualization } from "./debug";
 import { Drawing } from "../../domain/drawing";
 import { Output } from "../output";
 import SvgConfig from './elements';
@@ -58,8 +56,4 @@ export class SvgFile {
         return html;
     }
 
-    // save(drawing: Drawing, path: string) {
-    //     const html = this.toHtml(drawing);
-    //     fs.writeFile(path, html, (e) => { });
-    // }
 }

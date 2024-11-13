@@ -2,7 +2,6 @@ import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/service/graph/grapher";
 import { Chain } from "./src/domain/chain";
 import { Shape } from "./src/geometry/shape";
-import { MirrorEnum } from "./src/geometry/geometry.enum";
 import { reorientShapes } from "./src/service/graph/grapher.function";
 import { Drawing } from "./src/domain/drawing";
 import { Cut } from "./src/domain/cut";
@@ -18,9 +17,11 @@ import { TspPoint } from "./src/service/tsp/tsp-point";
 import { TravellingSalesman } from "./src/service/tsp/tsp";
 import { Operation, OperationProperties } from "./src/domain/operation";
 import { InputFile } from "./src/input/input";
+import { Stock } from "./src/domain/stock";
+import { Parter } from "./src/service/part/parter";
 
 function dump(o) {
-  console.log(JSON.stringify(o, null, 4));
+    console.log(JSON.stringify(o, null, 4));
 }
 
 //
@@ -51,41 +52,26 @@ const TOLERANCE = 0.5;
 // Loop over DXF layers. One graph per layer
 const layers: Layer[] = [];
 const area = new Area();
-const tspPoints: TspPoint[] = [];
 for (const layerName in inputDrawing.layers) {
-  const shapes: Shape[] = inputDrawing.layers[layerName].shapes;
+    const shapes: Shape[] = inputDrawing.layers[layerName].shapes;
+    // Generate Multishapes
+    // Connect all points within given tolerance
+    const graphs: Shape[][] = new Grapher().solve(shapes, TOLERANCE);
+    const chains: Chain[] = [];
+    for (let graph of graphs) {
+        // TODO do this in Grapher.solve()?
+        reorientShapes(graph, TOLERANCE);
 
-  // Each Multishape is a Cut
-  const cuts: Cut[] = [];
-
-  // Generate Multishapes
-  // Connect all points within given tolerance
-  const graphs: Shape[][] = new Grapher().solve(shapes, TOLERANCE);
-  for (let graph of graphs) {
-    // TODO do this in Grapher.solve()?
-    reorientShapes(graph, TOLERANCE);
-
-    const multishape = new Chain();
-    let lastShape: Shape;
-    for (let shape of graph) {
-      multishape.add(shape);
-      area.add(shape);
-      lastShape = shape;
+        const chain = new Chain();
+        let lastShape: Shape;
+        for (let shape of graph) {
+            chain.add(shape);
+            area.add(shape);
+            lastShape = shape;
+        }
+        chains.push(chain);
     }
-    const cut: Cut = new Cut(multishape);
-    cuts.push(cut);
-
-    // Save point for TSP Rapid optimization later
-    tspPoints.push(new TspPoint(cut));
-  }
-
-  // TODO reorganize cuts into parts
-  // const parts: Part[] = new Parter().part(cuts);
-  // HACK
-  const part: Part = new Part(cuts);
-  const parts: Part[] = [part];
-
-  layers.push(new Layer(layerName, parts));
+    layers.push(new Layer(layerName, chains));
 }
 
 // Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
@@ -95,10 +81,6 @@ area.translate(-area.min.x, -area.min.y);
 // Flip coordinate origin from bottom-left to top-right
 // area.flip(MirrorEnum.HORIZONTAL);
 
-// Use TSP to build rapids between cuts
-// Rapids get added to Cut in the apply() method
-new TravellingSalesman().solve(tspPoints);
-
 const drawing: Drawing = new Drawing(layers, area);
 
 //
@@ -107,80 +89,80 @@ const drawing: Drawing = new Drawing(layers, area);
 
 // These are our saved Operation settings
 // Map operation to layer(s) using keys and names
-const operationLookup: {[key: string]: OperationProperties } = {
-  'default': {
-    feedRate: 3000,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
-  // TODO use [operation1.key] instead
-  'operation-3200': {
-    feedRate: 3200,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
-  'operation-3000': {
-    feedRate: 3000,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
-  'operation-2800': {
-    feedRate: 2800,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
-  'operation-2600': {
-    feedRate: 2600,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
-  'operation-2400': {
-    feedRate: 2400,
-    pierceDelay: 0,
-    pierceHeight: 2.5,
-    cutHeight: 0.5,
-    cutVolts: 148,
-    kerfWidth: 1
-  },
+const operationLookup: { [key: string]: OperationProperties } = {
+    'default': {
+        feedRate: 3000,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
+    // TODO use [operation1.key] instead
+    'operation-3200': {
+        feedRate: 3200,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
+    'operation-3000': {
+        feedRate: 3000,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
+    'operation-2800': {
+        feedRate: 2800,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
+    'operation-2600': {
+        feedRate: 2600,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
+    'operation-2400': {
+        feedRate: 2400,
+        pierceDelay: 0,
+        pierceHeight: 2.5,
+        cutHeight: 0.5,
+        cutVolts: 148,
+        kerfWidth: 1
+    },
 };
 
 // These links automatically apply Operations to Layers
 const operationLinks = [
-  {
-    operationKey: 'operation-3200',
-    layerNames: ['Layer 5'],
-  },
-  {
-    operationKey: 'operation-3000',
-    layerNames: ['Layer 4'],
-  },
-  {
-    operationKey: 'operation-2800',
-    layerNames: ['Layer 3'],
-  },
-  {
-    operationKey: 'operation-2600',
-    layerNames: ['Layer 2'],
-  },
-  {
-    operationKey: 'operation-2400',
-    layerNames: ['Layer 1', 'suhe', 'muhe', 'fly', 'outline'],
-  }
+    {
+        operationKey: 'operation-3200',
+        layerNames: ['Layer 5'],
+    },
+    {
+        operationKey: 'operation-3000',
+        layerNames: ['Layer 4'],
+    },
+    {
+        operationKey: 'operation-2800',
+        layerNames: ['Layer 3'],
+    },
+    {
+        operationKey: 'operation-2600',
+        layerNames: ['Layer 2'],
+    },
+    {
+        operationKey: 'operation-2400',
+        layerNames: ['Layer 1', 'suhe', 'muhe', 'fly', 'outline'],
+    }
 ];
 
 //
@@ -199,21 +181,45 @@ const operationLinks = [
 // 
 // Link all layers to default operation
 const operation: Operation = drawing.children.reduce<Operation>((operation: Operation, layer: Layer) => {
-  operation.layers.push(layer);
-  return operation;
+    operation.layers.push(layer);
+    return operation;
 }, new Operation(operationLookup['default']));
 
-const machine: Machine = new Machine(
-  {
+// Transform Drawing to Program
+const tspPoints: TspPoint[] = [];
+const cuts: Cut[] = [];
+for (const layer of drawing.children) {
+    for (const chain of layer.children) {
+        // Each Chain is a Cut
+        const cut: Cut = new Cut(chain);
+        cuts.push(cut);
+        // Save point for TSP Rapid optimization later
+        tspPoints.push(new TspPoint(cut));
+    }
+}
+// Use TSP to build rapids between cuts
+// Rapids get added to Cut in the apply() method
+new TravellingSalesman().solve(tspPoints);
+// Reorganize Cuts into Parts
+const parts: Part[] = new Parter().process(cuts);
+
+const stock = new Stock();
+stock.children = parts;
+
+const machine: Machine = new Machine({
     units: UnitEnum.METRIC,
     // TODO cutterCompensation
     cutterCompensation: undefined,
     // TODO distanceMode
     distanceMode: undefined,
-    operations: [operation]
-  }
-);
+    stock: stock
+});
+
 const program: Program = new Program({ machine });
+// TODO set Program width and height from Drawing
+program.width = drawing.width;
+program.height = drawing.height;
+program.units = drawing.units;
 
 //
 // Render DXF

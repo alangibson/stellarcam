@@ -10,7 +10,7 @@ export class HtmlFile {
     // Left
     const left = Mustache.render(
       fs.readFileSync("./src/output/html/left.mustache", "utf-8"),
-      { drawing },
+      { drawing, program },
     );
 
     // Middle

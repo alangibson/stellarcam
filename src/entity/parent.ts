@@ -1,11 +1,11 @@
 import { Rectangle } from "../geometry/rectangle/rectangle";
 import { Entity } from "./entity";
 
-export class Parent implements Entity {
+export class Parent<C extends Entity> implements Entity {
 
-    children: Entity[];
+    children: C[];
 
-    constructor(children: Entity[] = []) {
+    constructor(children: C[] = []) {
         this.children = children;
     }
 

@@ -248,3 +248,24 @@ export function ellipseMiddlePoint(ellipse: EllipseProperties): PointProperties 
 //         rotation: newRotation
 //     };
 // }
+
+export function ellipseArcToPoints(
+  center: PointProperties,
+  a: number, // Semi-major axis
+  b: number, // Semi-minor axis
+  startAngle: number,
+  endAngle: number,
+  segments: number = 20
+): PointProperties[] {
+  const points: PointProperties[] = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const theta = startAngle + t * (endAngle - startAngle);
+    const point = {
+      x: center.x + a * Math.cos(theta),
+      y: center.y + b * Math.sin(theta),
+    };
+    points.push(point);
+  }
+  return points;
+}

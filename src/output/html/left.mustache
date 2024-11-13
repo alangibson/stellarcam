@@ -34,54 +34,71 @@
 }
 </style>
 
+<p>Drawing</p>
 <ul class="tree">
     {{#drawing.children}}
     <li>
     <details open>
     <summary>Layer: {{name}}</summary>
-
-    <ul>
-        {{#children}}
-        <li>
-        <details open>
-        <summary>Part</summary>
-
         <ul>
             {{#children}}
             <li>
             <details>
-            <summary>Cut</summary>
-                <ul>
-                    {{#children}}
-                    <li>
-                    Rapid: {{rapidTo}}
-                    <details>
-                    <summary>Chain</summary>
-
-                    <ul>
-                        {{#shapes}}
-                        <li>
-                        <details>
-                            <summary>Shape: {{.type}}</summary>
-                        </details>
-                        </li>        
-                        {{/shapes}}
-                    </ul>
-
-                    </details>
-                    </li>        
-                    {{/children}}
-                </ul>
-
+            <summary>Chain</summary>
+            <ul>
+                {{#children}}
+                <li>
+                <details>
+                    <summary>Shape: {{type}}</summary>
+                </details>
+                </li>        
+                {{/children}}
+            </ul>
             </details>
-            </li>
+            </li>        
             {{/children}}
-
-        </details>
-        </li>
-        {{/children}}
-    </ul>
-
+        </ul>
     </li>
     {{/drawing.children}}
+</ul>
+
+<p>Program</p>
+<ul class="tree">
+    <li>
+    <details open>
+    <summary>Program: {{program}}</summary>
+        <ul>
+            <li>
+            <details open>
+            <summary>Machine: {{program.machine}}</summary>
+                <ul>
+                    <li>
+                    <details open>
+                    <summary>Stock: {{program.machine.stock}}</summary>
+                        <ul>
+                            {{#program.machine.stock.children}}
+                            <li>
+                            <details open>
+                            <summary>Part: {{.}}</summary>
+                                <ul>
+                                    {{#children}}
+                                    <li>
+                                    <details open>
+                                    <summary>Cut: {{.}}</summary>
+                                    </details>
+                                    </li>
+                                    {{/children}}
+                                </ul>
+                            </details>
+                            </li>
+                            {{/program.machine.stock.children}}
+                        </ul>
+                    </details>
+                    </li>
+                </ul>
+            </details>
+            </li>
+        </ul>
+    </details>
+    </li>
 </ul>

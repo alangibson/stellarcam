@@ -167,3 +167,19 @@ export function offsetCircle(circle: CircleProperties, distance:number): CircleP
 
   return [innerCircle, outerCircle];
 }
+
+export function circleToPoints(
+  circle: CircleProperties,
+  segments: number = 20
+): PointProperties[] {
+  const points: PointProperties[] = [];
+  for (let i = 0; i <= segments; i++) {
+    const theta = (i / segments) * 2 * Math.PI;
+    const point = {
+      x: circle.center.x + circle.radius * Math.cos(theta),
+      y: circle.center.y + circle.radius * Math.sin(theta),
+    };
+    points.push(point);
+  }
+  return points;
+}

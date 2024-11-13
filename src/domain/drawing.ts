@@ -4,7 +4,7 @@ import { Rectangle } from "../geometry/rectangle/rectangle";
 import { Layer } from "./layer";
 
 /** A DXF/SVG drawing. */
-export class Drawing extends Parent {
+export class Drawing extends Parent<Layer> {
   children: Layer[];
   area: Area;
 

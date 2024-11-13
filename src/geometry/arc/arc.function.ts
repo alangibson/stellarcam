@@ -467,3 +467,20 @@ export function offsetArc(arc: ArcProperties, distance: number): ArcProperties[]
 
   return [innerArc, outerArc];
 }
+
+// Downsample an Arc into an array of points
+export function arcToPoints(curve: ArcProperties, segments: number = 20): PointProperties[] {
+  const points: PointProperties[] = [];
+  for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      let point;
+      // Arc approximation using circle parameterization
+      const theta = curve.startAngle + t * (curve.endAngle - curve.startAngle);
+      point = {
+          x: curve.center.x + curve.radius * Math.cos(theta),
+          y: curve.center.y + curve.radius * Math.sin(theta),
+      };
+      points.push(point);
+  }
+  return points;
+}

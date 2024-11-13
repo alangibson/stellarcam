@@ -2,6 +2,7 @@ import { Chain } from "../../domain/chain";
 import { Cut } from "../../domain/cut";
 import { Drawing } from "../../domain/drawing";
 import { Layer } from "../../domain/layer";
+import { Program } from "../../domain/program";
 import { Rapid } from "../../domain/rapid";
 import { Arc } from "../../geometry/arc/arc";
 import { Circle } from "../../geometry/circle/circle";
@@ -78,6 +79,11 @@ const apply: OutputApply = {
         begin: () => '',
         end: () => ''
     },
+    program: {
+        begin: (program: Program) => `<svg id="drawing" width="${program.width}${program.units}" height="${program.height}${program.units}" viewBox="0 0 ${program.width} ${program.height}" preserveAspectRatio="none">`,
+        end: () => '</svg>'
+    },
+
 }
 
 export default apply;

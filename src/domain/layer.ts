@@ -2,13 +2,13 @@
 /** A DXF layer */
 
 import { Parent } from "../entity/parent";
-import { Part } from "./part";
+import { Chain } from "./chain";
 
-export class Layer extends Parent {
+export class Layer extends Parent<Chain> {
   name: string;
-  children: Part[];
+  children: Chain[];
 
-  constructor(name: string, children: Part[]) {
+  constructor(name: string, children: Chain[]) {
     super(children)
     this.name = name;
   }

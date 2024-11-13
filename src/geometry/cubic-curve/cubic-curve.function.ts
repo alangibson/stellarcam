@@ -336,3 +336,31 @@ export function offsetCubicCurve(curve: CubicCurveProperties, distance: number, 
 
   return [innerOffsetPoints, outerOffsetPoints];
 }
+
+// Downsample a CubicCurve into an array of points
+export function cubicCurveToPoints(curve: CubicCurveProperties, segments: number = 20): PointProperties[] {
+  const points: PointProperties[] = [];
+  for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      let point;
+      // Cubic Bezier Curve
+      const p0 = curve.startPoint;
+      const p1 = curve.control1;
+      const p2 = curve.control2;
+      const p3 = curve.endPoint;
+      point = {
+          x:
+              Math.pow(1 - t, 3) * p0.x +
+              3 * Math.pow(1 - t, 2) * t * p1.x +
+              3 * (1 - t) * Math.pow(t, 2) * p2.x +
+              Math.pow(t, 3) * p3.x,
+          y:
+              Math.pow(1 - t, 3) * p0.y +
+              3 * Math.pow(1 - t, 2) * t * p1.y +
+              3 * (1 - t) * Math.pow(t, 2) * p2.y +
+              Math.pow(t, 3) * p3.y,
+      };
+      points.push(point);
+  }
+  return points;
+}
