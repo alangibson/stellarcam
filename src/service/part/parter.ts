@@ -11,7 +11,7 @@ export class Parter {
             parent: Node,
             children: Node[]
         };
-        let nodes: Node[] = cuts.map(cut => ({ cut: cut, parent: null, children: [] }));
+        let nodes: Node[] = cuts.map((cut: Cut) => ({ cut: cut, parent: null, children: [] }));
     
         // Assign parent to each node based on containment
         for (let i = 0; i < nodes.length; i++) {
@@ -19,8 +19,8 @@ export class Parter {
             for (let j = 0; j < nodes.length; j++) {
                 if (i === j) continue;
                 let nodeQ = nodes[j];
-                if (chainContains(nodeQ.cut.chain, nodeP.cut.chain)) {
-                    if (nodeP.parent === null || chainContains(nodeQ.cut.chain, nodeP.parent.cut.chain)) {
+                if (chainContains(nodeQ.cut.path.chain, nodeP.cut.path.chain)) {
+                    if (nodeP.parent === null || chainContains(nodeQ.cut.path.chain, nodeP.parent.cut.path.chain)) {
                         nodeP.parent = nodeQ;
                     }
                 }
@@ -43,10 +43,7 @@ export class Parter {
             let holes: Cut[] = node.children.map(child => child.cut);
     
             if (node.parent === null)
-                parts.push(new Part({
-                    shell: node.cut,
-                    holes: holes
-                }));
+                parts.push(new Part({shell: node.cut, holes: holes}));
     
             // Process children recursively
             for (let child of node.children) {

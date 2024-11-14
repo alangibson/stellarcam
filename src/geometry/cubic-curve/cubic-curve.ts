@@ -13,7 +13,7 @@ import { GeometryTypeEnum, MirrorEnum, DirectionEnum } from "../geometry.enum";
 import { Point, PointProperties } from "../point/point";
 import { Shape } from "../shape";
 import { transformPoint } from "../point/point.function";
-import { Chain } from "../../domain/chain";
+import { Chain } from "../chain/chain";
 import { segmentsFromPoints } from "../segment/segment.function";
 import { Segment, SegmentProperties } from "../segment/segment";
 

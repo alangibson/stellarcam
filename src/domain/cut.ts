@@ -1,30 +1,39 @@
-import { Parent } from "../entity/parent";
-import { PointProperties } from "../geometry/point/point";
-import { Chain } from "./chain";
+import { Point, PointProperties } from "../geometry/point/point";
 import { Lead } from "./lead";
+import { Path } from "./path";
 import { Rapid } from "./rapid";
 
-export class Cut extends Parent<Chain> {
+export interface CutProperties {
+}
 
-  children: Chain[];
-  rapidTo: Rapid;
-  leadIn: Lead;
-  chain: Chain;
-  leadOut: Lead;
+export interface ICut extends CutProperties {
+  rapidTo?: Rapid;
+  leadIn?: Lead;
+  path: Path;
+  leadOut?: Lead;
+}
 
-  constructor(chain: Chain) {
-    super([chain]);
-    this.chain = chain;
+export class Cut implements ICut {
+
+  // Children
+  rapidTo?: Rapid;
+  leadIn?: Lead;
+  path: Path;
+  leadOut?: Lead;
+  
+  constructor({path, leadIn, leadOut, rapidTo}: ICut) {
+    this.path = path;
+    this.leadIn = leadIn;
+    this.leadOut = leadOut;
+    this.rapidTo = rapidTo;
   }
 
-  get startPoint(): PointProperties {
-    // FIXME assumes only one chain, but is array
-    return this.children[0].startPoint;
+  get startPoint(): Point {
+    return this.path.chain.startPoint;
   }
 
-  get endPoint(): PointProperties {
-    // FIXME assumes only one chain, but is array
-    return this.children[0].endPoint;
+  get endPoint(): Point {
+    return this.path.chain.endPoint;
   }
 
 }

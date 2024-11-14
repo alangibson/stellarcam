@@ -1,3 +1,7 @@
-export class Lead {
+export interface LeadProperties {
+
+}
+
+export class Lead implements LeadProperties {
     
 }

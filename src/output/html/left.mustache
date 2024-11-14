@@ -76,7 +76,7 @@
                     <details open>
                     <summary>Stock: {{program.machine.stock}}</summary>
                         <ul>
-                            {{#program.machine.stock.children}}
+                            {{#program.machine.stock.parts}}
                             <li>
                             <details open>
                             <summary>Part: {{.}}</summary>
@@ -91,7 +91,7 @@
                                 </ul>
                             </details>
                             </li>
-                            {{/program.machine.stock.children}}
+                            {{/program.machine.stock.parts}}
                         </ul>
                     </details>
                     </li>

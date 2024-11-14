@@ -1,5 +1,5 @@
-import { Chain } from "../../domain/chain";
-import { GeometryTypeEnum } from "../geometry.enum";
+import { Chain } from "./chain";
+import { DirectionEnum, GeometryTypeEnum } from "../geometry.enum";
 import { PointProperties } from "../point/point";
 import { Shape } from "../shape";
 import { segmentIntersects } from "../segment/segment.function";
@@ -11,6 +11,110 @@ import { CubicCurve } from "../cubic-curve/cubic-curve";
 import { QuadraticCurve } from "../quadratic-curve/quadratic-curve";
 import { circleToPoints } from "../circle/circle.function";
 import { Circle } from "../circle/circle";
+import { Rectangle } from "../rectangle/rectangle";
+
+export function sortShapesInDirection(
+  shapes: Shape[],
+  direction: DirectionEnum,
+): Shape[] {
+  // Function to generate a key for a point with rounding to handle floating point inaccuracies
+  function getPointKey(point) {
+    const x = point.x.toFixed(6);
+    const y = point.y.toFixed(6);
+    return `${x},${y}`;
+  }
+
+  // Step 1: Collect unique points and calculate centroid
+  const pointMap = new Map();
+  let sumX = 0;
+  let sumY = 0;
+  shapes.forEach((shape) => {
+    [shape.startPoint, shape.endPoint].forEach((point) => {
+      const key = getPointKey(point);
+      if (!pointMap.has(key)) {
+        pointMap.set(key, { point, key });
+        sumX += point.x;
+        sumY += point.y;
+      }
+    });
+  });
+  const points = Array.from(pointMap.values());
+  const centroidX = sumX / pointMap.size;
+  const centroidY = sumY / pointMap.size;
+
+  // Step 2: Compute angles for each point
+  points.forEach((p) => {
+    p.angle = Math.atan2(p.point.y - centroidY, p.point.x - centroidX);
+  });
+
+  // Step 3: Sort points based on angle
+  points.sort((a, b) => {
+    if (direction === DirectionEnum.CW) {
+      return b.angle - a.angle;
+    } else {
+      return a.angle - b.angle;
+    }
+  });
+
+  // Step 4: Map shapes between points
+  const shapeMap = new Map();
+  shapes.forEach((shape) => {
+    const startKey = getPointKey(shape.startPoint);
+    const endKey = getPointKey(shape.endPoint);
+    const keyForward = `${startKey}->${endKey}`;
+    const keyBackward = `${endKey}->${startKey}`;
+    shapeMap.set(keyForward, { shape, reverse: false });
+    shapeMap.set(keyBackward, { shape, reverse: true });
+  });
+
+  // Step 5: Build sorted list of shapes
+  const sortedShapes = [];
+  const n = points.length;
+  for (let i = 0; i < n; i++) {
+    const pointA = points[i];
+    const pointB = points[(i + 1) % n]; // Wrap around to form a loop
+    const keyAB = `${pointA.key}->${pointB.key}`;
+    const keyBA = `${pointB.key}->${pointA.key}`;
+    if (shapeMap.has(keyAB)) {
+      const { shape } = shapeMap.get(keyAB);
+      sortedShapes.push(shape);
+    } else if (shapeMap.has(keyBA)) {
+      const { shape } = shapeMap.get(keyBA);
+      // Reverse the shape to maintain direction
+      const reversedShape = { start: shape.end, end: shape.start };
+      sortedShapes.push(reversedShape);
+    } else {
+      throw new Error(
+        `No shape connects point ${pointA.key} to point ${pointB.key}`,
+      );
+    }
+  }
+
+  return sortedShapes;
+}
+
+/** Returns true if, starting with first shape, each subsequent shape is connected end-to-start point */
+export function chainIsClosed(chain: Chain): boolean {
+  let last_shape: Shape;
+  for (let shape of this.children) {
+    if (last_shape) {
+      if (last_shape.endPoint.isEqual(shape.startPoint)) {
+        // good result
+      } else {
+        // bad result
+        return false;
+      }
+    }
+    last_shape = shape;
+  }
+  return true;
+}
+
+export function chainBoundingBox(chain: Chain): Rectangle {
+  const boundary = new Rectangle({startPoint:{x:0,y:0}, endPoint: {x:0,y:0}});
+  chain.children.forEach((shape) => boundary.join(shape.boundary));
+  return boundary;
+}
 
 /**
  * Point-in-polygon test using ray casting algorithm
@@ -136,4 +240,12 @@ export function chainContains(outer: Chain, inner: Chain) {
     }
 
     return true;
+}
+
+export function chainStartPoint(chain: Chain): PointProperties {
+  return chain.children[0].startPoint;
+}
+
+export function chainEndPoint(chain: Chain): PointProperties {
+  return chain.children[chain.children.length - 1].endPoint  
 }

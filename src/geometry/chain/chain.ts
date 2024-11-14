@@ -1,62 +1,55 @@
-import { Parent } from "../entity/parent";
-import { chainContains } from "../geometry/chain/chain.function";
-import { DirectionEnum } from "../geometry/geometry.enum";
-import { Point } from "../geometry/point/point";
-import { Rectangle } from "../geometry/rectangle/rectangle";
-import { Shape } from "../geometry/shape";
-import { sortShapesInDirection } from "./chain.function";
+import { Parent } from "../../entity/parent";
+import { chainContains, chainEndPoint, chainStartPoint } from "./chain.function";
+import { DirectionEnum } from "../geometry.enum";
+import { Point } from "../point/point";
+import { Rectangle } from "../rectangle/rectangle";
+import { Shape } from "../shape";
+import { chainBoundingBox, chainIsClosed, sortShapesInDirection } from "./chain.function";
 
-export class Chain extends Parent<Shape> {
-
+export interface IChain {
   children: Shape[];
+}
+
+export class Chain extends Parent<Shape> implements IChain {
+
+  // Children
+  children: Shape[];
+
   // Direction starts out as undefined since shapes can be oriented
   // in either direction at the time they're added.
-  private _direction: DirectionEnum;
+  #direction: DirectionEnum;
 
-  constructor(children: Shape[] = []) {
-    super(children);
+  constructor(shapes: Shape[]) {
+    super(shapes);
   }
 
   get direction(): DirectionEnum {
-    return this._direction;
+    return this.#direction;
   }
 
   set direction(direction: DirectionEnum) {
     for (let shape of this.children) {
       shape.direction = direction;
     }
-    this._direction = direction;
+    this.#direction = direction;
   }
 
   get startPoint(): Point {
-    return this.children[0].startPoint;
+    console.log(chainStartPoint(this));
+    return new Point(chainStartPoint(this));
   }
 
   get endPoint(): Point {
-    return this.children[this.children.length - 1].endPoint;
+    return new Point(chainEndPoint(this));
   }
 
   get boundary(): Rectangle {
-    const boundary = new Rectangle({startPoint:{x:0,y:0}, endPoint: {x:0,y:0}});
-    this.children.forEach((shape) => boundary.join(shape.boundary));
-    return boundary;
+    return chainBoundingBox(this);
   }
 
   /** Returns true if, starting with first shape, each subsequent shape is connected end-to-start point */
   closed(): boolean {
-    let last_shape: Shape;
-    for (let shape of this.children) {
-      if (last_shape) {
-        if (last_shape.endPoint.isEqual(shape.startPoint)) {
-          // good result
-        } else {
-          // bad result
-          return false;
-        }
-      }
-      last_shape = shape;
-    }
-    return true;
+    return chainIsClosed(this);
   }
 
   contains(that: Chain): boolean {
@@ -84,6 +77,6 @@ export class Chain extends Parent<Shape> {
     // console.log("Clockwise:", sortedShapesClockwise);
     // const sortedShapesCounterClockwise = sortShapes(shapes, "counterclockwise");
     // console.log("Counterclockwise:", sortedShapesCounterClockwise);
-    this.children = sortShapesInDirection(this.children, this._direction);
+    this.children = sortShapesInDirection(this.children, this.#direction);
   }
 }

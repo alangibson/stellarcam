@@ -1,6 +1,9 @@
-import { Machine, MachineProperties } from "./machine";
+import { Machine } from "./machine";
 
 export interface ProgramProperties {
+    width: number;
+    height: number;
+    units: string;
 }
 
 export interface IProgram extends ProgramProperties {
@@ -9,14 +12,18 @@ export interface IProgram extends ProgramProperties {
 
 export class Program implements IProgram {
 
-    machine: Machine;
-
+    // Properties
     width: number;
     height: number;
     units: string;
+    // Children
+    machine: Machine;
 
-    constructor(c: IProgram) {
-        this.machine = c.machine;
+    constructor({height, width, units, machine}: IProgram) {
+        this.height = height;
+        this.width = width;
+        this.units = units;
+        this.machine = machine;
     }
 
 }

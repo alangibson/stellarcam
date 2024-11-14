@@ -1,18 +1,5 @@
-import { Operation, OperationProperties } from "./operation";
+import { CutterCompensationEnum, DistanceModeEnum, UnitEnum } from "./machine.enum";
 import { Stock } from "./stock";
-
-export enum UnitEnum {
-    METRIC = 'metric',
-    IMPERIAL = 'imperial'
-}
-
-export enum CutterCompensationEnum {
-    // TODO
-}
-
-export enum DistanceModeEnum {
-    // TODO
-}
 
 export interface MachineProperties {
     // G21 (units: metric)
@@ -36,17 +23,19 @@ export interface IMachine extends MachineProperties {
 }
 
 export class Machine implements IMachine {
-    
+
+    // Properties
     units: UnitEnum;
     cutterCompensation: CutterCompensationEnum;
     distanceMode: DistanceModeEnum;
+    // Children
     stock: Stock;
     
-    constructor(c: IMachine) {
-        this.units = c.units;
-        this.cutterCompensation = c.cutterCompensation;
-        this.distanceMode = c.distanceMode;
-        this.stock = c.stock;
+    constructor({units, cutterCompensation, distanceMode, stock}: IMachine) {
+        this.units = units;
+        this.cutterCompensation = cutterCompensation;
+        this.distanceMode = distanceMode;
+        this.stock = stock;
     }
 
 }

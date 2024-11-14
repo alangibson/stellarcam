@@ -48,7 +48,6 @@ export class Arc extends Shape implements ArcProperties {
 
     // Set at creation time because we will render arc backwards
     // if we reverse() then try to determine direction afterward
-    // this._direction = arcOrientation(this.start_angle, this.end_angle);
     this._direction = DirectionEnum.CCW;
   }
 

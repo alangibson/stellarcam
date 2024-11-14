@@ -1,4 +1,4 @@
-import { Chain } from "../../domain/chain";
+import { Chain } from "../../geometry/chain/chain";
 import { Cut } from "../../domain/cut";
 import { Drawing } from "../../domain/drawing";
 import { Layer } from "../../domain/layer";

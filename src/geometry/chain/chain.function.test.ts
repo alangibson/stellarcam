@@ -1,9 +1,9 @@
-import { Chain } from "../../domain/chain";
 import { Arc } from "../arc/arc";
 import { chainContains } from "./chain.function";
 import { Segment } from "../segment/segment";
 import { Circle } from "../circle/circle";
 import { CubicCurve } from "../cubic-curve/cubic-curve";
+import { Chain } from "./chain";
 
 const LARGE_SQUARE = new Chain([
     new Segment({ startPoint: { x: 1, y: 1 }, endPoint: { x: 7, y: 1 } }),

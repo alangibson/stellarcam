@@ -99,15 +99,15 @@ export class Output {
         // TODO Stock begin
         // output.push(this.config.stock?.begin?.(this.program.machine.stock));
 
-        for (const part of this.program.machine.stock.children) {
+        for (const part of this.program.machine.stock.parts) {
             // Part begin
             output.push(this.config.part?.begin?.(part));
-            for (const cut of part.children) {
+            for (const cut of [...part.holes, part.shell]) {
                 // Rapid to Cut
                 output.push(this.config.cut?.rapidTo?.(cut));
                 // Cut begin
                 output.push(this.config.cut?.begin?.(cut));
-                for (const chain of cut.children) {
+                for (const chain of [cut.path.chain]) { // HACK
                     // Chain begin
                     output.push(this.config.chain?.begin?.(chain));
                     output.push(this.config.chain?.startPoint?.(chain));

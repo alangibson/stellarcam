@@ -1,19 +1,29 @@
-import { Parent } from "../entity/parent";
-import { Cut } from "./cut";
+import { Cut, CutProperties } from "./cut";
 
-export interface IPart {
-  shell: Cut;
-  holes: Cut[];
+export interface PartProperties {
+
 }
 
-export class Part extends Parent<Cut> implements IPart {
+export interface IPart extends PartProperties {
+
   shell: Cut;
   holes: Cut[];
 
-  constructor({shell, holes = []}: IPart) {
-    super([shell, ...holes]);
+}
+
+export class Part implements IPart {
+
+  // Children
+  shell: Cut;
+  holes: Cut[];
+
+  constructor({shell, holes} : IPart) {
     this.shell = shell;
     this.holes = holes;
+  }
+
+  get children(): Cut[] {
+    return [...this.holes, this.shell];
   }
 
 }

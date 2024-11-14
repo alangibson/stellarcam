@@ -1,6 +1,6 @@
 import { Area } from "./src/geometry/area";
 import { Grapher } from "./src/service/graph/grapher";
-import { Chain } from "./src/domain/chain";
+import { Chain } from "./src/geometry/chain/chain";
 import { Shape } from "./src/geometry/shape";
 import { reorientShapes } from "./src/service/graph/grapher.function";
 import { Drawing } from "./src/domain/drawing";
@@ -12,13 +12,15 @@ import { HtmlFile } from "./src/output/html/html";
 import { Output } from "./src/output/output";
 import GcodeConfig from './src/output/gcode/gcode';
 import { Program } from "./src/domain/program";
-import { Machine, UnitEnum } from "./src/domain/machine";
+import { Machine } from "./src/domain/machine";
 import { TspPoint } from "./src/service/tsp/tsp-point";
 import { TravellingSalesman } from "./src/service/tsp/tsp";
 import { Operation, OperationProperties } from "./src/domain/operation";
 import { InputFile } from "./src/input/input";
 import { Stock } from "./src/domain/stock";
 import { Parter } from "./src/service/part/parter";
+import { Path } from "./src/domain/path";
+import { UnitEnum } from "./src/domain/machine.enum";
 
 function dump(o) {
     console.log(JSON.stringify(o, null, 4));
@@ -62,14 +64,14 @@ for (const layerName in inputDrawing.layers) {
         // TODO do this in Grapher.solve()?
         reorientShapes(graph, TOLERANCE);
 
-        const chain = new Chain();
+        const shapes: Shape[] = [];
         let lastShape: Shape;
         for (let shape of graph) {
-            chain.add(shape);
+            shapes.push(shape);
             area.add(shape);
             lastShape = shape;
         }
-        chains.push(chain);
+        chains.push(new Chain(shapes));
     }
     layers.push(new Layer(layerName, chains));
 }
@@ -191,7 +193,8 @@ const cuts: Cut[] = [];
 for (const layer of drawing.children) {
     for (const chain of layer.children) {
         // Each Chain is a Cut
-        const cut: Cut = new Cut(chain);
+        const path: Path = new Path({chain});
+        const cut: Cut = new Cut({path});
         cuts.push(cut);
         // Save point for TSP Rapid optimization later
         tspPoints.push(new TspPoint(cut));
@@ -203,8 +206,7 @@ new TravellingSalesman().solve(tspPoints);
 // Reorganize Cuts into Parts
 const parts: Part[] = new Parter().process(cuts);
 
-const stock = new Stock();
-stock.children = parts;
+const stock = new Stock({ width: 69, length: 69, parts });
 
 const machine: Machine = new Machine({
     units: UnitEnum.METRIC,
@@ -212,14 +214,10 @@ const machine: Machine = new Machine({
     cutterCompensation: undefined,
     // TODO distanceMode
     distanceMode: undefined,
-    stock: stock
+    stock
 });
 
-const program: Program = new Program({ machine });
-// TODO set Program width and height from Drawing
-program.width = drawing.width;
-program.height = drawing.height;
-program.units = drawing.units;
+const program: Program = new Program({ height: drawing.height, width: drawing.width, units: drawing.units, machine});
 
 //
 // Render DXF

@@ -1,8 +1,9 @@
 import { Cut } from "../../domain/cut";
 import { Drawing } from "../../domain/drawing";
 import { Layer } from "../../domain/layer";
-import { MachineProperties, UnitEnum } from "../../domain/machine";
-import { Operation, OperationProperties } from "../../domain/operation";
+import { MachineProperties} from "../../domain/machine";
+import { UnitEnum } from "../../domain/machine.enum";
+import { Operation } from "../../domain/operation";
 import { Part } from "../../domain/part";
 import { Arc } from "../../geometry/arc/arc";
 import { Circle } from "../../geometry/circle/circle";
