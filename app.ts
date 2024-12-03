@@ -1,8 +1,3 @@
-import { Area } from "./src/geometry/area";
-import { Grapher } from "./src/service/graph/grapher";
-import { Chain } from "./src/geometry/chain/chain";
-import { Shape } from "./src/geometry/shape";
-import { reorientShapes } from "./src/service/graph/grapher.function";
 import { Drawing } from "./src/domain/drawing";
 import { Cut } from "./src/domain/cut";
 import { Part } from "./src/domain/part";
@@ -48,42 +43,7 @@ const inputDrawing: InputDrawing = new InputFile().load(filePath);
 // Create Drawing from input
 //
 
-// TODO get from configuration file
-const TOLERANCE = 0.5;
-
-// Loop over DXF layers. One graph per layer
-const layers: Layer[] = [];
-const area = new Area();
-for (const layerName in inputDrawing.layers) {
-    const shapes: Shape[] = inputDrawing.layers[layerName].shapes;
-    // Generate Multishapes
-    // Connect all points within given tolerance
-    const graphs: Shape[][] = new Grapher().solve(shapes, TOLERANCE);
-    const chains: Chain[] = [];
-    for (let graph of graphs) {
-        // TODO do this in Grapher.solve()?
-        reorientShapes(graph, TOLERANCE);
-
-        const shapes: Shape[] = [];
-        let lastShape: Shape;
-        for (let shape of graph) {
-            shapes.push(shape);
-            area.add(shape);
-            lastShape = shape;
-        }
-        chains.push(new Chain(shapes));
-    }
-    layers.push(new Layer(layerName, chains));
-}
-
-// Translate Area, and all Geometry in it, so that 0,0 is at bottom-left
-area.translate(-area.min.x, -area.min.y);
-
-// FIXME flip dxf, don't flip SVG
-// Flip coordinate origin from bottom-left to top-right
-// area.flip(MirrorEnum.HORIZONTAL);
-
-const drawing: Drawing = new Drawing(layers, area);
+const drawing: Drawing = Drawing.from({tolerance: 0.5}, inputDrawing);
 
 //
 // Load settings

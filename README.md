@@ -7,29 +7,29 @@
 #### Inheritance
 
 Geometry
-    Point
-    Shape
-        Arc
-        Circle
-        CubicCurve
-        Ellipse
-        Rectangle
-        Segment
-        QuadraticCurve
+Point
+Shape
+Arc
+Circle
+CubicCurve
+Ellipse
+Rectangle
+Segment
+QuadraticCurve
 
 #### Collection
 
 Multishape
-    Shape
+Shape
 
 Area
-    Shape
+Shape
 
 ### Entities
 
 Drawing
-    Layer
-        Chain
+Layer
+Chain
 
 ### Configuration
 
@@ -38,19 +38,19 @@ Drawing
 Configuration that gets built in order to run the app or produce gcode.
 
 Program
-    Machine
-        Stock
-            Part
-                Cut
-                    Path
-                    Operation (LinuxCNC Material)
+Machine
+Stock
+Part
+Cut
+Path
+Operation (LinuxCNC Material)
 
 #### Application
 
 Overall application configuration
 
 Application
-    Postprocessor
+Postprocessor
 
 ## TODO
 
