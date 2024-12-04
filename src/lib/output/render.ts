@@ -257,6 +257,9 @@ export class Renderer {
 		// Initialize output collector
 		const output: string[] = [];
 
+		// Drawing begin
+		output.push(config.drawing?.begin?.(drawing));
+		// Layers
 		for (const layer of drawing.children) {
 			// Layer begin
 			output.push(config.layer?.begin?.(layer));
@@ -301,6 +304,8 @@ export class Renderer {
 			// Layer end
 			output.push(config.layer?.end?.(layer));
 		}
+		// Drawing end
+		output.push(config.drawing?.end?.(drawing));
 
 		return output;
 	}

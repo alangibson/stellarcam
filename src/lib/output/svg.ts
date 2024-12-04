@@ -13,7 +13,7 @@ import { QuadraticCurve } from '../geometry/quadratic-curve/quadratic-curve';
 import { Segment } from '../geometry/segment/segment';
 
 export const SvgRenderProgramConfig: RenderProgramConfig = {
-    program: {
+	program: {
 		begin: (program: Program) =>
 			`<svg id="drawing" width="${program.width}${program.units}" height="${program.height}${program.units}" viewBox="0 0 ${program.width} ${program.height}" preserveAspectRatio="none">`,
 		end: () => '</svg>'
@@ -36,7 +36,7 @@ export const SvgRenderProgramConfig: RenderProgramConfig = {
 
 export const SvgRenderDrawingConfig: RenderDrawingConfig = {
 	drawing: {
-		begin: (drawing: Drawing) =>
+		begin: (drawing: Drawing) => 
 			`<svg id="drawing" width="${drawing.width}${drawing.units}" height="${drawing.height}${drawing.units}" viewBox="0 0 ${drawing.width} ${drawing.height}" preserveAspectRatio="none">`,
 		end: () => '</svg>'
 	},

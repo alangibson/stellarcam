@@ -13,4 +13,5 @@ export class Parent<C extends Entity> implements Entity {
 		this.children.forEach((entity) => boundary.join(entity.boundary));
 		return boundary;
 	}
+	
 }

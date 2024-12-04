@@ -28,14 +28,6 @@ export class Rectangle extends Shape {
 		return new Point(pointdef);
 	}
 
-	get width(): number {
-		return this.endPoint.x - this.startPoint.x;
-	}
-
-	get height(): number {
-		return this.endPoint.y - this.startPoint.y;
-	}
-
 	get boundary(): Boundary {
 		return new Boundary(this);
 	}

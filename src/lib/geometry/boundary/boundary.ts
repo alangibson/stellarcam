@@ -23,6 +23,14 @@ export class Boundary implements BoundaryProperties {
 		this.endPoint = endPoint;
 	}
 
+	get width(): number {
+		return this.endPoint.x - this.startPoint.x;
+	}
+
+	get height(): number {
+		return this.endPoint.y - this.startPoint.y;
+	}
+
 	join(boundary: Boundary): Boundary {
 		const newBoundary = joinBoundaries(this, boundary);
 		this.startPoint.x = newBoundary.startPoint.x;
